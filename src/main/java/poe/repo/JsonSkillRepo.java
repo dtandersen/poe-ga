@@ -25,6 +25,10 @@ public class JsonSkillRepo implements SkillRepo
 
 		for (final Node22 n : x.nodes)
 		{
+			if (n.asc)
+			{
+				continue;
+			}
 			final PassiveSkill e = new PassiveSkill(n.dn);
 			for (final String s : n.sd)
 			{
@@ -32,19 +36,24 @@ public class JsonSkillRepo implements SkillRepo
 				for (final AttributeType at : AttributeType.values())
 				{
 					final Matcher matcher = at.matcher(s);
-					if (matcher.find())
+					if (!matcher.find())
 					{
-						final Attribute attribute = new Attribute(at);
-						try
-						{
-							attribute.setValue(Float.parseFloat(matcher.group(1)));
-						}
-						catch (final IndexOutOfBoundsException e2)
-						{
-						}
-						e.addAttribute(attribute);
-						matched = true;
+						continue;
 					}
+
+					final Attribute attribute = new Attribute(at);
+					try
+					{
+						final String group = matcher.group(1);
+						final float val = Float.parseFloat(group);
+						attribute.setValue(val);
+					}
+					catch (final IndexOutOfBoundsException e2)
+					{
+					}
+					e.addAttribute(attribute);
+					matched = true;
+					break;
 				}
 				if (!matched)
 				{
@@ -83,6 +92,8 @@ public class JsonSkillRepo implements SkillRepo
 			 * output nodes
 			 */
 			List<Integer> out;
+
+			boolean asc;
 		}
 	}
 }

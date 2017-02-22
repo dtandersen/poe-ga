@@ -49,7 +49,7 @@ final class PassiveSkillMatcher extends TypeSafeDiagnosingMatcher<PassiveSkill>
 	{
 		if (!Objects.equals(actualSkill.getName(), expectedName))
 		{
-			mismatchDescription.appendText("a skill named " + actualSkill.getName());
+			mismatchDescription.appendText(actualSkill.toString());
 			return false;
 		}
 
@@ -58,7 +58,8 @@ final class PassiveSkillMatcher extends TypeSafeDiagnosingMatcher<PassiveSkill>
 			final Matcher<Iterable<? extends Attribute>> x = containsInAnyOrder(expectedAttributes);
 			if (!x.matches(actualSkill.getAttributes()))
 			{
-				x.describeMismatch(actualSkill.getAttributes(), mismatchDescription);
+				// x.describeMismatch(actualSkill.getAttributes(), mismatchDescription);
+				mismatchDescription.appendText(actualSkill.toString());
 				return false;
 			}
 		}
@@ -66,7 +67,8 @@ final class PassiveSkillMatcher extends TypeSafeDiagnosingMatcher<PassiveSkill>
 		{
 			if (!actualSkill.getAttributes().isEmpty())
 			{
-				mismatchDescription.appendValueList("", ",", "", actualSkill.getAttributes());
+				// mismatchDescription.appendValueList("", ",", "", actualSkill.getAttributes());
+				mismatchDescription.appendText(actualSkill.toString());
 				return false;
 			}
 		}

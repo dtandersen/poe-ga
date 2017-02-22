@@ -20,7 +20,7 @@ public class AttributeTypeTest
 		assertThat(skills, hasItem(skill()
 				.withName("Herbalism")
 				.withAttributes(
-						attribute(AttributeType.MAX_LIFE, 10),
+						attribute(AttributeType.LIFE_MAX, 10),
 						attribute(AttributeType.FLASK_LIFE, 20),
 						attribute(AttributeType.FLASK_RECOVERY, 20))));
 
@@ -35,6 +35,24 @@ public class AttributeTypeTest
 				.withName("Minion Instability")
 				.withAttributes(
 						attribute(AttributeType.MINION_INSTABILITY, 0))));
+
+		assertThat(skills, hasItem(skill()
+				.withName("Phase Acrobatics")
+				.withAttributes(
+						attribute(AttributeType.DODGE_SPELL, 30))));
+
+		// assertThat(skills, hasItem(skill()
+		// .withName("Ghost Dance")
+		// .withAttributes(
+		// attribute(AttributeType.ES_FASTER, 20),
+		// attribute(AttributeType.DODGE_ATTACK, 5),
+		// attribute(AttributeType.DODGE_SPELL, 5),
+		// attribute(AttributeType.MOVEMENT_ENERGY_SHIELD, 10))));
+
+		assertThat(skills, hasItem(skill()
+				.withName("Phase Acrobatics")
+				.withAttributes(
+						attribute(AttributeType.DODGE_SPELL, 30))));
 	}
 
 	private Matcher<Attribute> attribute(final AttributeType attributeType, final float value)

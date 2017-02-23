@@ -62,27 +62,33 @@ public enum AttributeType
 
 	// extra damage
 	DAMAGE_ATTACK(INT + "% increased Attack Damage"),
-	CHAOS_DAMAGE(INT + "% increased Chaos Damage"),
+	DAMAGE_FROZEN_SHOCK_IGNITED(INT + "% increased Damage against Frozen, Shocked or Ignited Enemies"),
+	DAMAGE_ON_ENEMY_LOW_LIFE("Hits deal " + INT + "% increased Damage against Enemies that are on Low Life"),
+
 	PHYSICAL_DAMAGE(INT + "% increased Physical Damage"),
 	PHYSICAL_DAMAGE_2(INT + "% increased Physical Damage with Attacks"),
 	PHYSICAL_DOT(INT + "% increased Physical Damage over Time"),
+
+	CHAOS_DAMAGE(INT + "% increased Chaos Damage"),
+	CHAOS_DAMAGE_ON_PHYSICAL("Gain " + INT + "% of Physical Damage as Extra Chaos Damage"),
+
 	ELEM_DAMAGE(INT + "% increased Elemental Damage"),
 	ELEMENTAL_STATUS_AILMENTS(INT + "% increased Duration of Elemental Status Ailments on Enemies"),
 	ELEMENTAL_DAMAGE_ON_CRIT(INT + "% more Elemental Damage if you've Crit in the past 8 seconds"),
 	CSC_ELEM_STATUS(INT + "% increased Critical Strike Chance against Enemies affected"), // by Elemental Status Ailments
+
 	FIRE_DAMAGE(INT + "% increased Fire Damage"),
 	FIRE_DAMAGE_CONVERT(INT + "% of Physical, Cold and Lightning Damage Converted to Fire Damage"),
-	FIRE_ONLY("Deal no Non-Fire Damage"),
 	BURN_DAMAGE(INT + "% increased Burning Damage"),
-	LIGHT_DAMAGE(INT + "% increased Lightning Damage"),
-	LIGHTNING_RESIST_MAX(PLUS_INT + "% to maximum Lightning Resistance"),
+	PHYSICAL_DAMAGE_AS_FIRE_DAMAGE("Gain " + INT + "% of Physical Damage as Extra Fire Damage"),
+	FIRE_DAMAGE_ONLY("Deal no Non-Fire Damage"),
+
+	LIGHTNING_DAMAGE(INT + "% increased Lightning Damage"),
+
 	DOT_DAMAGE(INT + "% increased Damage over Time"),
-	FROZ_DMG(INT + "% increased Damage against Frozen, Shocked or Ignited Enemies"),
-	PHYS_FIRE("Gain " + INT + "% of Physical Damage as Extra Fire Damage"),
-	CHAOS_DAMAGE_ON_PHYSICAL("Gain " + INT + "% of Physical Damage as Extra Chaos Damage"),
 
 	// spell damage
-	SPELL_DAMAGE_LOW_LIFE(INT + "% more Spell Damage when on Low Life"),
+	SPELL_DAMAGE_ON_LOW_LIFE(INT + "% more Spell Damage when on Low Life"),
 	SPELL_DAMAGE_PER_POWER_CHARGE(INT + "% increased Spell Damage per Power Charge"),
 
 	// traps
@@ -263,6 +269,7 @@ public enum AttributeType
 	// shield
 	SHIELD_ATTACK_SPEED(INT + "% increased Attack Speed while holding a Shield"),
 	SHIELD_PHYSICAL_DAMAGE(INT + "% increased Physical Attack Damage while holding a Shield"),
+	SHIELD_MELEE_PHYSICAL_DAMAGE(INT + "% increased Melee Physical Damage while holding a Shield"),
 
 	// accuracy
 	ACCURACY(INT + "% increased Accuracy Rating"),
@@ -287,33 +294,41 @@ public enum AttributeType
 	MOVEMENT_IGNORE_ARMOR("Ignore all Movement Penalties from Armour"),
 	REGEN(FLOAT + "% of Life Regenerated per second"),
 
+	// global defence
+	BLOCK_CHANCE(INT + "% additional Block Chance"),
+
 	// shield defence
 	SHIELD_DEFENCE(INT + "% increased Defences from equipped Shield"),
 	SHIELD_BLOCK_CHANCE(INT + "% additional Chance to Block with Shields"),
 	SHIELD_ELEMENTAL_RESIST(PLUS + INT + "% Elemental Resistances while holding a Shield"),
 	SHIELD_DUAL_BLOCK(INT + "% additional Block Chance while Dual Wielding or holding a Shield"),
 
-	// global defence
-	BLOCK_CHANCE(INT + "% additional Block Chance"),
+	// resistances
+	LIGHTNING_RESIST(PLUS_INT + "% to Lightning Resistance"),
+	LIGHTNING_RESIST_MAX(PLUS_INT + "% to maximum Lightning Resistance"),
+	@Deprecated
+	MAX_LIGHT(INT + "% to maximum Lightning Resistance"),
 
-	// damage resist
-	LIGHTNING(PLUS_INT + "% to Lightning Resistance"),
 	ELEMENTAL_RESIST(INT + "% to all Elemental Resistances"),
+
 	FIRE_RESIST(PLUS_INT + "% to Fire Resistance"),
 	FIRE_RESIST_MAX(PLUS_INT + "% to maximum Fire Resistance"),
+
 	COLD_RESIST(PLUS_INT + "% to Cold Resistance"),
 	COLD_RESIST_CAP(PLUS_INT + "% to maximum Cold Resistance"),
+
+	CHAOS_RESIST(PLUS_INT + "% to Chaos Resistance"),
+
+	RESIST_ALL(PLUS_INT + "% to all Elemental Resistances"),
+
 	FREEZE(INT + "% chance to Freeze"),
 	COLD(INT + "% increased Cold Damage"),
 	COLD_PEN("Damage Penetrates " + INT + "% Cold Resistance"),
-	MAX_LIGHT(INT + "% to maximum Lightning Resistance"),
-	CHAOS_RESIST(PLUS_INT + "% to Chaos Resistance"),
-	RESIST_ALL(PLUS_INT + "% to all Elemental Resistances"),
 
 	// damage reduction
-	ELEM_DR_CONSECRATE("Take " + INT + "% reduced Elemental Damage while on Consecrated Ground"),
-	CRIT_REDUCE("You take " + INT + "% reduced Extra Damage from Critical Strikes"),
 	PHYSICAL_DAMAGE_REDUCTION(INT + "% additional Physical Damage Reduction"),
+	ELEMENTAL_DAMAGE_REDUCTION_ON_CONSECRATE("Take " + INT + "% reduced Elemental Damage while on Consecrated Ground"),
+	CRITICAL_REDUCE("You take " + INT + "% reduced Extra Damage from Critical Strikes"),
 
 	// status
 	CHILL_AVOID(INT + "% chance to Avoid being Chilled"),
@@ -322,7 +337,6 @@ public enum AttributeType
 	SHOCK_AVOID(INT + "% chance to Avoid being Shocked"),
 	AVOID_STUN_ON_CAST(INT + "% chance to Avoid interruption from Stuns while Casting"),
 
-	MELEE_PHYSICAL_SHIELD(INT + "% increased Melee Physical Damage while holding a Shield"),
 	CHILL_DURATION(INT + "% increased Chill Duration on Enemies"),
 	FREEZE_DURATION(INT + "% increased Freeze Duration on Enemies"),
 	BLOCK_RECOVERY(INT + "% increased Block Recovery"),
@@ -361,29 +375,29 @@ public enum AttributeType
 	FILL_LEECH("Life Leech effects are not removed at Full Life"),
 
 	// onslaught
-	ONSLAUGHT("Gain Onslaught for 20 seconds when you Kill a Rare or Unique Enemy"),
-	ONSLAUGHT_KILL(INT + "% chance to gain Onslaught for 3 seconds on Kill"),
-	ONSLAUGHT_FRENZY("You have Onslaught while on full Frenzy Charges"),
-	ONSLAUGHT_EVASION(INT + "% increased Evasion Rating while you have Onslaught"),
+	ONSLAUGHT_ON_RARE_OR_UNIQUE("Gain Onslaught for 20 seconds when you Kill a Rare or Unique Enemy"),
+	ONSLAUGHT_ON_KILL_KILL(INT + "% chance to gain Onslaught for 3 seconds on Kill"),
+	ONSLAUGHT_ON_FULL_FRENZY("You have Onslaught while on full Frenzy Charges"),
+	EVASION_ON_ONSLAUGHT(INT + "% increased Evasion Rating while you have Onslaught"),
 
 	// aoe
 	AOE_RADIUS(INT + "% increased Radius of Area Skills"),
 	AOE_DAMAGE(INT + "% increased Area Damage"),
 
 	// stun
-	STUN("Your Damaging Hits always Stun Enemies that are on Full Life"),
-	FULL_LIFE_STUN("100% increased Stun Duration against Enemies that are on Full Life"),
-	LOW_LIFE_STUN("100% increased Stun Duration against Enemies that are on Low Life"),
-	DOUBLE_STUN("20% chance to double Stun Duration"),
-	AVOID_STUN(INT + "% chance to Avoid being Stunned"),
+	STUN_DURATION(INT + "% increased Stun Duration on Enemies"),
+	STUN_ON_ENEMY_FULL_LIFE("Your Damaging Hits always Stun Enemies that are on Full Life"),
+	STUN_DURATION_ON_ENEMY_FULL_LIFE("100% increased Stun Duration against Enemies that are on Full Life"),
+	STUN_DURATION_ON_ENEMY_LOW_LIFE("100% increased Stun Duration against Enemies that are on Low Life"),
+	STUN_DURATION_DOUBLE("20% chance to double Stun Duration"),
+
+	// damage avoidance
+	STUN_AVOID(INT + "% chance to Avoid being Stunned"),
 	STUN_NEVER("Cannot be Stunned"),
-	STUN_RECOV(INT + "% increased Stun and Block Recovery"),
-	STUN_THRESHHOLD_INCREASE(INT + "% increased Stun Threshold"),
-	STUN_DUR(INT + "% increased Stun Duration on Enemies"),
+	STUN_AND_BLOCK_RECOVERY(INT + "% increased Stun and Block Recovery"),
+	STUN_THRESHHOLD(INT + "% increased Stun Threshold"),
 
-	// low life
-	HIT_LL("Hits deal " + INT + "% increased Damage against Enemies that are on Low Life"),
-
+	//
 	REFLECT_REDUCE(INT + "% reduced Reflected Physical Damage taken"),
 	RECENT_KILL_DAMAGE(INT + "% more Damage if you've Killed Recently"),
 

@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 public enum AttributeType
 {
 	UNKNOWN("Unknown"),
+
 	// life
 	LIFE_MAX(INT + "% increased maximum Life"),
 	LIFE_1("Maximum Life becomes 1, Immune to Chaos Damage"),

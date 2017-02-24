@@ -1,6 +1,5 @@
-package poe.app;
+package poe.command;
 
-import poe.command.ListSkills;
 import poe.repo.SkillRepo;
 
 public class CommandFactory

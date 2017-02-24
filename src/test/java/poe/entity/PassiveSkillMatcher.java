@@ -26,7 +26,8 @@ public class PassiveSkillMatcher extends TypeSafeDiagnosingMatcher<PassiveSkill>
 		return this;
 	}
 
-	public PassiveSkillMatcher withAttributes(final Matcher<StatValue>... expectedAttributes)
+	@SafeVarargs
+	public final PassiveSkillMatcher withAttributes(final Matcher<StatValue>... expectedAttributes)
 	{
 		this.expectedAttributes = expectedAttributes;
 		return this;

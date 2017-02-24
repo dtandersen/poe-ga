@@ -1,9 +1,10 @@
-package poe.app;
+package poe.app.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import poe.repo.JsonSkillRepo;
+import poe.command.CommandFactory;
 import poe.repo.SkillRepo;
+import poe.repo.json.JsonSkillRepo;
 
 @Configuration
 public class PoeConfig

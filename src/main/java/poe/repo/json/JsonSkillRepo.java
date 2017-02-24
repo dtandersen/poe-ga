@@ -1,4 +1,4 @@
-package poe.repo;
+package poe.repo.json;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -10,7 +10,8 @@ import poe.entity.StatValue;
 import poe.entity.Stat;
 import poe.entity.PassiveSkill;
 import poe.entity.UnknownStatValue;
-import poe.repo.JsonSkillRepo.Stuff.Node22;
+import poe.repo.SkillRepo;
+import poe.repo.json.JsonSkillRepo.Stuff.Node22;
 
 public class JsonSkillRepo implements SkillRepo
 {

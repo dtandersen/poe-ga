@@ -541,23 +541,14 @@ public enum Stat
 
 	private Pattern pattern;
 
-	private Applier applier;
-
 	Stat(final String pattern)
 	{
 		this.pattern = pattern(pattern);
 	}
 
-	Stat(final String pattern, final Applier applier)
-	{
-		this.pattern = pattern(pattern);
-		this.applier = applier;
-	}
-
 	Stat(final String pattern, final Stat passiveSkillAttributeType)
 	{
 		this.pattern = pattern(pattern);
-		this.applier = new GenericApplier(passiveSkillAttributeType);
 	}
 
 	public Matcher matcher(final String skillDescription)

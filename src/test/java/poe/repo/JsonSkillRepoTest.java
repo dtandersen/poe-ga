@@ -7,6 +7,7 @@ import org.junit.Test;
 import poe.entity.PassiveSkill;
 import poe.entity.PoeMatchers;
 import poe.entity.Stat;
+import poe.repo.json.JsonSkillRepo;
 
 public class JsonSkillRepoTest
 {

@@ -11,8 +11,8 @@ import poe.entity.Attribute;
 import poe.entity.ImmutableCharacter;
 import poe.entity.PoeMatchers;
 import poe.entity.Stat;
-import poe.repo.JsonSkillRepo;
 import poe.repo.SkillRepo;
+import poe.repo.json.JsonSkillRepo;
 
 public class CreateCharacterTest
 {

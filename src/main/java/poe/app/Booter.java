@@ -7,7 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import poe.command.ListSkills;
 import poe.command.ListSkills.ListSkillsResult;
-import poe.entity.AttributeDescription;
+import poe.entity.Stat;
 import poe.entity.PassiveSkill;
 
 @SpringBootApplication
@@ -27,7 +27,7 @@ public class Booter implements CommandLineRunner
 				int count = 0;
 				for (final PassiveSkill skill : skills)
 				{
-					if (skill.hasAttribute(AttributeDescription.UNKNOWN))
+					if (skill.hasAttribute(Stat.UNKNOWN))
 					{
 						System.out.println(skill);
 						count++;

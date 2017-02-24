@@ -7,9 +7,9 @@ import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 
-public class StatMatcher extends TypeSafeDiagnosingMatcher<ImmutableCharacter>
+public class StatValuesMatcher extends TypeSafeDiagnosingMatcher<ImmutableCharacter>
 {
-	Set<StatValue> stats = new HashSet<>();
+	Set<AttributeValue> stats = new HashSet<>();
 
 	@Override
 	public void describeTo(final Description description)
@@ -20,7 +20,7 @@ public class StatMatcher extends TypeSafeDiagnosingMatcher<ImmutableCharacter>
 	@Override
 	protected boolean matchesSafely(final ImmutableCharacter item, final Description mismatchDescription)
 	{
-		final Matcher<Iterable<? extends StatValue>> m = Matchers.containsInAnyOrder(stats.toArray(new StatValue[0]));
+		final Matcher<Iterable<? extends AttributeValue>> m = Matchers.containsInAnyOrder(stats.toArray(new AttributeValue[0]));
 		if (!m.matches(item.getStats()))
 		{
 			m.describeMismatch(item.getStats(), mismatchDescription);
@@ -31,9 +31,9 @@ public class StatMatcher extends TypeSafeDiagnosingMatcher<ImmutableCharacter>
 		return true;
 	}
 
-	public StatMatcher withStat(final Stat stat, final int value)
+	public StatValuesMatcher withStat(final Attribute stat, final int value)
 	{
-		stats.add(new StatValue(stat, value));
+		stats.add(new AttributeValue(stat, value));
 		return this;
 	}
 }

@@ -10,7 +10,7 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 
 public class PassiveMatcher extends TypeSafeDiagnosingMatcher<ImmutableCharacter>
 {
-	private final List<PassiveAttribute> expectedPassives = new ArrayList<>();
+	private final List<StatValue> expectedPassives = new ArrayList<>();
 
 	@Override
 	public void describeTo(final Description description)
@@ -22,8 +22,8 @@ public class PassiveMatcher extends TypeSafeDiagnosingMatcher<ImmutableCharacter
 	@Override
 	protected boolean matchesSafely(final ImmutableCharacter item, final Description mismatchDescription)
 	{
-		final Matcher<Iterable<? extends PassiveAttribute>> matcher = containsInAnyOrder(expectedPassives);
-		final Collection<PassiveAttribute> actualPassives = item.getPassives();
+		final Matcher<Iterable<? extends StatValue>> matcher = containsInAnyOrder(expectedPassives);
+		final Collection<StatValue> actualPassives = item.getPassives();
 		if (!matcher.matches(actualPassives))
 		{
 			matcher.describeMismatch(actualPassives, mismatchDescription);
@@ -33,9 +33,9 @@ public class PassiveMatcher extends TypeSafeDiagnosingMatcher<ImmutableCharacter
 		return true;
 	}
 
-	public PassiveMatcher withPassive(final PassiveSkillAttributeType passive, final float value)
+	public PassiveMatcher withPassive(final Stat passive, final float value)
 	{
-		expectedPassives.add(new PassiveAttribute(passive, value));
+		expectedPassives.add(new StatValue(passive, value));
 		return this;
 	}
 }

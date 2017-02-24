@@ -6,12 +6,12 @@ import java.util.List;
 import org.junit.Test;
 import poe.command.CreateCharacter.CreateCharacterRequest;
 import poe.command.CreateCharacter.CreateCharacterResult;
+import poe.entity.Attribute;
 import poe.entity.ImmutableCharacter;
 import poe.entity.PassiveMatcher;
-import poe.entity.PassiveSkillAttributeType;
 import poe.entity.PoeMatchers;
 import poe.entity.Stat;
-import poe.entity.StatMatcher;
+import poe.entity.StatValuesMatcher;
 import poe.repo.JsonSkillRepo;
 import poe.repo.SkillRepo;
 
@@ -27,13 +27,13 @@ public class CreateCharacterTest
 		createCharacter(CharacterClass.WITCH);
 
 		assertThat(theCharacter(), hasStats()
-				.withStat(Stat.STRENGTH, 14)
-				.withStat(Stat.DEXTERITY, 14)
-				.withStat(Stat.INTELLIGENCE, 32)
-				.withStat(Stat.LIFE, 57)
-				.withStat(Stat.MANA, 56)
-				.withStat(Stat.EVASION_RATING, 58)
-				.withStat(Stat.ACCURACY, 28));
+				.withStat(Attribute.STRENGTH, 14)
+				.withStat(Attribute.DEXTERITY, 14)
+				.withStat(Attribute.INTELLIGENCE, 32)
+				.withStat(Attribute.LIFE, 57)
+				.withStat(Attribute.MANA, 56)
+				.withStat(Attribute.EVASION_RATING, 58)
+				.withStat(Attribute.ACCURACY, 28));
 	}
 
 	@Test
@@ -42,13 +42,13 @@ public class CreateCharacterTest
 		createCharacter(CharacterClass.MARAUDER);
 
 		assertThat(theCharacter(), hasStats()
-				.withStat(Stat.STRENGTH, 32)
-				.withStat(Stat.DEXTERITY, 14)
-				.withStat(Stat.INTELLIGENCE, 14)
-				.withStat(Stat.LIFE, 66)
-				.withStat(Stat.MANA, 47)
-				.withStat(Stat.EVASION_RATING, 58)
-				.withStat(Stat.ACCURACY, 28));
+				.withStat(Attribute.STRENGTH, 32)
+				.withStat(Attribute.DEXTERITY, 14)
+				.withStat(Attribute.INTELLIGENCE, 14)
+				.withStat(Attribute.LIFE, 66)
+				.withStat(Attribute.MANA, 47)
+				.withStat(Attribute.EVASION_RATING, 58)
+				.withStat(Attribute.ACCURACY, 28));
 	}
 
 	@Test
@@ -57,7 +57,7 @@ public class CreateCharacterTest
 		createCharacter(CharacterClass.MARAUDER, new Integer[] { 60942 });
 
 		assertThat(theCharacter(), hasPassives()
-				.withPassive(PassiveSkillAttributeType.DEXTERITY, 10));
+				.withPassive(Stat.DEXTERITY, 10));
 	}
 
 	private PassiveMatcher hasPassives()
@@ -112,9 +112,9 @@ public class CreateCharacterTest
 		return result.character;
 	}
 
-	private StatMatcher hasStats()
+	private StatValuesMatcher hasStats()
 	{
-		return new StatMatcher();
+		return new StatValuesMatcher();
 	}
 
 	private final class CreateCharacterResultImplementation implements CreateCharacterResult

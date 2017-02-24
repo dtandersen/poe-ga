@@ -1,18 +1,16 @@
-package poe.repo;
+package poe.entity;
 
 import java.util.Objects;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
-import poe.entity.Attribute;
-import poe.entity.AttributeDescription;
 
-final class AttributeMatcher extends TypeSafeDiagnosingMatcher<Attribute>
+public class StatValueMatcher extends TypeSafeDiagnosingMatcher<StatValue>
 {
-	private final AttributeDescription expectedAttributeType;
+	private final Stat expectedAttributeType;
 
 	private final float expectedValue;
 
-	public AttributeMatcher(final AttributeDescription expectedAttributeType, final float expectedValue)
+	public StatValueMatcher(final Stat expectedAttributeType, final float expectedValue)
 	{
 		this.expectedAttributeType = expectedAttributeType;
 		this.expectedValue = expectedValue;
@@ -25,11 +23,11 @@ final class AttributeMatcher extends TypeSafeDiagnosingMatcher<Attribute>
 	}
 
 	@Override
-	protected boolean matchesSafely(final Attribute item, final Description mismatchDescription)
+	protected boolean matchesSafely(final StatValue item, final Description mismatchDescription)
 	{
-		if (!Objects.equals(item.getAttributeType(), expectedAttributeType))
+		if (!Objects.equals(item.getStat(), expectedAttributeType))
 		{
-			mismatchDescription.appendText("attribute " + item.getAttributeType().toString());
+			mismatchDescription.appendText("attribute " + item.getStat().toString());
 			return false;
 		}
 

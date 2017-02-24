@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import com.google.gson.Gson;
-import poe.entity.Attribute;
-import poe.entity.AttributeDescription;
+import poe.entity.StatValue;
+import poe.entity.Stat;
 import poe.entity.PassiveSkill;
-import poe.entity.UnknownAttribute;
+import poe.entity.UnknownStatValue;
 import poe.repo.JsonSkillRepo.Stuff.Node22;
 
 public class JsonSkillRepo implements SkillRepo
@@ -34,7 +34,7 @@ public class JsonSkillRepo implements SkillRepo
 			for (final String s : n.sd)
 			{
 				boolean matched = false;
-				for (final AttributeDescription at : AttributeDescription.values())
+				for (final Stat at : Stat.values())
 				{
 					final Matcher matcher = at.matcher(s);
 					if (!matcher.find())
@@ -42,13 +42,15 @@ public class JsonSkillRepo implements SkillRepo
 						continue;
 					}
 
-					final Attribute attribute = new Attribute(at);
+					StatValue attribute;
+					attribute = new StatValue(at, 0);
 					try
 					{
 						final String group = matcher.group(1);
 						final float val = Float.parseFloat(group);
-						attribute.setValue(val);
-					} catch (final IndexOutOfBoundsException e2)
+						attribute = new StatValue(at, val);
+					}
+					catch (final IndexOutOfBoundsException e2)
 					{
 					}
 					e.addAttribute(attribute);
@@ -58,7 +60,7 @@ public class JsonSkillRepo implements SkillRepo
 				if (!matched)
 				{
 					// System.out.println("failed at " + s);
-					e.addAttribute(new UnknownAttribute(s));
+					e.addAttribute(new UnknownStatValue(s));
 				}
 			}
 			skills.add(e);

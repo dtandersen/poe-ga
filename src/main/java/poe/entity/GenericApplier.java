@@ -2,9 +2,9 @@ package poe.entity;
 
 public class GenericApplier implements Applier
 {
-	private final PassiveSkillAttributeType passiveSkillAttributeType;
+	private final Stat passiveSkillAttributeType;
 
-	public GenericApplier(final PassiveSkillAttributeType passiveSkillAttributeType)
+	public GenericApplier(final Stat passiveSkillAttributeType)
 	{
 		this.passiveSkillAttributeType = passiveSkillAttributeType;
 	}

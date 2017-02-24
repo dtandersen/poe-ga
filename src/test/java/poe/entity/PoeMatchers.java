@@ -14,4 +14,14 @@ public class PoeMatchers
 	{
 		return new PassiveMatcher();
 	}
+
+	public static PassiveSkillMatcher skill()
+	{
+		return new PassiveSkillMatcher();
+	}
+
+	public static Matcher<StatValue> attribute(final Stat attributeType, final float value)
+	{
+		return new StatValueMatcher(attributeType, value);
+	}
 }

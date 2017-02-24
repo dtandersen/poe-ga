@@ -1,12 +1,12 @@
 package poe.entity;
 
-public class UnknownAttribute extends Attribute
+public class UnknownStatValue extends StatValue
 {
 	private final String text;
 
-	public UnknownAttribute(final String text)
+	public UnknownStatValue(final String text)
 	{
-		super(AttributeDescription.UNKNOWN);
+		super(Stat.UNKNOWN, 0);
 		this.text = text;
 	}
 

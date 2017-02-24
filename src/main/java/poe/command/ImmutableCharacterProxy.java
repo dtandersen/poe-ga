@@ -1,73 +1,58 @@
 package poe.command;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
-import poe.entity.Attribute;
 import poe.entity.ImmutableCharacter;
-import poe.entity.PassiveAttribute;
-import poe.entity.PassiveSkill;
-import poe.entity.PassiveSkillAttributeType;
-import poe.entity.Stat;
 import poe.entity.StatValue;
+import poe.entity.PassiveAttributeBag;
+import poe.entity.PassiveSkill;
+import poe.entity.Attribute;
+import poe.entity.AttributeValue;
 
 final class ImmutableCharacterProxy implements ImmutableCharacter
 {
-	private final HashMap<Stat, StatValue> stats;
+	private final HashMap<Attribute, AttributeValue> stats;
 
-	private final List<PassiveAttribute> passiveAttributes = new ArrayList<>();
+	// private final List<PassiveAttribute> passiveAttributes = new ArrayList<>();
+	private final PassiveAttributeBag passiveAttributes = new PassiveAttributeBag();
 
 	public ImmutableCharacterProxy()
 	{
 		stats = new HashMap<>();
 	}
 
-	public float stat(final Stat dexterity)
+	public float stat(final Attribute dexterity)
 	{
 		return stats.get(dexterity).getValue();
 	}
 
 	@Override
-	public Collection<StatValue> getStats()
+	public Collection<AttributeValue> getStats()
 	{
 		return stats.values();
 	}
 
-	public void stat(final Stat stat, final float value)
+	public void stat(final Attribute stat, final float value)
 	{
-		stats.put(stat, new StatValue(stat, value));
+		stats.put(stat, new AttributeValue(stat, value));
 	}
 
 	@Override
-	public Collection<PassiveAttribute> getPassives()
+	public Collection<StatValue> getPassives()
 	{
-		return passiveAttributes;
+		return passiveAttributes.list();
 	}
 
 	public void apply(final PassiveSkill passive)
 	{
-		for (final Attribute attribute : passive.getAttributes())
+		for (final StatValue attribute : passive.getAttributes())
 		{
 			apply(attribute);
 		}
 	}
 
-	private void apply(final Attribute attribute)
+	private void apply(final StatValue attribute)
 	{
-		final PassiveAttribute passiveAttribute = find(attribute.getAttributeType().getPassiveAttributeType());
-	}
-
-	private PassiveAttribute find(final PassiveSkillAttributeType passiveSkillAttributeType)
-	{
-		for (final PassiveAttribute passiveAttribute : passiveAttributes)
-		{
-			if (passiveAttribute.getPassive() == passiveSkillAttributeType)
-			{
-				return passiveAttribute;
-			}
-		}
-
-		return null;
+		passiveAttributes.increment(attribute);
 	}
 }

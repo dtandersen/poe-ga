@@ -5,7 +5,7 @@ import poe.command.CreateCharacter.CreateCharacterRequest;
 import poe.command.CreateCharacter.CreateCharacterResult;
 import poe.entity.ImmutableCharacter;
 import poe.entity.PassiveSkill;
-import poe.entity.Stat;
+import poe.entity.Attribute;
 import poe.repo.SkillRepo;
 
 public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateCharacterResult>
@@ -59,19 +59,19 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 	private void baseStats(final int level, final ImmutableCharacterProxy character)
 	{
 		final CharacterClass characterClass = request.getCharacterClass();
-		character.stat(Stat.STRENGTH, characterClass.getStrength());
-		character.stat(Stat.DEXTERITY, characterClass.getDexterity());
-		character.stat(Stat.INTELLIGENCE, characterClass.getIntelligence());
-		character.stat(Stat.LIFE, 38 + level * 12 + character.stat(Stat.STRENGTH) / 2);
-		character.stat(Stat.MANA, (40 - 6) + level * 6 + character.stat(Stat.INTELLIGENCE) / 2);
+		character.stat(Attribute.STRENGTH, characterClass.getStrength());
+		character.stat(Attribute.DEXTERITY, characterClass.getDexterity());
+		character.stat(Attribute.INTELLIGENCE, characterClass.getIntelligence());
+		character.stat(Attribute.LIFE, 38 + level * 12 + character.stat(Attribute.STRENGTH) / 2);
+		character.stat(Attribute.MANA, (40 - 6) + level * 6 + character.stat(Attribute.INTELLIGENCE) / 2);
 		final int dexdiv5 = dexDiv5(character);
-		character.stat(Stat.EVASION_RATING, 53 + level * 3 + dexdiv5);
-		character.stat(Stat.ACCURACY, character.stat(Stat.DEXTERITY) * 2);
+		character.stat(Attribute.EVASION_RATING, 53 + level * 3 + dexdiv5);
+		character.stat(Attribute.ACCURACY, character.stat(Attribute.DEXTERITY) * 2);
 	}
 
 	private int dexDiv5(final ImmutableCharacterProxy character)
 	{
-		final float dex = character.stat(Stat.DEXTERITY);
+		final float dex = character.stat(Attribute.DEXTERITY);
 		final float gg = dex % 5;
 		if (gg == 0)
 		{

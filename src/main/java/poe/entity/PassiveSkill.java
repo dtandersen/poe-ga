@@ -8,7 +8,7 @@ public class PassiveSkill
 {
 	private final String name;
 
-	private final List<Attribute> attributes = new ArrayList<>();
+	private final List<StatValue> attributes = new ArrayList<>();
 
 	private int id;
 
@@ -22,7 +22,7 @@ public class PassiveSkill
 		return name;
 	}
 
-	public void addAttribute(final Attribute attribute)
+	public void addAttribute(final StatValue attribute)
 	{
 		attributes.add(attribute);
 	}
@@ -33,20 +33,17 @@ public class PassiveSkill
 		return name + ": " + attributes;
 	}
 
-	public boolean hasAttribute(final AttributeDescription expectedAttributeType)
+	public boolean hasAttribute(final Stat expectedAttributeType)
 	{
-		for (final Attribute a : attributes)
+		for (final StatValue a : attributes)
 		{
-			if (Objects.equals(a.getAttributeType(), expectedAttributeType))
-			{
-				return true;
-			}
+			if (Objects.equals(a.getStat(), expectedAttributeType)) { return true; }
 		}
 
 		return false;
 	}
 
-	public List<Attribute> getAttributes()
+	public List<StatValue> getAttributes()
 	{
 		return attributes;
 	}

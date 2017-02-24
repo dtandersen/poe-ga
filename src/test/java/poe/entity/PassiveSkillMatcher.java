@@ -1,18 +1,16 @@
-package poe.repo;
+package poe.entity;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import java.util.Objects;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
-import poe.entity.Attribute;
-import poe.entity.PassiveSkill;
 
-final class PassiveSkillMatcher extends TypeSafeDiagnosingMatcher<PassiveSkill>
+public class PassiveSkillMatcher extends TypeSafeDiagnosingMatcher<PassiveSkill>
 {
 	private String expectedName;
 
-	private Matcher<Attribute>[] expectedAttributes;
+	private Matcher<StatValue>[] expectedAttributes;
 
 	private int id;
 
@@ -28,7 +26,7 @@ final class PassiveSkillMatcher extends TypeSafeDiagnosingMatcher<PassiveSkill>
 		return this;
 	}
 
-	public PassiveSkillMatcher withAttributes(final Matcher<Attribute>... expectedAttributes)
+	public PassiveSkillMatcher withAttributes(final Matcher<StatValue>... expectedAttributes)
 	{
 		this.expectedAttributes = expectedAttributes;
 		return this;
@@ -46,7 +44,8 @@ final class PassiveSkillMatcher extends TypeSafeDiagnosingMatcher<PassiveSkill>
 			{
 				x.describeTo(description);
 			}
-		} else
+		}
+		else
 		{
 			description.appendText(" with no attributes ");
 		}
@@ -69,7 +68,7 @@ final class PassiveSkillMatcher extends TypeSafeDiagnosingMatcher<PassiveSkill>
 
 		if (expectedAttributes != null)
 		{
-			final Matcher<Iterable<? extends Attribute>> x = containsInAnyOrder(expectedAttributes);
+			final Matcher<Iterable<? extends StatValue>> x = containsInAnyOrder(expectedAttributes);
 			if (!x.matches(actualSkill.getAttributes()))
 			{
 				// x.describeMismatch(actualSkill.getAttributes(),
@@ -77,7 +76,8 @@ final class PassiveSkillMatcher extends TypeSafeDiagnosingMatcher<PassiveSkill>
 				mismatchDescription.appendText(actualSkill.toString());
 				return false;
 			}
-		} else
+		}
+		else
 		{
 			if (!actualSkill.getAttributes().isEmpty())
 			{

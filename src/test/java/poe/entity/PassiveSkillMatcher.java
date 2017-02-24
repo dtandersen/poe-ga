@@ -90,4 +90,9 @@ public class PassiveSkillMatcher extends TypeSafeDiagnosingMatcher<PassiveSkill>
 
 		return true;
 	}
+
+	static PassiveSkillMatcher skill()
+	{
+		return new PassiveSkillMatcher();
+	}
 }

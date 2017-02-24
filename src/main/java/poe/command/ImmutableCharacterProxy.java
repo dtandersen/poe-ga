@@ -2,19 +2,18 @@ package poe.command;
 
 import java.util.Collection;
 import java.util.HashMap;
-import poe.entity.ImmutableCharacter;
-import poe.entity.StatValue;
-import poe.entity.PassiveAttributeBag;
-import poe.entity.PassiveSkill;
 import poe.entity.Attribute;
 import poe.entity.AttributeValue;
+import poe.entity.ImmutableCharacter;
+import poe.entity.StatValueBag;
+import poe.entity.PassiveSkill;
+import poe.entity.StatValue;
 
 final class ImmutableCharacterProxy implements ImmutableCharacter
 {
 	private final HashMap<Attribute, AttributeValue> stats;
 
-	// private final List<PassiveAttribute> passiveAttributes = new ArrayList<>();
-	private final PassiveAttributeBag passiveAttributes = new PassiveAttributeBag();
+	private final StatValueBag passiveAttributes = new StatValueBag();
 
 	public ImmutableCharacterProxy()
 	{
@@ -38,7 +37,7 @@ final class ImmutableCharacterProxy implements ImmutableCharacter
 	}
 
 	@Override
-	public Collection<StatValue> getPassives()
+	public Collection<StatValue> getStateValues()
 	{
 		return passiveAttributes.list();
 	}

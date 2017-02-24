@@ -39,4 +39,9 @@ public class StatValueMatcher extends TypeSafeDiagnosingMatcher<StatValue>
 
 		return true;
 	}
+
+	static StatValueMatcher attribute(final Stat attributeType, final float value)
+	{
+		return new StatValueMatcher(attributeType, value);
+	}
 }

@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PassiveAttributeBag
+public class StatValueBag
 {
 	private final Map<Stat, StatValue> passives = new HashMap<>();
 

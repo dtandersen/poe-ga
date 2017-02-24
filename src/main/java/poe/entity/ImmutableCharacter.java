@@ -6,5 +6,5 @@ public interface ImmutableCharacter
 {
 	Collection<AttributeValue> getStats();
 
-	Collection<StatValue> getPassives();
+	Collection<StatValue> getStateValues();
 }

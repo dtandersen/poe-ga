@@ -10,18 +10,23 @@ public class PoeMatchers
 		return org.hamcrest.Matchers.containsInAnyOrder(MatcherHelper.listToArray(values));
 	}
 
-	public static PassiveMatcher passiveMatcher()
-	{
-		return new PassiveMatcher();
-	}
-
 	public static PassiveSkillMatcher skill()
 	{
-		return new PassiveSkillMatcher();
+		return PassiveSkillMatcher.skill();
 	}
 
-	public static Matcher<StatValue> attribute(final Stat attributeType, final float value)
+	public static StatValueMatcher attribute(final Stat stat, final float value)
 	{
-		return new StatValueMatcher(attributeType, value);
+		return StatValueMatcher.attribute(stat, value);
+	}
+
+	public static CharacterStatMatcher hasCharacter()
+	{
+		return CharacterStatMatcher.passiveMatcher();
+	}
+
+	public static StatValuesMatcher hasStats()
+	{
+		return StatValuesMatcher.hasStats();
 	}
 }

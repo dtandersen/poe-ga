@@ -36,4 +36,9 @@ public class StatValuesMatcher extends TypeSafeDiagnosingMatcher<ImmutableCharac
 		stats.add(new AttributeValue(stat, value));
 		return this;
 	}
+
+	static StatValuesMatcher hasStats()
+	{
+		return new StatValuesMatcher();
+	}
 }

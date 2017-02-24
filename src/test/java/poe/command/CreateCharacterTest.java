@@ -1,6 +1,7 @@
 package poe.command;
 
 import static org.junit.Assert.assertThat;
+import static poe.entity.PoeMatchers.hasCharacter;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
@@ -8,10 +9,8 @@ import poe.command.CreateCharacter.CreateCharacterRequest;
 import poe.command.CreateCharacter.CreateCharacterResult;
 import poe.entity.Attribute;
 import poe.entity.ImmutableCharacter;
-import poe.entity.PassiveMatcher;
 import poe.entity.PoeMatchers;
 import poe.entity.Stat;
-import poe.entity.StatValuesMatcher;
 import poe.repo.JsonSkillRepo;
 import poe.repo.SkillRepo;
 
@@ -26,7 +25,7 @@ public class CreateCharacterTest
 	{
 		createCharacter(CharacterClass.WITCH);
 
-		assertThat(theCharacter(), hasStats()
+		assertThat(theCharacter(), PoeMatchers.hasStats()
 				.withStat(Attribute.STRENGTH, 14)
 				.withStat(Attribute.DEXTERITY, 14)
 				.withStat(Attribute.INTELLIGENCE, 32)
@@ -41,7 +40,7 @@ public class CreateCharacterTest
 	{
 		createCharacter(CharacterClass.MARAUDER);
 
-		assertThat(theCharacter(), hasStats()
+		assertThat(theCharacter(), PoeMatchers.hasStats()
 				.withStat(Attribute.STRENGTH, 32)
 				.withStat(Attribute.DEXTERITY, 14)
 				.withStat(Attribute.INTELLIGENCE, 14)
@@ -54,15 +53,11 @@ public class CreateCharacterTest
 	@Test
 	public void passiveDexterity()
 	{
-		createCharacter(CharacterClass.MARAUDER, new Integer[] { 60942 });
+		createCharacter(CharacterClass.MARAUDER, new Integer[] { 60942, 6741 });
 
-		assertThat(theCharacter(), hasPassives()
-				.withPassive(Stat.DEXTERITY, 10));
-	}
-
-	private PassiveMatcher hasPassives()
-	{
-		return PoeMatchers.passiveMatcher();
+		assertThat(theCharacter(), hasCharacter()
+				.withStatValue(Stat.DEXTERITY, 10)
+				.withStatValue(Stat.STRENGTH, 10));
 	}
 
 	private void createCharacter(final CharacterClass marauder, final Integer[] passiveSkillIds)
@@ -110,11 +105,6 @@ public class CreateCharacterTest
 	private ImmutableCharacter theCharacter()
 	{
 		return result.character;
-	}
-
-	private StatValuesMatcher hasStats()
-	{
-		return new StatValuesMatcher();
 	}
 
 	private final class CreateCharacterResultImplementation implements CreateCharacterResult

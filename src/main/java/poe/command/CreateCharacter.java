@@ -3,9 +3,9 @@ package poe.command;
 import java.util.List;
 import poe.command.CreateCharacter.CreateCharacterRequest;
 import poe.command.CreateCharacter.CreateCharacterResult;
+import poe.entity.Attribute;
 import poe.entity.ImmutableCharacter;
 import poe.entity.PassiveSkill;
-import poe.entity.Attribute;
 import poe.repo.SkillRepo;
 
 public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateCharacterResult>
@@ -35,22 +35,20 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 			final List<Integer> passiveSkillIds,
 			final List<PassiveSkill> passiveTree)
 	{
-		if (passiveSkillIds.isEmpty())
+		if (passiveSkillIds.isEmpty()) { return; }
+
+		for (final int passiveSkillId : passiveSkillIds)
 		{
-			return;
+			final PassiveSkill passive = find(passiveTree, passiveSkillId);
+			character.apply(passive);
 		}
-		final PassiveSkill passive = find(passiveTree, passiveSkillIds.get(0));
-		character.apply(passive);
 	}
 
 	private PassiveSkill find(final List<PassiveSkill> passiveTree, final Integer integer)
 	{
 		for (final PassiveSkill passiveSkill : passiveTree)
 		{
-			if (passiveSkill.getId() == integer)
-			{
-				return passiveSkill;
-			}
+			if (passiveSkill.getId() == integer) { return passiveSkill; }
 		}
 
 		return null;
@@ -73,10 +71,7 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 	{
 		final float dex = character.stat(Attribute.DEXTERITY);
 		final float gg = dex % 5;
-		if (gg == 0)
-		{
-			return (int)(dex / 5);
-		}
+		if (gg == 0) { return (int)(dex / 5); }
 
 		final int g = (int)(dex - gg);
 		final int f = g / 5;

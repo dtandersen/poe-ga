@@ -10,6 +10,8 @@ public class PassiveSkill
 
 	private final List<Attribute> attributes = new ArrayList<>();
 
+	private int id;
+
 	public PassiveSkill(final String name)
 	{
 		this.name = name;
@@ -31,11 +33,14 @@ public class PassiveSkill
 		return name + ": " + attributes;
 	}
 
-	public boolean hasAttribute(final AttributeType expectedAttributeType)
+	public boolean hasAttribute(final AttributeDescription expectedAttributeType)
 	{
 		for (final Attribute a : attributes)
 		{
-			if (Objects.equals(a.getAttributeType(), expectedAttributeType)) { return true; }
+			if (Objects.equals(a.getAttributeType(), expectedAttributeType))
+			{
+				return true;
+			}
 		}
 
 		return false;
@@ -44,5 +49,15 @@ public class PassiveSkill
 	public List<Attribute> getAttributes()
 	{
 		return attributes;
+	}
+
+	public int getId()
+	{
+		return id;
+	}
+
+	public void setId(final int id)
+	{
+		this.id = id;
 	}
 }

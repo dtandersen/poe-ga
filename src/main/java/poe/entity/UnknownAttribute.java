@@ -6,7 +6,7 @@ public class UnknownAttribute extends Attribute
 
 	public UnknownAttribute(final String text)
 	{
-		super(AttributeType.UNKNOWN);
+		super(AttributeDescription.UNKNOWN);
 		this.text = text;
 	}
 

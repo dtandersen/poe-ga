@@ -5,4 +5,6 @@ import java.util.Collection;
 public interface ImmutableCharacter
 {
 	Collection<StatValue> getStats();
+
+	Collection<PassiveAttribute> getPassives();
 }

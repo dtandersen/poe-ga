@@ -7,7 +7,7 @@ import static poe.entity.Regex.PLUS_INT;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public enum AttributeType
+public enum AttributeDescription
 {
 	UNKNOWN("Unknown"),
 
@@ -76,7 +76,10 @@ public enum AttributeType
 	ELEM_DAMAGE(INT + "% increased Elemental Damage"),
 	ELEMENTAL_STATUS_AILMENTS(INT + "% increased Duration of Elemental Status Ailments on Enemies"),
 	ELEMENTAL_DAMAGE_ON_CRIT(INT + "% more Elemental Damage if you've Crit in the past 8 seconds"),
-	CSC_ELEM_STATUS(INT + "% increased Critical Strike Chance against Enemies affected"), // by Elemental Status Ailments
+	CSC_ELEM_STATUS(INT + "% increased Critical Strike Chance against Enemies affected"), // by
+																							// Elemental
+																							// Status
+																							// Ailments
 
 	FIRE_DAMAGE(INT + "% increased Fire Damage"),
 	FIRE_DAMAGE_CONVERT(INT + "% of Physical, Cold and Lightning Damage Converted to Fire Damage"),
@@ -538,14 +541,23 @@ public enum AttributeType
 
 	private Pattern pattern;
 
-	AttributeType(final String pattern)
+	private Applier applier;
+
+	AttributeDescription(final String pattern)
 	{
-		String upperCase = pattern;
-		upperCase = upperCase.toLowerCase();
-		upperCase = upperCase.replace("+", "\\+");
-		upperCase = upperCase.replace(Regex.INT, "(\\d+)");
-		upperCase = upperCase.replace(Regex.FLOAT, "(\\d*\\.?\\d*)");
-		this.pattern = Pattern.compile("^" + upperCase + "$");
+		this.pattern = pattern(pattern);
+	}
+
+	AttributeDescription(final String pattern, final Applier applier)
+	{
+		this.pattern = pattern(pattern);
+		this.applier = applier;
+	}
+
+	AttributeDescription(final String pattern, final PassiveSkillAttributeType passiveSkillAttributeType)
+	{
+		this.pattern = pattern(pattern);
+		this.applier = new GenericApplier(passiveSkillAttributeType);
 	}
 
 	public Matcher matcher(final String skillDescription)
@@ -553,5 +565,21 @@ public enum AttributeType
 		final Matcher matcher = pattern.matcher(skillDescription.toLowerCase());
 
 		return matcher;
+	}
+
+	private Pattern pattern(final String pattern)
+	{
+		String newPattern = pattern;
+		newPattern = newPattern.toLowerCase();
+		newPattern = newPattern.replace("+", "\\+");
+		newPattern = newPattern.replace(Regex.INT, "(\\d+)");
+		newPattern = newPattern.replace(Regex.FLOAT, "(\\d*\\.?\\d*)");
+		final Pattern compile = Pattern.compile("^" + newPattern + "$");
+		return compile;
+	}
+
+	public Object getPassiveAttributeType()
+	{
+		return null;
 	}
 }

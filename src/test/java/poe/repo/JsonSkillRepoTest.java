@@ -6,10 +6,10 @@ import java.util.List;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 import poe.entity.Attribute;
-import poe.entity.AttributeType;
+import poe.entity.AttributeDescription;
 import poe.entity.PassiveSkill;
 
-public class AttributeTypeTest
+public class JsonSkillRepoTest
 {
 	@Test
 	public void test()
@@ -19,27 +19,31 @@ public class AttributeTypeTest
 
 		assertThat(skills, hasItem(skill()
 				.withName("Herbalism")
+				.withId(19858)
 				.withAttributes(
-						attribute(AttributeType.LIFE_MAX, 10),
-						attribute(AttributeType.FLASK_LIFE, 20),
-						attribute(AttributeType.FLASK_RECOVERY, 20))));
+						attribute(AttributeDescription.LIFE_MAX, 10),
+						attribute(AttributeDescription.FLASK_LIFE, 20),
+						attribute(AttributeDescription.FLASK_RECOVERY, 20))));
 
 		assertThat(skills, hasItem(skill()
 				.withName("Armour Mastery")
+				.withId(10542)
 				.withAttributes(
-						attribute(AttributeType.ARMOUR, 24),
-						attribute(AttributeType.MOVEMENT_SPEED, 3),
-						attribute(AttributeType.REGEN, 0.5f))));
+						attribute(AttributeDescription.ARMOUR, 24),
+						attribute(AttributeDescription.MOVEMENT_SPEED, 3),
+						attribute(AttributeDescription.REGEN, 0.5f))));
 
 		assertThat(skills, hasItem(skill()
 				.withName("Minion Instability")
+				.withId(18663)
 				.withAttributes(
-						attribute(AttributeType.MINION_INSTABILITY, 0))));
+						attribute(AttributeDescription.MINION_INSTABILITY, 0))));
 
 		assertThat(skills, hasItem(skill()
 				.withName("Phase Acrobatics")
+				.withId(14914)
 				.withAttributes(
-						attribute(AttributeType.DODGE_SPELL, 30))));
+						attribute(AttributeDescription.DODGE_SPELL, 30))));
 
 		// assertThat(skills, hasItem(skill()
 		// .withName("Ghost Dance")
@@ -51,11 +55,12 @@ public class AttributeTypeTest
 
 		assertThat(skills, hasItem(skill()
 				.withName("Phase Acrobatics")
+				.withId(14914)
 				.withAttributes(
-						attribute(AttributeType.DODGE_SPELL, 30))));
+						attribute(AttributeDescription.DODGE_SPELL, 30))));
 	}
 
-	private Matcher<Attribute> attribute(final AttributeType attributeType, final float value)
+	private Matcher<Attribute> attribute(final AttributeDescription attributeType, final float value)
 	{
 		return new AttributeMatcher(attributeType, value);
 	}

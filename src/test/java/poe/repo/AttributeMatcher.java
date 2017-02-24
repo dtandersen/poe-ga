@@ -4,15 +4,15 @@ import java.util.Objects;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 import poe.entity.Attribute;
-import poe.entity.AttributeType;
+import poe.entity.AttributeDescription;
 
 final class AttributeMatcher extends TypeSafeDiagnosingMatcher<Attribute>
 {
-	private final AttributeType expectedAttributeType;
+	private final AttributeDescription expectedAttributeType;
 
 	private final float expectedValue;
 
-	public AttributeMatcher(final AttributeType expectedAttributeType, final float expectedValue)
+	public AttributeMatcher(final AttributeDescription expectedAttributeType, final float expectedValue)
 	{
 		this.expectedAttributeType = expectedAttributeType;
 		this.expectedValue = expectedValue;

@@ -14,9 +14,17 @@ final class PassiveSkillMatcher extends TypeSafeDiagnosingMatcher<PassiveSkill>
 
 	private Matcher<Attribute>[] expectedAttributes;
 
+	private int id;
+
 	public PassiveSkillMatcher withName(final String name)
 	{
 		this.expectedName = name;
+		return this;
+	}
+
+	public PassiveSkillMatcher withId(final int id)
+	{
+		this.id = id;
 		return this;
 	}
 
@@ -30,6 +38,7 @@ final class PassiveSkillMatcher extends TypeSafeDiagnosingMatcher<PassiveSkill>
 	public void describeTo(final Description description)
 	{
 		description.appendText("the skill " + expectedName);
+		description.appendText(" with id " + id);
 		if (expectedAttributes != null)
 		{
 			description.appendText(" with the attributes ");
@@ -37,8 +46,7 @@ final class PassiveSkillMatcher extends TypeSafeDiagnosingMatcher<PassiveSkill>
 			{
 				x.describeTo(description);
 			}
-		}
-		else
+		} else
 		{
 			description.appendText(" with no attributes ");
 		}
@@ -53,21 +61,28 @@ final class PassiveSkillMatcher extends TypeSafeDiagnosingMatcher<PassiveSkill>
 			return false;
 		}
 
+		if (id != actualSkill.getId())
+		{
+			mismatchDescription.appendText(" was id " + actualSkill.getId());
+			return false;
+		}
+
 		if (expectedAttributes != null)
 		{
 			final Matcher<Iterable<? extends Attribute>> x = containsInAnyOrder(expectedAttributes);
 			if (!x.matches(actualSkill.getAttributes()))
 			{
-				// x.describeMismatch(actualSkill.getAttributes(), mismatchDescription);
+				// x.describeMismatch(actualSkill.getAttributes(),
+				// mismatchDescription);
 				mismatchDescription.appendText(actualSkill.toString());
 				return false;
 			}
-		}
-		else
+		} else
 		{
 			if (!actualSkill.getAttributes().isEmpty())
 			{
-				// mismatchDescription.appendValueList("", ",", "", actualSkill.getAttributes());
+				// mismatchDescription.appendValueList("", ",", "",
+				// actualSkill.getAttributes());
 				mismatchDescription.appendText(actualSkill.toString());
 				return false;
 			}

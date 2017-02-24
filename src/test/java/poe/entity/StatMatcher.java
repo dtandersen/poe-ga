@@ -1,4 +1,4 @@
-package poe.command;
+package poe.entity;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -6,11 +6,8 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
-import poe.entity.ImmutableCharacter;
-import poe.entity.Stat;
-import poe.entity.StatValue;
 
-final class TypeSafeDiagnosingMatcherExtension extends TypeSafeDiagnosingMatcher<ImmutableCharacter>
+public class StatMatcher extends TypeSafeDiagnosingMatcher<ImmutableCharacter>
 {
 	Set<StatValue> stats = new HashSet<>();
 
@@ -34,7 +31,7 @@ final class TypeSafeDiagnosingMatcherExtension extends TypeSafeDiagnosingMatcher
 		return true;
 	}
 
-	public TypeSafeDiagnosingMatcherExtension withStat(final Stat stat, final int value)
+	public StatMatcher withStat(final Stat stat, final int value)
 	{
 		stats.add(new StatValue(stat, value));
 		return this;

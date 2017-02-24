@@ -2,11 +2,11 @@ package poe.entity;
 
 public class Attribute
 {
-	private final AttributeType attributeType;
+	private final AttributeDescription attributeType;
 
 	private float value;
 
-	public Attribute(final AttributeType attributeType)
+	public Attribute(final AttributeDescription attributeType)
 	{
 		this.attributeType = attributeType;
 	}
@@ -17,7 +17,7 @@ public class Attribute
 		return getAttributeType().toString() + " " + value;
 	}
 
-	public AttributeType getAttributeType()
+	public AttributeDescription getAttributeType()
 	{
 		return attributeType;
 	}

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import com.google.gson.Gson;
 import poe.entity.Attribute;
-import poe.entity.AttributeType;
+import poe.entity.AttributeDescription;
 import poe.entity.PassiveSkill;
 import poe.entity.UnknownAttribute;
 import poe.repo.JsonSkillRepo.Stuff.Node22;
@@ -30,10 +30,11 @@ public class JsonSkillRepo implements SkillRepo
 				continue;
 			}
 			final PassiveSkill e = new PassiveSkill(n.dn);
+			e.setId(n.id);
 			for (final String s : n.sd)
 			{
 				boolean matched = false;
-				for (final AttributeType at : AttributeType.values())
+				for (final AttributeDescription at : AttributeDescription.values())
 				{
 					final Matcher matcher = at.matcher(s);
 					if (!matcher.find())
@@ -47,8 +48,7 @@ public class JsonSkillRepo implements SkillRepo
 						final String group = matcher.group(1);
 						final float val = Float.parseFloat(group);
 						attribute.setValue(val);
-					}
-					catch (final IndexOutOfBoundsException e2)
+					} catch (final IndexOutOfBoundsException e2)
 					{
 					}
 					e.addAttribute(attribute);
@@ -76,7 +76,7 @@ public class JsonSkillRepo implements SkillRepo
 			/**
 			 * skill id
 			 */
-			String id;
+			int id;
 
 			/**
 			 * description

@@ -1,7 +1,6 @@
-package poe.command;
+package poe.entity;
 
 import java.util.Collection;
-import poe.entity.StatValue;
 
 public interface ImmutableCharacter
 {

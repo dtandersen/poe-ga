@@ -1,11 +1,9 @@
 package poe.command;
 
-import java.util.Collection;
-import java.util.HashMap;
 import poe.command.CreateCharacter.CreateCharacterRequest;
 import poe.command.CreateCharacter.CreateCharacterResult;
+import poe.entity.ImmutableCharacter;
 import poe.entity.Stat;
-import poe.entity.StatValue;
 
 public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateCharacterResult>
 {
@@ -37,32 +35,6 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 		final int g = (int)(dex - gg);
 		final int f = g / 5;
 		return f;
-	}
-
-	private final class ImmutableCharacterProxy implements ImmutableCharacter
-	{
-		private final HashMap<Stat, StatValue> stats;
-
-		public ImmutableCharacterProxy()
-		{
-			stats = new HashMap<>();
-		}
-
-		public float stat(final Stat dexterity)
-		{
-			return stats.get(dexterity).getValue();
-		}
-
-		@Override
-		public Collection<StatValue> getStats()
-		{
-			return stats.values();
-		}
-
-		public void stat(final Stat stat, final float value)
-		{
-			stats.put(stat, new StatValue(stat, value));
-		}
 	}
 
 	public static interface CreateCharacterRequest

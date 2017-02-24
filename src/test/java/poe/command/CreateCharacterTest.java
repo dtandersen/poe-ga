@@ -4,6 +4,7 @@ import static org.junit.Assert.assertThat;
 import org.junit.Test;
 import poe.command.CreateCharacter.CreateCharacterRequest;
 import poe.command.CreateCharacter.CreateCharacterResult;
+import poe.entity.ImmutableCharacter;
 import poe.entity.Stat;
 
 public class CreateCharacterTest

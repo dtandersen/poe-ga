@@ -6,6 +6,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
+import poe.entity.ImmutableCharacter;
 import poe.entity.Stat;
 import poe.entity.StatValue;
 

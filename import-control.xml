@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<!DOCTYPE import-control PUBLIC
+    "-//Puppy Crawl//DTD Import Control 1.1//EN"
+    "http://www.puppycrawl.com/dtds/import_control_1_1.dtd">
+<import-control pkg="poe">
+	<allow pkg="java.util" />
+	<allow pkg="java.io" />
+
+	<subpackage name="app">
+		<allow pkg="org.springframework" />
+		<allow pkg="poe.command" />
+
+		<subpackage name="config">
+			<allow pkg="poe.repo" />
+		</subpackage>
+	</subpackage>
+
+	<subpackage name="command">
+		<allow pkg="poe.command" />
+		<allow pkg="poe.entity" />
+		<allow pkg="poe.repo" />
+	</subpackage>
+
+	<subpackage name="entity">
+		<allow pkg="poe.entity" />
+	</subpackage>
+
+	<subpackage name="repo">
+		<allow pkg="poe.entity" />
+
+		<subpackage name="json">
+			<allow pkg="com.google.gson" />
+			<allow pkg="poe.entity" />
+			<allow pkg="poe.repo" />
+		</subpackage>
+	</subpackage>
+</import-control>

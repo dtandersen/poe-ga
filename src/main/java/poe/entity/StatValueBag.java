@@ -26,4 +26,10 @@ public class StatValueBag
 	{
 		return passives.get(attributeType);
 	}
+
+	@Override
+	public String toString()
+	{
+		return "StatValueBag[passives=" + passives + "]";
+	}
 }

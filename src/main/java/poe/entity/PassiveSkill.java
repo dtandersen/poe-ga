@@ -1,6 +1,7 @@
 package poe.entity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -17,6 +18,13 @@ public class PassiveSkill
 	public PassiveSkill(final String name)
 	{
 		this.name = name;
+	}
+
+	public PassiveSkill(final PassiveSkillBuilder passiveSkillBuilder)
+	{
+		this.id = passiveSkillBuilder.id;
+		this.name = passiveSkillBuilder.name;
+		this.outputs = passiveSkillBuilder.outputs;
 	}
 
 	public String getName()
@@ -71,5 +79,37 @@ public class PassiveSkill
 	public void setOutputs(final List<Integer> out)
 	{
 		outputs = out;
+	}
+
+	public static class PassiveSkillBuilder
+	{
+		private int id;
+
+		private String name;
+
+		private List<Integer> outputs;
+
+		public PassiveSkill build()
+		{
+			return new PassiveSkill(this);
+		}
+
+		public PassiveSkillBuilder withId(final int id)
+		{
+			this.id = id;
+			return this;
+		}
+
+		public PassiveSkillBuilder withName(final String name)
+		{
+			this.name = name;
+			return this;
+		}
+
+		public PassiveSkillBuilder withOutputs(final Integer... outputs)
+		{
+			this.outputs = Arrays.asList(outputs);
+			return this;
+		}
 	}
 }

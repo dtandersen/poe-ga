@@ -85,7 +85,7 @@ public class RandomBuildTest
 			@Override
 			public int getSize()
 			{
-				return 2;
+				return 3;
 			}
 		});
 		result = new RandomBuildResultImplementation();
@@ -125,7 +125,7 @@ public class RandomBuildTest
 	public void nodupes2()
 	{
 		givenWitchData();
-		givenRandomData(0, 0, 1);
+		givenRandomData(0, 0, 0, 0, 1, 0);
 		final RandomBuild command = new RandomBuild(passiveRepo, randomizer);
 		command.setRequest(new RandomBuildRequest() {
 			@Override

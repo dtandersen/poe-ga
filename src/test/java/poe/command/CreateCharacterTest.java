@@ -14,7 +14,7 @@ import poe.entity.CharacterClass;
 import poe.entity.ImmutableCharacter;
 import poe.entity.PoeMatchers;
 import poe.entity.Stat;
-import poe.matcher.ComposeableMatcher;
+import poe.matcher.ComposableMatcher;
 import poe.repository.PassiveSkillRepository;
 import poe.repository.json.JsonPassiveSkillRepository;
 
@@ -76,7 +76,7 @@ public class CreateCharacterTest
 
 	private Matcher<CreateCharacterResultImplementation> hasUrl(final Matcher<String> matcher)
 	{
-		return new ComposeableMatcher<CreateCharacterTest.CreateCharacterResultImplementation, String>(matcher) {
+		return new ComposableMatcher<CreateCharacterTest.CreateCharacterResultImplementation, String>(matcher) {
 			@Override
 			protected String getValue(final CreateCharacterResultImplementation item)
 			{

@@ -6,9 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import com.google.gson.Gson;
-import poe.entity.StatValue;
-import poe.entity.Stat;
 import poe.entity.PassiveSkill;
+import poe.entity.PassiveSkillTree;
+import poe.entity.Stat;
+import poe.entity.StatValue;
 import poe.entity.UnknownStatValue;
 import poe.repository.PassiveSkillRepository;
 import poe.repository.json.JsonPassiveSkillRepository.Stuff.Node22;
@@ -32,6 +33,7 @@ public class JsonPassiveSkillRepository implements PassiveSkillRepository
 			}
 			final PassiveSkill e = new PassiveSkill(n.dn);
 			e.setId(n.id);
+			e.setOutputs(n.out);
 			for (final String s : n.sd)
 			{
 				boolean matched = false;
@@ -50,8 +52,7 @@ public class JsonPassiveSkillRepository implements PassiveSkillRepository
 						final String group = matcher.group(1);
 						final float val = Float.parseFloat(group);
 						attribute = new StatValue(at, val);
-					}
-					catch (final IndexOutOfBoundsException e2)
+					} catch (final IndexOutOfBoundsException e2)
 					{
 					}
 					e.addAttribute(attribute);
@@ -98,5 +99,11 @@ public class JsonPassiveSkillRepository implements PassiveSkillRepository
 
 			boolean asc;
 		}
+	}
+
+	@Override
+	public PassiveSkillTree skillTree()
+	{
+		return new PassiveSkillTree(all());
 	}
 }

@@ -16,7 +16,7 @@ public abstract class BaseCommand<REQ, RES>
 		this.result = result;
 	}
 
-	abstract void execute();
+	abstract public void execute();
 
 	interface VoidRequest
 	{

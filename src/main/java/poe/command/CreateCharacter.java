@@ -19,7 +19,7 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 	}
 
 	@Override
-	void execute()
+	public void execute()
 	{
 		final int level = 1;
 		final ImmutableCharacterProxy character = new ImmutableCharacterProxy();
@@ -40,7 +40,10 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 			final List<Integer> passiveSkillIds,
 			final List<PassiveSkill> passiveTree)
 	{
-		if (passiveSkillIds.isEmpty()) { return; }
+		if (passiveSkillIds.isEmpty())
+		{
+			return;
+		}
 
 		for (final int passiveSkillId : passiveSkillIds)
 		{
@@ -53,7 +56,10 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 	{
 		for (final PassiveSkill passiveSkill : passiveTree)
 		{
-			if (passiveSkill.getId() == integer) { return passiveSkill; }
+			if (passiveSkill.getId() == integer)
+			{
+				return passiveSkill;
+			}
 		}
 
 		return null;
@@ -76,21 +82,24 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 	{
 		final float dex = character.stat(Attribute.DEXTERITY);
 		final float gg = dex % 5;
-		if (gg == 0) { return (int)(dex / 5); }
+		if (gg == 0)
+		{
+			return (int)(dex / 5);
+		}
 
 		final int g = (int)(dex - gg);
 		final int f = g / 5;
 		return f;
 	}
 
-	interface CreateCharacterRequest
+	public interface CreateCharacterRequest
 	{
 		CharacterClass getCharacterClass();
 
 		List<Integer> getPassiveSkillIds();
 	}
 
-	interface CreateCharacterResult
+	public interface CreateCharacterResult
 	{
 		void setCharacter(ImmutableCharacter immutableCharacter);
 

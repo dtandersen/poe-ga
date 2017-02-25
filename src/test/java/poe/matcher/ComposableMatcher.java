@@ -5,11 +5,11 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 import poe.util.TypeUtil;
 
-public abstract class ComposeableMatcher<T, U> extends TypeSafeDiagnosingMatcher<T>
+public abstract class ComposableMatcher<T, U> extends TypeSafeDiagnosingMatcher<T>
 {
-	private final Matcher<String> matcher;
+	private final Matcher<?> matcher;
 
-	public ComposeableMatcher(final Matcher<String> matcher)
+	public ComposableMatcher(final Matcher<?> matcher)
 	{
 		this.matcher = matcher;
 	}
@@ -38,7 +38,7 @@ public abstract class ComposeableMatcher<T, U> extends TypeSafeDiagnosingMatcher
 
 	private String typeArgumentName()
 	{
-		final Class<?> typeArgument = TypeUtil.resolveTypeArgument(getClass(), ComposeableMatcher.class);
+		final Class<?> typeArgument = TypeUtil.resolveTypeArgument(getClass(), ComposableMatcher.class);
 		return typeArgument.getSimpleName();
 	}
 }

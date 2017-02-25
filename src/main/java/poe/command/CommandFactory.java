@@ -4,15 +4,21 @@ import poe.repository.PassiveSkillRepository;
 
 public class CommandFactory
 {
-	private final PassiveSkillRepository repo;
+	private final PassiveSkillRepository passiveSkillRepository;
 
-	public CommandFactory(final PassiveSkillRepository repo)
+	public CommandFactory(
+			final PassiveSkillRepository passiveSkillRepository)
 	{
-		this.repo = repo;
+		this.passiveSkillRepository = passiveSkillRepository;
 	}
 
 	public ListSkills list()
 	{
-		return new ListSkills(repo);
+		return new ListSkills(passiveSkillRepository);
+	}
+
+	public CreateCharacter createCharacter()
+	{
+		return new CreateCharacter(passiveSkillRepository);
 	}
 }

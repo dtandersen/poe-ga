@@ -12,6 +12,8 @@ public class PassiveSkill
 
 	private int id;
 
+	private List<Integer> outputs;
+
 	public PassiveSkill(final String name)
 	{
 		this.name = name;
@@ -30,14 +32,17 @@ public class PassiveSkill
 	@Override
 	public String toString()
 	{
-		return name + ": " + attributes;
+		return name + ": " + attributes + ", outputs=" + outputs;
 	}
 
 	public boolean hasAttribute(final Stat expectedAttributeType)
 	{
 		for (final StatValue a : attributes)
 		{
-			if (Objects.equals(a.getStat(), expectedAttributeType)) { return true; }
+			if (Objects.equals(a.getStat(), expectedAttributeType))
+			{
+				return true;
+			}
 		}
 
 		return false;
@@ -56,5 +61,15 @@ public class PassiveSkill
 	public void setId(final int id)
 	{
 		this.id = id;
+	}
+
+	public List<Integer> getOutputs()
+	{
+		return outputs;
+	}
+
+	public void setOutputs(final List<Integer> out)
+	{
+		outputs = out;
 	}
 }

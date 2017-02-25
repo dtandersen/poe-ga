@@ -148,6 +148,11 @@ final class ImmutableCharacterProxy implements ImmutableCharacter
 			this.passiveSkillIds = passives;
 			return this;
 		}
+
+		static ImmutableCharacterBuilder character()
+		{
+			return new ImmutableCharacterBuilder();
+		}
 	}
 
 	@Override

@@ -62,8 +62,6 @@ public class CreateCharacterTest
 		assertThat(theCharacter(), hasCharacter()
 				.withStatValue(Stat.DEXTERITY, 10)
 				.withStatValue(Stat.STRENGTH, 10));
-
-		// assertThat(result, hasUrl(equalTo("")));
 	}
 
 	@Test
@@ -71,7 +69,7 @@ public class CreateCharacterTest
 	{
 		createCharacter(CharacterClass.MARAUDER, new Integer[] { 31628 });
 
-		assertThat(result, hasUrl(equalTo("AAAABAEAAHuM")));
+		assertThat(result, hasUrl(equalTo("https://www.pathofexile.com/passive-skill-tree/AAAABAEAAHuM")));
 	}
 
 	private Matcher<CreateCharacterResultImplementation> hasUrl(final Matcher<String> matcher)

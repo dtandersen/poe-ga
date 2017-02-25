@@ -19,18 +19,13 @@ public class PassiveSkillTree
 		graph = new SimpleGraph<>(DefaultEdge.class);
 		for (final PassiveSkill passiveSkill : passiveSkills)
 		{
-			int id = passiveSkill.getId();
+			final int id = passiveSkill.getId();
 			graph.addVertex(id);
 		}
 		for (final PassiveSkill passiveSkill : passiveSkills)
 		{
 			final Integer v1 = passiveSkill.getId();
 			final List<Integer> outputs = passiveSkill.getOutputs();
-			// if (outputs == null)
-			// {
-			// throw new RuntimeException(passiveSkill.getName() + " has no
-			// outputs");
-			// }
 			for (final Integer neighborId : outputs)
 			{
 				final Integer v2 = neighborId;

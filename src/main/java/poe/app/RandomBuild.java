@@ -6,12 +6,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import poe.command.CommandFactory;
-import poe.command.CreateCharacter;
-import poe.command.CreateCharacter.CreateCharacterRequest;
-import poe.command.CreateCharacter.CreateCharacterResult;
 import poe.command.RandomBuild.RandomBuildRequest;
 import poe.command.RandomBuild.RandomBuildResult;
-import poe.entity.CharacterClass;
 import poe.entity.ImmutableCharacter;
 import poe.repository.PassiveSkillRepository;
 
@@ -39,34 +35,8 @@ public class RandomBuild implements CommandLineRunner
 		command.setResult(result1);
 		command.execute();
 
-		final CreateCharacter command2 = commandFactory.createCharacter();
-		command2.setRequest(new CreateCharacterRequest() {
-			@Override
-			public List<Integer> getPassiveSkillIds()
-			{
-				return result1.selectedIds;
-			}
-
-			@Override
-			public CharacterClass getCharacterClass()
-			{
-				return CharacterClass.MARAUDER;
-			}
-		});
-		final CreateCharacterResultImplementation result = new CreateCharacterResultImplementation();
-		command2.setResult(result);
-		command2.execute();
-
-		System.out.println(result.getUrl());
+		System.out.println(result1.getUrl());
 	}
-
-	// private PassiveSkill reset(final List<Integer> selectedIds, final Random
-	// r, final PassiveSkillTree ps)
-	// {
-	// final int i = r.nextInt(selectedIds.size());
-	// final int id = selectedIds.get(i);
-	// return ps.find(id);
-	// }
 
 	public static void main(final String[] args) throws Exception
 	{
@@ -77,31 +47,23 @@ public class RandomBuild implements CommandLineRunner
 	{
 		protected List<Integer> selectedIds;
 
+		private String url;
+
 		@Override
 		public void setCharacter(final ImmutableCharacter build)
 		{
 			selectedIds = build.getPassiveSkillIds();
 		}
-	}
 
-	private final class CreateCharacterResultImplementation implements CreateCharacterResult
-	{
-		private String url;
+		public String getUrl()
+		{
+			return url;
+		}
 
 		@Override
 		public void setUrl(final String url)
 		{
 			this.url = url;
-		}
-
-		@Override
-		public void setCharacter(final ImmutableCharacter immutableCharacter)
-		{
-		}
-
-		public String getUrl()
-		{
-			return url;
 		}
 	}
 }

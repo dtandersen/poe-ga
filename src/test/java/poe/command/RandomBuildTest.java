@@ -144,6 +144,31 @@ public class RandomBuildTest
 				"Melee Damage"));
 	}
 
+	@Test
+	public void returnTheUrl()
+	{
+		givenWitchData();
+		givenRandomData(0, 0, 0, 0, 1, 0);
+		final RandomBuild command = new RandomBuild(passiveRepo, randomizer);
+		command.setRequest(new RandomBuildRequest() {
+			@Override
+			public int getSize()
+			{
+				return 100;
+			}
+		});
+		result = new RandomBuildResultImplementation();
+		command.setResult(result);
+		command.execute();
+
+		assertThat(theUrl(), equalTo("https://www.pathofexile.com/passive-skill-tree/AAAABAEAAAABAAIAAw=="));
+	}
+
+	private String theUrl()
+	{
+		return result.getUrl();
+	}
+
 	private void givenRandomData(final int... series)
 	{
 		randomizer = new SeriesRandomizer(series);
@@ -253,6 +278,8 @@ public class RandomBuildTest
 	{
 		private ImmutableCharacter character;
 
+		private String url;
+
 		public ImmutableCharacter getCharacter()
 		{
 			return character;
@@ -262,6 +289,17 @@ public class RandomBuildTest
 		public void setCharacter(final ImmutableCharacter immutableCharacter)
 		{
 			character = immutableCharacter;
+		}
+
+		public String getUrl()
+		{
+			return url;
+		}
+
+		@Override
+		public void setUrl(final String url)
+		{
+			this.url = url;
 		}
 	}
 }

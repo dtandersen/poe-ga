@@ -1,13 +1,14 @@
 package poe.command;
 
-import java.util.ArrayList;
 import java.util.List;
 import poe.command.ImmutableCharacterProxy.ImmutableCharacterBuilder;
 import poe.command.RandomBuild.RandomBuildRequest;
 import poe.command.RandomBuild.RandomBuildResult;
+import poe.entity.CharacterClass;
 import poe.entity.ImmutableCharacter;
 import poe.entity.PassiveSkill;
 import poe.entity.PassiveSkillTree;
+import poe.entity.PoeCharacter;
 import poe.repository.PassiveSkillRepository;
 import poe.repository.Randomizer;
 
@@ -28,37 +29,51 @@ public class RandomBuild extends BaseCommand<RandomBuildRequest, RandomBuildResu
 	@Override
 	public void execute()
 	{
-		final List<PassiveSkill> all = passiveSkillRepository.all();
-		final PassiveSkillTree skillTree = new PassiveSkillTree(all);
-		PassiveSkill passiveSkill = skillTree.findByName("MARAUDER");
-		final List<Integer> passives = new ArrayList<>();
-		int count = 0;
+		final List<PassiveSkill> skills = passiveSkillRepository.all();
+		final PassiveSkillTree skillTree = new PassiveSkillTree(skills);
+
+		PassiveSkill curSkill = skillTree.findByName("MARAUDER");
+		PassiveSkill prevSkill = curSkill;
+
+		final PoeCharacter character = new PoeCharacter();
+
 		do
 		{
-			if (passives.size() == all.size())
+			if (character.hasAllPassiveSkills(skills))
 			{
 				break;
 			}
-			if (!passives.contains(passiveSkill.getId()))
+
+			if (!character.hasPassiveSkill(curSkill))
 			{
-				System.out.println("added " + passiveSkill.getName());
-				passives.add(passiveSkill.getId());
-				count++;
+				System.out.println("added " + curSkill.getName());
+				if (prevSkill == curSkill)
+				{
+					character.addSkill(curSkill);
+				} else
+				{
+					character.addSkill(curSkill, prevSkill);
+				}
 			} else
 			{
-				System.out.println("already have " + passiveSkill.getName());
+				System.out.println("already have " + curSkill.getName());
 			}
-			final List<Integer> neighbors = skillTree.neighbors(passiveSkill.getId());
-			System.out.println("neighbors of " + passiveSkill.getName() + " are " + neighbors);
+			prevSkill = curSkill;
+			final List<Integer> neighbors = skillTree.neighbors(curSkill.getId());
+			System.out.println("neighbors of " + curSkill.getName() + " are " + neighbors);
 			final int nextIndex = randomizer.nextInt(neighbors.size());
-			passiveSkill = skillTree.find(neighbors.get(nextIndex));
-			System.out.println("rolled " + nextIndex + " and got " + passiveSkill.getName());
-		} while (count < request.getSize());
-		final ImmutableCharacterBuilder builder = new ImmutableCharacterBuilder();
-		builder.withPassives(passives);
-		final ImmutableCharacter character = builder
-				.build();
-		result.setCharacter(character);
+			curSkill = skillTree.find(neighbors.get(nextIndex));
+			System.out.println("rolled " + nextIndex + " and got " + curSkill.getName());
+		} while (character.passiveSkillCount() < request.getSize());
+
+		result.setCharacter(ImmutableCharacterBuilder.character()
+				.withPassives(character.getPassiveSkillIds())
+				.build());
+
+		result.setUrl(new PoeComUrlBuilder()
+				.withCharacterClass(CharacterClass.MARAUDER)
+				.withPassiveSkillIds(character.getPassiveSkillIds())
+				.toUrl());
 	}
 
 	public interface RandomBuildRequest
@@ -70,5 +85,7 @@ public class RandomBuild extends BaseCommand<RandomBuildRequest, RandomBuildResu
 	{
 
 		void setCharacter(ImmutableCharacter build);
+
+		void setUrl(String url);
 	}
 }

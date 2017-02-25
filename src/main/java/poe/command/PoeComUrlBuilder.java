@@ -40,8 +40,7 @@ public class PoeComUrlBuilder
 			final String base64Url = encodeBase64(bytes);
 
 			return base64Url;
-		}
-		catch (final IOException e)
+		} catch (final IOException e)
 		{
 			throw new RuntimeException(e);
 		}
@@ -52,7 +51,7 @@ public class PoeComUrlBuilder
 		final Encoder base64Encoder = Base64.getUrlEncoder();
 
 		final String encoded = base64Encoder.encodeToString(bytes);
-		return encoded;
+		return "https://www.pathofexile.com/passive-skill-tree/" + encoded;
 	}
 
 	private byte[] characterToBytes() throws IOException

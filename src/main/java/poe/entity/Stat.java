@@ -1,9 +1,9 @@
 package poe.entity;
 
-import static poe.entity.Regex.FLOAT;
-import static poe.entity.Regex.INT;
-import static poe.entity.Regex.PLUS;
-import static poe.entity.Regex.PLUS_INT;
+import static poe.entity.Stat.Regex.FLOAT;
+import static poe.entity.Stat.Regex.INT;
+import static poe.entity.Stat.Regex.PLUS;
+import static poe.entity.Stat.Regex.PLUS_INT;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -546,11 +546,6 @@ public enum Stat
 		this.pattern = pattern(pattern);
 	}
 
-	Stat(final String pattern, final Stat passiveSkillAttributeType)
-	{
-		this.pattern = pattern(pattern);
-	}
-
 	public Matcher matcher(final String skillDescription)
 	{
 		final Matcher matcher = pattern.matcher(skillDescription.toLowerCase());
@@ -567,5 +562,16 @@ public enum Stat
 		newPattern = newPattern.replace(Regex.FLOAT, "(\\d*\\.?\\d*)");
 		final Pattern compile = Pattern.compile("^" + newPattern + "$");
 		return compile;
+	}
+
+	public class Regex
+	{
+		public static final String INT = "%d";
+
+		public static final String FLOAT = "%f";
+
+		public static final String PLUS = "+";
+
+		public static final String PLUS_INT = PLUS + INT;
 	}
 }

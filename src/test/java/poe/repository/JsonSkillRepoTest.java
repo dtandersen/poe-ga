@@ -1,4 +1,4 @@
-package poe.repo;
+package poe.repository;
 
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertThat;
@@ -7,14 +7,14 @@ import org.junit.Test;
 import poe.entity.PassiveSkill;
 import poe.entity.PoeMatchers;
 import poe.entity.Stat;
-import poe.repo.json.JsonSkillRepo;
+import poe.repository.json.JsonPassiveSkillRepository;
 
 public class JsonSkillRepoTest
 {
 	@Test
 	public void test()
 	{
-		final JsonSkillRepo repo = new JsonSkillRepo();
+		final JsonPassiveSkillRepository repo = new JsonPassiveSkillRepository();
 		final List<PassiveSkill> skills = repo.all();
 
 		assertThat(skills, hasItem(PoeMatchers.skill()

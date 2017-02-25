@@ -1,12 +1,12 @@
 package poe.command;
 
-import poe.repo.SkillRepo;
+import poe.repository.PassiveSkillRepository;
 
 public class CommandFactory
 {
-	private final SkillRepo repo;
+	private final PassiveSkillRepository repo;
 
-	public CommandFactory(final SkillRepo repo)
+	public CommandFactory(final PassiveSkillRepository repo)
 	{
 		this.repo = repo;
 	}

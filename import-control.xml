@@ -11,27 +11,27 @@
 		<allow pkg="poe.command" />
 
 		<subpackage name="config">
-			<allow pkg="poe.repo" />
+			<allow pkg="poe.repository" />
 		</subpackage>
 	</subpackage>
 
 	<subpackage name="command">
 		<allow pkg="poe.command" />
 		<allow pkg="poe.entity" />
-		<allow pkg="poe.repo" />
+		<allow pkg="poe.repository" />
 	</subpackage>
 
 	<subpackage name="entity">
 		<allow pkg="poe.entity" />
 	</subpackage>
 
-	<subpackage name="repo">
+	<subpackage name="repository">
 		<allow pkg="poe.entity" />
 
 		<subpackage name="json">
 			<allow pkg="com.google.gson" />
 			<allow pkg="poe.entity" />
-			<allow pkg="poe.repo" />
+			<allow pkg="poe.repository" />
 		</subpackage>
 	</subpackage>
 </import-control>

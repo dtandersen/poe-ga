@@ -3,21 +3,21 @@ package poe.app.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import poe.command.CommandFactory;
-import poe.repo.SkillRepo;
-import poe.repo.json.JsonSkillRepo;
+import poe.repository.PassiveSkillRepository;
+import poe.repository.json.JsonPassiveSkillRepository;
 
 @Configuration
 public class PoeConfig
 {
 	@Bean
-	CommandFactory commandFactory(final SkillRepo repo)
+	CommandFactory commandFactory(final PassiveSkillRepository repo)
 	{
 		return new CommandFactory(repo);
 	}
 
 	@Bean
-	SkillRepo skillRepo()
+	PassiveSkillRepository skillRepo()
 	{
-		return new JsonSkillRepo();
+		return new JsonPassiveSkillRepository();
 	}
 }

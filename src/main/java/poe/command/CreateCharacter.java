@@ -4,17 +4,18 @@ import java.util.List;
 import poe.command.CreateCharacter.CreateCharacterRequest;
 import poe.command.CreateCharacter.CreateCharacterResult;
 import poe.entity.Attribute;
+import poe.entity.CharacterClass;
 import poe.entity.ImmutableCharacter;
 import poe.entity.PassiveSkill;
-import poe.repo.SkillRepo;
+import poe.repository.PassiveSkillRepository;
 
 public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateCharacterResult>
 {
-	private final SkillRepo skillRepo;
+	private final PassiveSkillRepository passiveSkillRepository;
 
-	public CreateCharacter(final SkillRepo skillRepo)
+	public CreateCharacter(final PassiveSkillRepository passiveSkillRepository)
 	{
-		this.skillRepo = skillRepo;
+		this.passiveSkillRepository = passiveSkillRepository;
 	}
 
 	@Override
@@ -24,10 +25,14 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 		final ImmutableCharacterProxy character = new ImmutableCharacterProxy();
 
 		baseStats(level, character);
-		final List<PassiveSkill> passiveTree = skillRepo.all();
+		final List<PassiveSkill> passiveTree = passiveSkillRepository.all();
 		applyPassives(character, request.getPassiveSkillIds(), passiveTree);
 
 		result.setCharacter(character);
+		result.setUrl(new PoeComUrlBuilder()
+				.withCharacterClass(CharacterClass.MARAUDER)
+				.withPassiveSkillIds(request.getPassiveSkillIds())
+				.toUrl());
 	}
 
 	private void applyPassives(
@@ -78,15 +83,17 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 		return f;
 	}
 
-	public static interface CreateCharacterRequest
+	interface CreateCharacterRequest
 	{
 		CharacterClass getCharacterClass();
 
 		List<Integer> getPassiveSkillIds();
 	}
 
-	public static interface CreateCharacterResult
+	interface CreateCharacterResult
 	{
 		void setCharacter(ImmutableCharacter immutableCharacter);
+
+		void setUrl(String url);
 	}
 }

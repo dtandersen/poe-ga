@@ -245,7 +245,7 @@ public class RandomBuildTest
 		}
 	}
 
-	private final class TypeSafeDiagnosingMatcherExtension extends TypeSafeDiagnosingMatcher<ImmutableCharacterProxy>
+	private final class TypeSafeDiagnosingMatcherExtension extends TypeSafeDiagnosingMatcher<PoeCharacter>
 	{
 		private final ImmutableCharacter expectedCharacter;
 
@@ -262,7 +262,7 @@ public class RandomBuildTest
 		}
 
 		@Override
-		protected boolean matchesSafely(final ImmutableCharacterProxy item, final Description mismatchDescription)
+		protected boolean matchesSafely(final PoeCharacter item, final Description mismatchDescription)
 		{
 			if (!Objects.equals(item, expectedCharacter))
 			{

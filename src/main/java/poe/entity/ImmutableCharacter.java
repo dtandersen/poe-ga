@@ -7,7 +7,7 @@ public interface ImmutableCharacter
 {
 	Collection<AttributeValue> getStats();
 
-	Collection<StatValue> getStateValues();
+	Collection<StatValue> getStatValues();
 
 	List<Integer> getPassiveSkillIds();
 }

@@ -35,7 +35,7 @@ public class PassiveSkillGraph
 		graph.addEdge(passiveSkillId1, passiveSkillId2);
 	}
 
-	public List<Integer> skills()
+	public List<Integer> getPassiveSkillIds()
 	{
 		return new ArrayList<>(graph.vertexSet());
 	}

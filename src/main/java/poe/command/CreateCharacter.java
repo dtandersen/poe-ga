@@ -3,10 +3,12 @@ package poe.command;
 import java.util.List;
 import poe.command.CreateCharacter.CreateCharacterRequest;
 import poe.command.CreateCharacter.CreateCharacterResult;
+import poe.command.PureImmutableCharacter.PureImmutableCharacterBuilder;
 import poe.entity.Attribute;
 import poe.entity.CharacterClass;
 import poe.entity.ImmutableCharacter;
 import poe.entity.PassiveSkill;
+import poe.entity.PassiveSkillTree;
 import poe.repository.PassiveSkillRepository;
 
 public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateCharacterResult>
@@ -22,50 +24,27 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 	public void execute()
 	{
 		final int level = 1;
-		final ImmutableCharacterProxy character = new ImmutableCharacterProxy();
+		final PoeCharacter character = new PoeCharacter();
 
 		baseStats(level, character);
 		final List<PassiveSkill> passiveTree = passiveSkillRepository.all();
-		applyPassives(character, request.getPassiveSkillIds(), passiveTree);
+		final PassiveSkillTree pst = new PassiveSkillTree(passiveTree);
+		character.applyPassives(request.getPassiveSkillIds(), pst);
 
-		result.setCharacter(character);
+		final ImmutableCharacter pure = new PureImmutableCharacterBuilder()
+				.withPassiveSkillIds(character.getPassiveSkillIds())
+				.withStats(character.getStats())
+				.withStatValues(character.getStatValues())
+				.build();
+
+		result.setCharacter(pure);
 		result.setUrl(new PoeComUrlBuilder()
 				.withCharacterClass(CharacterClass.MARAUDER)
 				.withPassiveSkillIds(request.getPassiveSkillIds())
 				.toUrl());
 	}
 
-	private void applyPassives(
-			final ImmutableCharacterProxy character,
-			final List<Integer> passiveSkillIds,
-			final List<PassiveSkill> passiveTree)
-	{
-		if (passiveSkillIds.isEmpty())
-		{
-			return;
-		}
-
-		for (final int passiveSkillId : passiveSkillIds)
-		{
-			final PassiveSkill passive = find(passiveTree, passiveSkillId);
-			character.apply(passive);
-		}
-	}
-
-	private PassiveSkill find(final List<PassiveSkill> passiveTree, final Integer integer)
-	{
-		for (final PassiveSkill passiveSkill : passiveTree)
-		{
-			if (passiveSkill.getId() == integer)
-			{
-				return passiveSkill;
-			}
-		}
-
-		return null;
-	}
-
-	private void baseStats(final int level, final ImmutableCharacterProxy character)
+	private void baseStats(final int level, final PoeCharacter character)
 	{
 		final CharacterClass characterClass = request.getCharacterClass();
 		character.stat(Attribute.STRENGTH, characterClass.getStrength());
@@ -78,7 +57,7 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 		character.stat(Attribute.ACCURACY, character.stat(Attribute.DEXTERITY) * 2);
 	}
 
-	private int dexDiv5(final ImmutableCharacterProxy character)
+	private int dexDiv5(final PoeCharacter character)
 	{
 		final float dex = character.stat(Attribute.DEXTERITY);
 		final float gg = dex % 5;

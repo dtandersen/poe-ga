@@ -1,14 +1,13 @@
 package poe.command;
 
 import java.util.List;
-import poe.command.ImmutableCharacterProxy.ImmutableCharacterBuilder;
+import poe.command.PureImmutableCharacter.PureImmutableCharacterBuilder;
 import poe.command.RandomBuild.RandomBuildRequest;
 import poe.command.RandomBuild.RandomBuildResult;
 import poe.entity.CharacterClass;
 import poe.entity.ImmutableCharacter;
 import poe.entity.PassiveSkill;
 import poe.entity.PassiveSkillTree;
-import poe.entity.PoeCharacter;
 import poe.repository.PassiveSkillRepository;
 import poe.repository.Randomizer;
 
@@ -66,8 +65,8 @@ public class RandomBuild extends BaseCommand<RandomBuildRequest, RandomBuildResu
 			System.out.println("rolled " + nextIndex + " and got " + curSkill.getName());
 		} while (character.passiveSkillCount() < request.getSize());
 
-		result.setCharacter(ImmutableCharacterBuilder.character()
-				.withPassives(character.getPassiveSkillIds())
+		result.setCharacter(PureImmutableCharacterBuilder.character()
+				.withPassiveSkillIds(character.getPassiveSkillIds())
 				.build());
 
 		result.setUrl(new PoeComUrlBuilder()

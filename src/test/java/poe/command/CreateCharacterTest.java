@@ -2,10 +2,13 @@ package poe.command;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
-import static poe.entity.PoeMatchers.hasCharacter;
+import static poe.entity.PoeMatchers.containsInAnyOrder;
+import static poe.entity.PoeMatchers.hasPassives;
 import java.util.Arrays;
 import java.util.List;
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.junit.Test;
 import poe.command.CreateCharacter.CreateCharacterRequest;
 import poe.command.CreateCharacter.CreateCharacterResult;
@@ -59,9 +62,47 @@ public class CreateCharacterTest
 	{
 		createCharacter(CharacterClass.MARAUDER, new Integer[] { 60942, 6741 });
 
-		assertThat(theCharacter(), hasCharacter()
+		assertThat(theCharacter(), hasPassives()
 				.withStatValue(Stat.DEXTERITY, 10)
 				.withStatValue(Stat.STRENGTH, 10));
+	}
+
+	@Test
+	public void marauderSkillsDeduplicate()
+	{
+		createCharacter(CharacterClass.MARAUDER, new Integer[] { 47175, 31628, 31628 });
+
+		assertThat(theCharacter(), hasPassives()
+				.withStatValue(Stat.MAX_LIFE_PLUS, 16)
+				.withStatValue(Stat.MELEE_PHYSICAL_DAMAGE, 16));
+
+		assertThat(theCharacter(), hasPassiveSkills(47175, 31628));
+	}
+
+	private Matcher<ImmutableCharacter> hasPassiveSkills(final Integer... expectedPassiveSkillIds)
+	{
+		final List<Integer> asList = Arrays.asList(expectedPassiveSkillIds);
+		final Matcher<Iterable<? extends Integer>> matcher = containsInAnyOrder(asList);
+		return new TypeSafeDiagnosingMatcher<ImmutableCharacter>() {
+			@Override
+			public void describeTo(final Description description)
+			{
+				description.appendText("a character with passives ");
+				description.appendValueList("", ",", "", expectedPassiveSkillIds);
+			}
+
+			@Override
+			protected boolean matchesSafely(final ImmutableCharacter item, final Description mismatchDescription)
+			{
+				final List<Integer> actualIds = item.getPassiveSkillIds();
+				if (!matcher.matches(actualIds))
+				{
+					matcher.describeMismatch(actualIds, mismatchDescription);
+					return false;
+				}
+				return true;
+			}
+		};
 	}
 
 	@Test

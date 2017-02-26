@@ -14,11 +14,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import poe.command.CommandFactory;
+import poe.command.PoeCharacter;
 import poe.command.PoeComUrlBuilder;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
 import poe.entity.PassiveSkillTree;
-import poe.entity.PoeCharacter;
 import poe.repository.PassiveSkillRepository;
 
 @SpringBootApplication
@@ -64,6 +64,7 @@ public class EvolveBuild implements CommandLineRunner
 		System.out.println(chromosome);
 
 		final PoeCharacter character = new PoeCharacter();
+		// final PoeCharacter character = new PoeCharacter();
 		int i = 0;
 		int last = 0;
 		for (final SkillGene g : chromosome)
@@ -71,8 +72,7 @@ public class EvolveBuild implements CommandLineRunner
 			if (last == 0)
 			{
 				character.addSkill(g.passiveSkillId);
-			}
-			else
+			} else
 			{
 				if (!character.hasPassiveSkill(g.passiveSkillId))
 				{

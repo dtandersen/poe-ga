@@ -20,7 +20,7 @@ public class PoeMatchers
 		return StatValueMatcher.attribute(stat, value);
 	}
 
-	public static CharacterStatMatcher hasCharacter()
+	public static CharacterStatMatcher hasPassives()
 	{
 		return CharacterStatMatcher.passiveMatcher();
 	}

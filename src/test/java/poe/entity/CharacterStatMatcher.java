@@ -34,7 +34,7 @@ public class CharacterStatMatcher extends TypeSafeDiagnosingMatcher<ImmutableCha
 	protected boolean matchesSafely(final ImmutableCharacter character, final Description mismatchDescription)
 	{
 		final Matcher<Iterable<? extends StatValue>> matcher = containsInAnyOrder(expectedStatValues);
-		final Collection<StatValue> actualPassives = character.getStateValues();
+		final Collection<StatValue> actualPassives = character.getStatValues();
 		if (!matcher.matches(actualPassives))
 		{
 			matcher.describeMismatch(actualPassives, mismatchDescription);

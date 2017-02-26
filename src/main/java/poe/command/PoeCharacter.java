@@ -14,14 +14,16 @@ import poe.entity.StatValueBag;
 
 public final class PoeCharacter
 {
-	private final Map<Attribute, AttributeValue> stats = new HashMap<>();
+	private final Map<Attribute, AttributeValue> stats;
 
-	private final StatValueBag passiveAttributes = new StatValueBag();
+	private final StatValueBag passiveAttributes;
 
 	private final PassiveSkillGraph skillGraph;
 
 	public PoeCharacter()
 	{
+		stats = new HashMap<>();
+		passiveAttributes = new StatValueBag();
 		skillGraph = new PassiveSkillGraph();
 	}
 
@@ -53,6 +55,82 @@ public final class PoeCharacter
 	public StatValueBag getPassiveAttributes()
 	{
 		return passiveAttributes;
+	}
+
+	public void apply(final StatValue attribute)
+	{
+		getPassiveAttributes().increment(attribute);
+	}
+
+	public void apply(final PassiveSkill passive)
+	{
+		if (passive == null)
+		{
+			return;
+		}
+		skillGraph.add(passive.getId());
+		if (passive.getAttributes() == null)
+		{
+			return;
+		}
+		for (final StatValue attribute : passive.getAttributes())
+		{
+			apply(attribute);
+		}
+	}
+
+	public void applyPassives(
+			final List<Integer> passiveSkillIds,
+			final PassiveSkillTree pst)
+	{
+		for (final int passiveSkillId : passiveSkillIds)
+		{
+			final PassiveSkill passive = pst.find(passiveSkillId);
+			apply(passive);
+		}
+	}
+
+	public int passiveSkillCount()
+	{
+		return skillGraph.size();
+	}
+
+	public boolean hasPassiveSkill(final PassiveSkill passiveSkill)
+	{
+		return skillGraph.contains(passiveSkill.getId());
+	}
+
+	public void addSkill(final PassiveSkill passiveSkill)
+	{
+		final int id = passiveSkill.getId();
+		addSkill(id);
+	}
+
+	public void addSkill(final int id)
+	{
+		skillGraph.add(id);
+	}
+
+	public void addSkill(final PassiveSkill passiveSkill1, final PassiveSkill passiveSkill2)
+	{
+		final int id = passiveSkill2.getId();
+		final int id2 = passiveSkill1.getId();
+		addSkill(id, id2);
+	}
+
+	public void addSkill(final int id, final int id2)
+	{
+		skillGraph.add(id, id2);
+	}
+
+	public boolean hasAllPassiveSkills(final List<PassiveSkill> skills)
+	{
+		return passiveSkillCount() == skills.size();
+	}
+
+	public boolean hasPassiveSkill(final int passiveSkillId)
+	{
+		return skillGraph.contains(passiveSkillId);
 	}
 
 	@Override
@@ -102,82 +180,6 @@ public final class PoeCharacter
 			return false;
 		}
 		return true;
-	}
-
-	public void apply(final StatValue attribute)
-	{
-		getPassiveAttributes().increment(attribute);
-	}
-
-	public void apply(final PassiveSkill passive)
-	{
-		if (passive == null)
-		{
-			return;
-		}
-		if (passive.getAttributes() == null)
-		{
-			return;
-		}
-		for (final StatValue attribute : passive.getAttributes())
-		{
-			apply(attribute);
-		}
-	}
-
-	public void applyPassives(
-			final List<Integer> passiveSkillIds,
-			final PassiveSkillTree pst)
-	{
-		for (final int passiveSkillId : passiveSkillIds)
-		{
-			skillGraph.add(passiveSkillId);
-			final PassiveSkill passive = pst.find(passiveSkillId);
-			apply(passive);
-		}
-	}
-
-	public int passiveSkillCount()
-	{
-		return skillGraph.size();
-	}
-
-	public boolean hasPassiveSkill(final PassiveSkill passiveSkill)
-	{
-		return skillGraph.contains(passiveSkill.getId());
-	}
-
-	public void addSkill(final PassiveSkill passiveSkill)
-	{
-		final int id = passiveSkill.getId();
-		addSkill(id);
-	}
-
-	public void addSkill(final int id)
-	{
-		skillGraph.add(id);
-	}
-
-	public void addSkill(final PassiveSkill passiveSkill1, final PassiveSkill passiveSkill2)
-	{
-		final int id = passiveSkill2.getId();
-		final int id2 = passiveSkill1.getId();
-		addSkill(id, id2);
-	}
-
-	public void addSkill(final int id, final int id2)
-	{
-		skillGraph.add(id, id2);
-	}
-
-	public boolean hasAllPassiveSkills(final List<PassiveSkill> skills)
-	{
-		return passiveSkillCount() == skills.size();
-	}
-
-	public boolean hasPassiveSkill(final int passiveSkillId)
-	{
-		return skillGraph.contains(passiveSkillId);
 	}
 
 	@Override

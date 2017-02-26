@@ -70,7 +70,7 @@ public class CreateCharacterTest
 	@Test
 	public void marauderSkillsDeduplicate()
 	{
-		createCharacter(CharacterClass.MARAUDER, new Integer[] { 47175, 31628, 31628 });
+		createCharacter(CharacterClass.MARAUDER, new Integer[] { 31628, 31628 });
 
 		assertThat(theCharacter(), hasPassives()
 				.withStatValue(Stat.MAX_LIFE_PLUS, 16)

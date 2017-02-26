@@ -28,12 +28,25 @@ public class PoeCharacter
 
 	public void addSkill(final PassiveSkill passiveSkill)
 	{
-		skillGraph.add(passiveSkill.getId());
+		final int id = passiveSkill.getId();
+		addSkill(id);
+	}
+
+	public void addSkill(final int id)
+	{
+		skillGraph.add(id);
 	}
 
 	public void addSkill(final PassiveSkill passiveSkill1, final PassiveSkill passiveSkill2)
 	{
-		skillGraph.add(passiveSkill2.getId(), passiveSkill1.getId());
+		final int id = passiveSkill2.getId();
+		final int id2 = passiveSkill1.getId();
+		addSkill(id, id2);
+	}
+
+	public void addSkill(final int id, final int id2)
+	{
+		skillGraph.add(id, id2);
 	}
 
 	public List<Integer> getPassiveSkillIds()
@@ -44,5 +57,10 @@ public class PoeCharacter
 	public boolean hasAllPassiveSkills(final List<PassiveSkill> skills)
 	{
 		return passiveSkillCount() == skills.size();
+	}
+
+	public boolean hasPassiveSkill(final int passiveSkillId)
+	{
+		return skillGraph.contains(passiveSkillId);
 	}
 }

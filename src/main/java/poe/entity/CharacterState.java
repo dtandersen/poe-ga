@@ -10,8 +10,6 @@ public class CharacterState
 {
 	private final Map<Integer, PassiveSkill> passiveSkills;
 
-	private PassiveSkill rootPassiveSkill;
-
 	public CharacterState()
 	{
 		passiveSkills = new HashMap<>();
@@ -40,16 +38,6 @@ public class CharacterState
 	public boolean contains(final int passiveSkillId)
 	{
 		return passiveSkills.containsKey(passiveSkillId);
-	}
-
-	public PassiveSkill getRootPassiveSkill()
-	{
-		return rootPassiveSkill;
-	}
-
-	public void setRootPassiveSkill(final PassiveSkill rootPassiveSkill)
-	{
-		this.rootPassiveSkill = rootPassiveSkill;
 	}
 
 	public void addPassiveSkill(final PassiveSkill passiveSkill)

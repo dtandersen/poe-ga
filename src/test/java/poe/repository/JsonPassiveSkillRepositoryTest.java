@@ -63,6 +63,14 @@ public class JsonPassiveSkillRepositoryTest
 						.withOutputs()
 						.withType(1)
 						.withStats(stat(Stat.DODGE_SPELL, 30))));
+
+		assertThat(passiveNamed("MARAUDER"), PoeMatchers.passiveSkillEqualTo(
+				passiveSkill()
+						.withName("MARAUDER")
+						.withId(47175)
+						.withOutputs(31628, 50904, 17765, 24704, 29294)
+						.withType(5)
+						.withStats()));
 	}
 
 	private PassiveSkill passiveNamed(final String name)

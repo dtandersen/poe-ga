@@ -4,6 +4,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import poe.entity.Attribute;
 import poe.entity.AttributeValue;
 import poe.entity.CharacterClass;
@@ -103,7 +105,7 @@ public final class PoeCharacter
 
 	public boolean hasAllPassiveSkills(final List<PassiveSkill> skills)
 	{
-		return passiveSkillCount() == skills.size() - 1;
+		return passiveSkillCount() == skills.size();
 	}
 
 	public boolean hasPassiveSkill(final int passiveSkillId)
@@ -116,14 +118,10 @@ public final class PoeCharacter
 		return character.getPassiveSkills();
 	}
 
-	public void addRoot(final PassiveSkill root)
-	{
-		character.setRootPassiveSkill(root);
-	}
-
 	private boolean hasNeighbor(final PassiveSkill passiveSkill)
 	{
-		return passiveSkill.isNeighbor(character.getPassiveSkills()) || passiveSkill.isNeighbor(character.getRootPassiveSkill());
+		if (this.character.size() == 0) { return true; }
+		return passiveSkill.isNeighbor(character.getPassiveSkills());
 	}
 
 	@Override
@@ -173,5 +171,16 @@ public final class PoeCharacter
 		final int dexdiv5 = CreateCharacter.div5(attributeValue);
 		setAttributeValue(Attribute.EVASION_RATING, 53 + level * 3 + dexdiv5);
 		setAttributeValue(Attribute.ACCURACY, getAttributeValue(Attribute.DEXTERITY) * 2);
+	}
+
+	public Collection<PassiveSkill> getPassiveSkillsWithoutRoot()
+	{
+		return character.getPassiveSkillMap().values().stream().filter(new Predicate<PassiveSkill>() {
+			@Override
+			public boolean test(final PassiveSkill t)
+			{
+				return t.getType() != 5;
+			}
+		}).collect(Collectors.toList());
 	}
 }

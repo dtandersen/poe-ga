@@ -1,6 +1,8 @@
 package poe.command;
 
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import poe.command.PureImmutableCharacter.ImmutableCharacterBuilder;
 import poe.command.RandomBuild.RandomBuildRequest;
 import poe.command.RandomBuild.RandomBuildResult;
@@ -35,7 +37,8 @@ public class RandomBuild extends BaseCommand<RandomBuildRequest, RandomBuildResu
 		PassiveSkill prevSkill = curSkill;
 
 		final PoeCharacter character = new PoeCharacter();
-		character.addRoot(curSkill);
+		final PassiveSkill root = curSkill;
+		character.addPassiveSkill(root);
 
 		do
 		{
@@ -69,15 +72,21 @@ public class RandomBuild extends BaseCommand<RandomBuildRequest, RandomBuildResu
 			curSkill = skillTree.find(neighbors.get(nextIndex));
 			System.out.println("rolled " + nextIndex + " and got " + curSkill.getName());
 		}
-		while (character.passiveSkillCount() < request.getSize());
+		while ((character.passiveSkillCount()) - 1 < request.getSize());
 
 		result.setCharacter(ImmutableCharacterBuilder.character()
-				.withPassiveSkills(character.getPassiveSkills())
+				.withPassiveSkills(character.getPassiveSkillsWithoutRoot())
 				.build());
 
 		result.setUrl(new PoeComUrlBuilder()
 				.withCharacterClass(CharacterClass.MARAUDER)
-				.withPassiveSkillIds(character.getPassiveSkillIds())
+				.withPassiveSkillIds(character.getPassiveSkillsWithoutRoot().stream().map(new Function<PassiveSkill, Integer>() {
+					@Override
+					public Integer apply(final PassiveSkill t)
+					{
+						return t.getId();
+					}
+				}).collect(Collectors.toList()))
 				.toUrl());
 	}
 

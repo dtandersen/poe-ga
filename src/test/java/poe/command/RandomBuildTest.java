@@ -14,7 +14,6 @@ import poe.entity.PassiveSkill.PassiveSkillBuilder;
 import poe.entity.PoeMatchers;
 import poe.repository.InMemoryPassiveSkillRepository;
 import poe.repository.Randomizer;
-import poe.repository.RandomizerStub;
 
 public class RandomBuildTest
 {
@@ -39,7 +38,8 @@ public class RandomBuildTest
 		passiveRepo.create(passiveSkill()
 				.withName("MARAUDER")
 				.withId(47175)
-				.withOutputs(31628, 50904, 17765, 24704, 29294));
+				.withOutputs(31628, 50904, 17765, 24704, 29294)
+				.withType(5));
 		passiveRepo.create(passiveSkill()
 				.withName("Melee Damage and Life")
 				.withId(31628)
@@ -59,7 +59,8 @@ public class RandomBuildTest
 		passiveRepo.create(passiveSkill()
 				.withName("WITCH")
 				.withId(1)
-				.withOutputs(2, 3));
+				.withOutputs(2, 3)
+				.withType(5));
 		passiveRepo.create(passiveSkill()
 				.withName("Melee Damage and Life")
 				.withId(2)
@@ -74,7 +75,7 @@ public class RandomBuildTest
 	public void test()
 	{
 		givenMarauderData();
-		final Randomizer randomizer = new RandomizerStub();
+		givenRandomData(0, 0, 0, 0, 0, 0);
 		final RandomBuild command = new RandomBuild(passiveRepo, randomizer);
 		command.setRequest(new RandomBuildRequest() {
 			@Override
@@ -102,7 +103,7 @@ public class RandomBuildTest
 	public void nodupes()
 	{
 		givenMarauderData();
-		final Randomizer randomizer = new RandomizerStub();
+		givenRandomData(0, 0, 0, 0, 0, 0);
 		final RandomBuild command = new RandomBuild(passiveRepo, randomizer);
 		command.setRequest(new RandomBuildRequest() {
 			@Override

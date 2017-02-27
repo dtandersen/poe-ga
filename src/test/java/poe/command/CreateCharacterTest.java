@@ -78,6 +78,22 @@ public class CreateCharacterTest
 		assertThat(theCharacter(), hasNoPassiveSkills());
 	}
 
+	@Test
+	public void passiveDexterity()
+	{
+		createCharacter(CharacterClass.SCION, new Integer[] { 62103, 2151 });
+
+		assertThat(theCharacter(), hasStats2()
+				.withStatValue(Stat.MANA_REGEN, 20)
+				.withStatValue(Stat.PROJ_DAMAGE, 8)
+				.withStatValue(Stat.DEXTERITY, 5)
+				.withStatValue(Stat.INTELLIGENCE, 5));
+
+		assertThat(theCharacter(), hasPassives(
+				passiveWithId(62103),
+				passiveWithId(2151)));
+	}
+
 	private Matcher<ImmutableCharacter> hasNoPassiveSkills()
 	{
 		return new TypeSafeDiagnosingMatcher<ImmutableCharacter>() {
@@ -101,20 +117,6 @@ public class CreateCharacterTest
 		};
 	}
 
-	@Test
-	public void passiveDexterity()
-	{
-		createCharacter(CharacterClass.MARAUDER, new Integer[] { 60942, 6741 });
-
-		assertThat(theCharacter(), hasStats2()
-				.withStatValue(Stat.DEXTERITY, 10)
-				.withStatValue(Stat.STRENGTH, 10));
-
-		assertThat(theCharacter(), hasPassives(
-				passiveWithId(60942),
-				passiveWithId(6741)));
-	}
-
 	private Matcher<ImmutableCharacter> hasPassives(final ImmutablePassiveSkill... classPassive)
 	{
 		final Collection<Matcher<? super ImmutablePassiveSkill>> x = new ArrayList<>();
@@ -136,7 +138,19 @@ public class CreateCharacterTest
 				.withStatValue(Stat.MAX_LIFE_PLUS, 16)
 				.withStatValue(Stat.MELEE_PHYSICAL_DAMAGE, 16));
 
-		assertThat(theCharacter(), PoeMatchers.hasPassiveSkills(31628));
+		assertThat(theCharacter(), hasPassives(passiveWithId(31628)));
+	}
+
+	@Test
+	public void impossibleMarauderSkills()
+	{
+		createCharacter(CharacterClass.MARAUDER, new Integer[] { 31628, 38148 });
+
+		assertThat(theCharacter(), hasStats2()
+				.withStatValue(Stat.MAX_LIFE_PLUS, 16)
+				.withStatValue(Stat.MELEE_PHYSICAL_DAMAGE, 16));
+
+		assertThat(theCharacter(), hasPassives(passiveWithId(31628)));
 	}
 
 	@Test

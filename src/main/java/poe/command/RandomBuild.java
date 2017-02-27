@@ -31,10 +31,11 @@ public class RandomBuild extends BaseCommand<RandomBuildRequest, RandomBuildResu
 		final List<PassiveSkill> skills = passiveSkillRepository.all();
 		final PassiveSkillTree skillTree = new PassiveSkillTree(skills);
 
-		PassiveSkill curSkill = skillTree.findByName("MARAUDER");
+		PassiveSkill curSkill = skillTree.findByName(request.getCharacterClass().getRootPassiveSkillName());
 		PassiveSkill prevSkill = curSkill;
 
 		final PoeCharacter character = new PoeCharacter();
+		character.addRoot(curSkill);
 
 		do
 		{
@@ -43,7 +44,7 @@ public class RandomBuild extends BaseCommand<RandomBuildRequest, RandomBuildResu
 				break;
 			}
 
-			if (!character.hasPassiveSkill(curSkill))
+			if (!(character.hasPassiveSkill(curSkill) || curSkill.isRootSkill()))
 			{
 				System.out.println("added " + curSkill.getName());
 				if (prevSkill == curSkill)
@@ -80,6 +81,8 @@ public class RandomBuild extends BaseCommand<RandomBuildRequest, RandomBuildResu
 
 	public interface RandomBuildRequest
 	{
+		CharacterClass getCharacterClass();
+
 		int getSize();
 	}
 

@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import poe.command.CommandFactory;
 import poe.command.RandomBuild.RandomBuildRequest;
 import poe.command.RandomBuild.RandomBuildResult;
+import poe.entity.CharacterClass;
 import poe.entity.ImmutableCharacter;
 import poe.repository.PassiveSkillRepository;
 
@@ -29,6 +30,12 @@ public class RandomBuild implements CommandLineRunner
 			public int getSize()
 			{
 				return 60;
+			}
+
+			@Override
+			public CharacterClass getCharacterClass()
+			{
+				return CharacterClass.SCION;
 			}
 		});
 		final RandomBuildResultImplementation result1 = new RandomBuildResultImplementation();

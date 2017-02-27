@@ -47,10 +47,7 @@ public class PassiveSkill
 	{
 		for (final StatValue a : attributes)
 		{
-			if (Objects.equals(a.getStat(), expectedAttributeType))
-			{
-				return true;
-			}
+			if (Objects.equals(a.getStat(), expectedAttributeType)) { return true; }
 		}
 
 		return false;
@@ -111,5 +108,30 @@ public class PassiveSkill
 			this.outputs = Arrays.asList(outputs);
 			return this;
 		}
+	}
+
+	public boolean isNeighbor(final List<PassiveSkill> neighbors)
+	{
+		for (final PassiveSkill neighbor : neighbors)
+		{
+			if (isNeighbor(neighbor)) { return true; }
+		}
+
+		return false;
+	}
+
+	public boolean isNeighbor(final PassiveSkill neighbor)
+	{
+		return isNeighbor(neighbor.getId()) || neighbor.isNeighbor(this.id);
+	}
+
+	private boolean isNeighbor(final int otherId)
+	{
+		return outputs.contains(otherId);
+	}
+
+	public boolean isRootSkill()
+	{
+		return CharacterClass.isRootSkill(name);
 	}
 }

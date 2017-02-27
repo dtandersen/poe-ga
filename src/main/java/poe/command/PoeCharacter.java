@@ -64,14 +64,13 @@ public final class PoeCharacter
 
 	public void apply(final PassiveSkill passive)
 	{
-		if (passive == null) { return; }
-		if (skillGraph.contains(passive.getId())) { return; }
-
-		skillGraph.addPassiveSkill(passive);
-		if (passive.getAttributes() == null) { return; }
-		for (final StatValue attribute : passive.getAttributes())
+		if (skillGraph.addPassiveSkill(passive))
 		{
-			apply(attribute);
+			if (passive.getAttributes() == null) { return; }
+			for (final StatValue attribute : passive.getAttributes())
+			{
+				apply(attribute);
+			}
 		}
 	}
 
@@ -103,7 +102,7 @@ public final class PoeCharacter
 
 	public boolean hasAllPassiveSkills(final List<PassiveSkill> skills)
 	{
-		return passiveSkillCount() == skills.size();
+		return passiveSkillCount() == skills.size() - 1;
 	}
 
 	public boolean hasPassiveSkill(final int passiveSkillId)
@@ -150,5 +149,10 @@ public final class PoeCharacter
 	public List<PassiveSkill> getPassiveSkills()
 	{
 		return skillGraph.getPassiveSkills();
+	}
+
+	public void addRoot(final PassiveSkill root)
+	{
+		skillGraph.addRoot(root);
 	}
 }

@@ -30,6 +30,7 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 		final List<PassiveSkill> passiveTree = passiveSkillRepository.all();
 		final PassiveSkillTree pst = new PassiveSkillTree(passiveTree);
 		final PassiveSkill root = pst.findByName(request.getCharacterClass().getRootPassiveSkillName());
+		character.addRoot(root);
 		// character.apply(root);
 		character.applyPassives(request.getPassiveSkillIds(), pst);
 

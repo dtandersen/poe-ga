@@ -1,5 +1,7 @@
 package poe.entity;
 
+import java.util.Objects;
+
 public enum CharacterClass
 {
 	MARAUDER(1, 32, 14, 14, "MARAUDER"),
@@ -53,5 +55,15 @@ public enum CharacterClass
 	public String getRootPassiveSkillName()
 	{
 		return rootPassiveSkillName;
+	}
+
+	public static boolean isRootSkill(final String name)
+	{
+		for (final CharacterClass c : values())
+		{
+			if (Objects.equals(c.getRootPassiveSkillName(), name)) { return true; }
+		}
+
+		return false;
 	}
 }

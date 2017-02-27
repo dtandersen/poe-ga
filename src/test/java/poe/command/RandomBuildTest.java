@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import poe.command.RandomBuild.RandomBuildRequest;
 import poe.command.RandomBuild.RandomBuildResult;
+import poe.entity.CharacterClass;
 import poe.entity.ImmutableCharacter;
 import poe.entity.PassiveSkill;
 import poe.entity.PassiveSkill.PassiveSkillBuilder;
@@ -62,7 +63,7 @@ public class RandomBuildTest
 		// 9511: +10 to Strength
 		// 33988: Melee Damage -> [31628]
 		passiveRepo.create(passiveSkill()
-				.withName("MARAUDER")
+				.withName("WITCH")
 				.withId(1)
 				.withOutputs(2, 3));
 		passiveRepo.create(passiveSkill()
@@ -85,7 +86,13 @@ public class RandomBuildTest
 			@Override
 			public int getSize()
 			{
-				return 3;
+				return 2;
+			}
+
+			@Override
+			public CharacterClass getCharacterClass()
+			{
+				return CharacterClass.MARAUDER;
 			}
 		});
 		result = new RandomBuildResultImplementation();
@@ -93,7 +100,6 @@ public class RandomBuildTest
 		command.execute();
 
 		assertThat(theCharacter(), hasPassives(
-				"MARAUDER",
 				"Melee Damage and Life",
 				"Melee Damage"));
 	}
@@ -110,13 +116,18 @@ public class RandomBuildTest
 			{
 				return 100;
 			}
+
+			@Override
+			public CharacterClass getCharacterClass()
+			{
+				return CharacterClass.MARAUDER;
+			}
 		});
 		result = new RandomBuildResultImplementation();
 		command.setResult(result);
 		command.execute();
 
 		assertThat(theCharacter(), hasPassives(
-				"MARAUDER",
 				"Melee Damage and Life",
 				"Melee Damage"));
 	}
@@ -133,13 +144,18 @@ public class RandomBuildTest
 			{
 				return 100;
 			}
+
+			@Override
+			public CharacterClass getCharacterClass()
+			{
+				return CharacterClass.WITCH;
+			}
 		});
 		result = new RandomBuildResultImplementation();
 		command.setResult(result);
 		command.execute();
 
 		assertThat(theCharacter(), hasPassives(
-				"MARAUDER",
 				"Melee Damage and Life",
 				"Melee Damage"));
 	}
@@ -156,12 +172,19 @@ public class RandomBuildTest
 			{
 				return 100;
 			}
+
+			@Override
+			public CharacterClass getCharacterClass()
+			{
+				return CharacterClass.WITCH;
+			}
+
 		});
 		result = new RandomBuildResultImplementation();
 		command.setResult(result);
 		command.execute();
 
-		assertThat(theUrl(), equalTo("https://www.pathofexile.com/passive-skill-tree/AAAABAEAAAABAAIAAw=="));
+		assertThat(theUrl(), equalTo("https://www.pathofexile.com/passive-skill-tree/AAAABAEAAAACAAM="));
 	}
 
 	private String theUrl()

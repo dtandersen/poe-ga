@@ -1,10 +1,10 @@
 package poe.command;
 
+import java.util.ArrayList;
 import java.util.List;
 import poe.command.CreateCharacter.CreateCharacterRequest;
 import poe.command.CreateCharacter.CreateCharacterResult;
 import poe.command.PureImmutableCharacter.ImmutableCharacterBuilder;
-import poe.entity.Attribute;
 import poe.entity.CharacterClass;
 import poe.entity.ImmutableCharacter;
 import poe.entity.PassiveSkill;
@@ -26,13 +26,17 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 		final int level = 1;
 		final PoeCharacter character = new PoeCharacter();
 
-		baseStats(level, character);
+		character.baseAttributes(level, request.getCharacterClass());
 		final List<PassiveSkill> passiveTree = passiveSkillRepository.all();
 		final PassiveSkillTree pst = new PassiveSkillTree(passiveTree);
 		final PassiveSkill root = pst.findByName(request.getCharacterClass().getRootPassiveSkillName());
 		character.addRoot(root);
-		// character.apply(root);
-		character.applyPassives(request.getPassiveSkillIds(), pst);
+		final List<PassiveSkill> passiveSkills = new ArrayList<>();
+		for (final int PassiveSkillId : request.getPassiveSkillIds())
+		{
+			passiveSkills.add(pst.find(PassiveSkillId));
+		}
+		character.addPassiveSkills(passiveSkills);
 
 		final ImmutableCharacter pure = new ImmutableCharacterBuilder()
 				.withPassiveSkills(character.getPassiveSkills())
@@ -47,26 +51,12 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 				.toUrl());
 	}
 
-	private void baseStats(final int level, final PoeCharacter character)
+	static int div5(final float attributeValue)
 	{
-		final CharacterClass characterClass = request.getCharacterClass();
-		character.setAttributeValue(Attribute.STRENGTH, characterClass.getStrength());
-		character.setAttributeValue(Attribute.DEXTERITY, characterClass.getDexterity());
-		character.setAttributeValue(Attribute.INTELLIGENCE, characterClass.getIntelligence());
-		character.setAttributeValue(Attribute.LIFE, 38 + level * 12 + character.getAttributeValue(Attribute.STRENGTH) / 2);
-		character.setAttributeValue(Attribute.MANA, (40 - 6) + level * 6 + character.getAttributeValue(Attribute.INTELLIGENCE) / 2);
-		final int dexdiv5 = dexDiv5(character);
-		character.setAttributeValue(Attribute.EVASION_RATING, 53 + level * 3 + dexdiv5);
-		character.setAttributeValue(Attribute.ACCURACY, character.getAttributeValue(Attribute.DEXTERITY) * 2);
-	}
+		final float gg = attributeValue % 5;
+		if (gg == 0) { return (int)(attributeValue / 5); }
 
-	private int dexDiv5(final PoeCharacter character)
-	{
-		final float dex = character.getAttributeValue(Attribute.DEXTERITY);
-		final float gg = dex % 5;
-		if (gg == 0) { return (int)(dex / 5); }
-
-		final int g = (int)(dex - gg);
+		final int g = (int)(attributeValue - gg);
 		final int f = g / 5;
 		return f;
 	}

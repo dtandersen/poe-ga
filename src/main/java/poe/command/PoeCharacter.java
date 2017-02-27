@@ -6,40 +6,40 @@ import java.util.List;
 import java.util.Map;
 import poe.entity.Attribute;
 import poe.entity.AttributeValue;
+import poe.entity.CharacterClass;
 import poe.entity.CharacterState;
 import poe.entity.PassiveSkill;
-import poe.entity.PassiveSkillTree;
 import poe.entity.StatValue;
-import poe.entity.StatValueBag;
+import poe.entity.StatValues;
 
 public final class PoeCharacter
 {
-	private final Map<Attribute, AttributeValue> stats;
+	private final Map<Attribute, AttributeValue> attributes;
 
-	private final StatValueBag passiveAttributes;
+	private final StatValues stats;
 
 	private final CharacterState character;
 
 	public PoeCharacter()
 	{
-		stats = new HashMap<>();
-		passiveAttributes = new StatValueBag();
+		attributes = new HashMap<>();
+		stats = new StatValues();
 		character = new CharacterState();
 	}
 
 	public float getAttributeValue(final Attribute attribute)
 	{
-		return stats.get(attribute).getValue();
+		return attributes.get(attribute).getValue();
 	}
 
 	public Collection<AttributeValue> getAttributes()
 	{
-		return stats.values();
+		return attributes.values();
 	}
 
 	public void setAttributeValue(final Attribute attribute, final float value)
 	{
-		stats.put(attribute, new AttributeValue(attribute, value));
+		attributes.put(attribute, new AttributeValue(attribute, value));
 	}
 
 	public Collection<StatValue> getStatValues()
@@ -52,14 +52,14 @@ public final class PoeCharacter
 		return character.getPassiveSkillIds();
 	}
 
-	public StatValueBag getPassiveAttributes()
+	public StatValues getPassiveAttributes()
 	{
-		return passiveAttributes;
+		return stats;
 	}
 
 	public void apply(final StatValue attribute)
 	{
-		passiveAttributes.increment(attribute);
+		stats.increment(attribute);
 	}
 
 	public boolean addPassiveSkill(final PassiveSkill passiveSkill)
@@ -69,30 +69,25 @@ public final class PoeCharacter
 		if (!hasNeighbor(passiveSkill)) { return false; }
 
 		character.addPassiveSkill(passiveSkill);
+		apply(passiveSkill);
 
 		return true;
 	}
 
-	public void apply(final PassiveSkill passive)
+	public void addPassiveSkills(final List<PassiveSkill> passiveSkills)
 	{
-		if (addPassiveSkill(passive))
+		for (final PassiveSkill passiveSkill : passiveSkills)
 		{
-			if (passive.getAttributes() == null) { return; }
-			for (final StatValue attribute : passive.getAttributes())
-			{
-				apply(attribute);
-			}
+			addPassiveSkill(passiveSkill);
 		}
 	}
 
-	public void applyPassives(
-			final List<Integer> passiveSkillIds,
-			final PassiveSkillTree pst)
+	private void apply(final PassiveSkill passive)
 	{
-		for (final int passiveSkillId : passiveSkillIds)
+		if (passive.getAttributes() == null) { return; }
+		for (final StatValue attribute : passive.getAttributes())
 		{
-			final PassiveSkill passive = pst.find(passiveSkillId);
-			apply(passive);
+			apply(attribute);
 		}
 	}
 
@@ -137,7 +132,7 @@ public final class PoeCharacter
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((getPassiveAttributes() == null) ? 0 : getPassiveAttributes().hashCode());
-		result = prime * result + ((stats == null) ? 0 : stats.hashCode());
+		result = prime * result + ((attributes == null) ? 0 : attributes.hashCode());
 		return result;
 	}
 
@@ -153,17 +148,30 @@ public final class PoeCharacter
 			if (other.getPassiveAttributes() != null) { return false; }
 		}
 		else if (!getPassiveAttributes().equals(other.getPassiveAttributes())) { return false; }
-		if (stats == null)
+		if (attributes == null)
 		{
-			if (other.stats != null) { return false; }
+			if (other.attributes != null) { return false; }
 		}
-		else if (!stats.equals(other.stats)) { return false; }
+		else if (!attributes.equals(other.attributes)) { return false; }
 		return true;
 	}
 
 	@Override
 	public String toString()
 	{
-		return "ImmutableCharacterProxy[stats=" + stats + ", passiveAttributes=" + getPassiveAttributes() + "]";
+		return "ImmutableCharacterProxy[stats=" + attributes + ", passiveAttributes=" + getPassiveAttributes() + "]";
+	}
+
+	public void baseAttributes(final int level, final CharacterClass characterClass)
+	{
+		setAttributeValue(Attribute.STRENGTH, characterClass.getStrength());
+		setAttributeValue(Attribute.DEXTERITY, characterClass.getDexterity());
+		setAttributeValue(Attribute.INTELLIGENCE, characterClass.getIntelligence());
+		setAttributeValue(Attribute.LIFE, 38 + level * 12 + getAttributeValue(Attribute.STRENGTH) / 2);
+		setAttributeValue(Attribute.MANA, (40 - 6) + level * 6 + getAttributeValue(Attribute.INTELLIGENCE) / 2);
+		final float attributeValue = getAttributeValue(Attribute.DEXTERITY);
+		final int dexdiv5 = CreateCharacter.div5(attributeValue);
+		setAttributeValue(Attribute.EVASION_RATING, 53 + level * 3 + dexdiv5);
+		setAttributeValue(Attribute.ACCURACY, getAttributeValue(Attribute.DEXTERITY) * 2);
 	}
 }

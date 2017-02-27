@@ -93,29 +93,6 @@ public class CreateCharacterTest
 				passiveWithId(2151)));
 	}
 
-	private Matcher<ImmutableCharacter> hasNoPassiveSkills()
-	{
-		return new TypeSafeDiagnosingMatcher<ImmutableCharacter>() {
-			@Override
-			public void describeTo(final Description description)
-			{
-				description.appendText("a character with no passive skills");
-			}
-
-			@Override
-			protected boolean matchesSafely(final ImmutableCharacter item, final Description mismatchDescription)
-			{
-				final Matcher<Collection<? extends Object>> matcher = Matchers.empty();
-				if (!matcher.matches(item.getPassiveSkills()))
-				{
-					matcher.describeMismatch(item.getPassiveSkills(), mismatchDescription);
-					return false;
-				}
-				return true;
-			}
-		};
-	}
-
 	@Test
 	public void marauderSkillsDeduplicate()
 	{
@@ -138,6 +115,29 @@ public class CreateCharacterTest
 				.withStatValue(Stat.MELEE_PHYSICAL_DAMAGE, 16));
 
 		assertThat(theCharacter(), PoeMatchers.hasPassives(passiveWithId(31628)));
+	}
+
+	private Matcher<ImmutableCharacter> hasNoPassiveSkills()
+	{
+		return new TypeSafeDiagnosingMatcher<ImmutableCharacter>() {
+			@Override
+			public void describeTo(final Description description)
+			{
+				description.appendText("a character with no passive skills");
+			}
+
+			@Override
+			protected boolean matchesSafely(final ImmutableCharacter item, final Description mismatchDescription)
+			{
+				final Matcher<Collection<? extends Object>> matcher = Matchers.empty();
+				if (!matcher.matches(item.getPassiveSkills()))
+				{
+					matcher.describeMismatch(item.getPassiveSkills(), mismatchDescription);
+					return false;
+				}
+				return true;
+			}
+		};
 	}
 
 	@Test

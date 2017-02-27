@@ -574,4 +574,9 @@ public enum Stat
 
 		public static final String PLUS_INT = PLUS + INT;
 	}
+
+	public boolean isUnknown()
+	{
+		return this == UNKNOWN;
+	}
 }

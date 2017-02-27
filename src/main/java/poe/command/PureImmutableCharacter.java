@@ -1,12 +1,15 @@
 package poe.command;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import poe.command.PureImmutableSkill.ImmutablePassiveSkillBuilder;
 import poe.entity.AttributeValue;
 import poe.entity.ImmutableCharacter;
+import poe.entity.PassiveSkill;
 import poe.entity.StatValue;
 
-final class PureImmutableCharacter implements ImmutableCharacter
+public class PureImmutableCharacter implements ImmutableCharacter
 {
 	private final List<Integer> passiveSkillIds;
 
@@ -14,11 +17,14 @@ final class PureImmutableCharacter implements ImmutableCharacter
 
 	private final Collection<AttributeValue> stats;
 
-	public PureImmutableCharacter(final PureImmutableCharacterBuilder pureImmutableCharacterBuilder)
+	private final List<ImmutablePassiveSkill> passiveSkills;
+
+	public PureImmutableCharacter(final ImmutableCharacterBuilder pureImmutableCharacterBuilder)
 	{
 		this.passiveSkillIds = pureImmutableCharacterBuilder.passiveSkillIds;
 		this.statValues = pureImmutableCharacterBuilder.statValues;
 		this.stats = pureImmutableCharacterBuilder.stats;
+		this.passiveSkills = pureImmutableCharacterBuilder.passiveSkills;
 	}
 
 	@Override
@@ -39,7 +45,13 @@ final class PureImmutableCharacter implements ImmutableCharacter
 		return passiveSkillIds;
 	}
 
-	public static class PureImmutableCharacterBuilder
+	@Override
+	public List<ImmutablePassiveSkill> getPassiveSkills()
+	{
+		return passiveSkills;
+	}
+
+	public static class ImmutableCharacterBuilder
 	{
 		private List<Integer> passiveSkillIds;
 
@@ -47,21 +59,41 @@ final class PureImmutableCharacter implements ImmutableCharacter
 
 		private Collection<AttributeValue> stats;
 
-		public PureImmutableCharacterBuilder withPassiveSkillIds(final List<Integer> passiveSkillIds)
+		private final List<ImmutablePassiveSkill> passiveSkills;
+
+		public ImmutableCharacterBuilder()
+		{
+			passiveSkills = new ArrayList<>();
+		}
+
+		public ImmutableCharacterBuilder withPassiveSkillIds(final List<Integer> passiveSkillIds)
 		{
 			this.passiveSkillIds = passiveSkillIds;
 			return this;
 		}
 
-		public PureImmutableCharacterBuilder withStatValues(final Collection<StatValue> statValues)
+		public ImmutableCharacterBuilder withStatValues(final Collection<StatValue> statValues)
 		{
 			this.statValues = statValues;
 			return this;
 		}
 
-		public PureImmutableCharacterBuilder withStats(final Collection<AttributeValue> stats)
+		public ImmutableCharacterBuilder withStats(final Collection<AttributeValue> stats)
 		{
 			this.stats = stats;
+			return this;
+		}
+
+		public ImmutableCharacterBuilder withPassiveSkill(final List<PassiveSkill> passiveSkills)
+		{
+			for (final PassiveSkill passiveSkill : passiveSkills)
+			{
+				final ImmutablePassiveSkill immutablePassiveSkill = ImmutablePassiveSkillBuilder.passiveSkill()
+						.withPassiveSkillId(passiveSkill.getId())
+						.withName(passiveSkill.getName())
+						.build();
+				this.passiveSkills.add(immutablePassiveSkill);
+			}
 			return this;
 		}
 
@@ -70,9 +102,9 @@ final class PureImmutableCharacter implements ImmutableCharacter
 			return new PureImmutableCharacter(this);
 		}
 
-		public static PureImmutableCharacterBuilder character()
+		public static ImmutableCharacterBuilder character()
 		{
-			return new PureImmutableCharacterBuilder();
+			return new ImmutableCharacterBuilder();
 		}
 	}
 }

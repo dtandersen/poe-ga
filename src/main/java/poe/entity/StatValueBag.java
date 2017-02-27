@@ -13,12 +13,12 @@ public class StatValueBag
 		return passives.values();
 	}
 
-	public void increment(final StatValue attribute)
+	public void increment(final StatValue statValue)
 	{
-		final StatValue existing = find(attribute.getStat());
+		final StatValue existing = find(statValue.getStat());
 		if (existing == null)
 		{
-			passives.put(attribute.getStat(), attribute);
+			passives.put(statValue.getStat(), statValue);
 		}
 	}
 

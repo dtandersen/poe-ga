@@ -52,7 +52,8 @@ public class JsonPassiveSkillRepository implements PassiveSkillRepository
 						final String group = matcher.group(1);
 						final float val = Float.parseFloat(group);
 						attribute = new StatValue(at, val);
-					} catch (final IndexOutOfBoundsException e2)
+					}
+					catch (final IndexOutOfBoundsException e2)
 					{
 					}
 					e.addAttribute(attribute);

@@ -59,20 +59,14 @@ public final class PoeCharacter
 
 	public void apply(final StatValue attribute)
 	{
-		getPassiveAttributes().increment(attribute);
+		passiveAttributes.increment(attribute);
 	}
 
 	public void apply(final PassiveSkill passive)
 	{
-		if (passive == null)
-		{
-			return;
-		}
-		skillGraph.add(passive.getId());
-		if (passive.getAttributes() == null)
-		{
-			return;
-		}
+		if (passive == null) { return; }
+		skillGraph.addPassiveSkill(passive);
+		if (passive.getAttributes() == null) { return; }
 		for (final StatValue attribute : passive.getAttributes())
 		{
 			apply(attribute);
@@ -90,6 +84,11 @@ public final class PoeCharacter
 		}
 	}
 
+	public void addSkill(final PassiveSkill passiveSkill)
+	{
+		skillGraph.addPassiveSkill(passiveSkill);
+	}
+
 	public int passiveSkillCount()
 	{
 		return skillGraph.size();
@@ -98,29 +97,6 @@ public final class PoeCharacter
 	public boolean hasPassiveSkill(final PassiveSkill passiveSkill)
 	{
 		return skillGraph.contains(passiveSkill.getId());
-	}
-
-	public void addSkill(final PassiveSkill passiveSkill)
-	{
-		final int id = passiveSkill.getId();
-		addSkill(id);
-	}
-
-	public void addSkill(final int id)
-	{
-		skillGraph.add(id);
-	}
-
-	public void addSkill(final PassiveSkill passiveSkill1, final PassiveSkill passiveSkill2)
-	{
-		final int id = passiveSkill2.getId();
-		final int id2 = passiveSkill1.getId();
-		addSkill(id, id2);
-	}
-
-	public void addSkill(final int id, final int id2)
-	{
-		skillGraph.add(id, id2);
 	}
 
 	public boolean hasAllPassiveSkills(final List<PassiveSkill> skills)
@@ -146,39 +122,20 @@ public final class PoeCharacter
 	@Override
 	public boolean equals(final Object obj)
 	{
-		if (this == obj)
-		{
-			return true;
-		}
-		if (obj == null)
-		{
-			return false;
-		}
-		if (getClass() != obj.getClass())
-		{
-			return false;
-		}
+		if (this == obj) { return true; }
+		if (obj == null) { return false; }
+		if (getClass() != obj.getClass()) { return false; }
 		final PoeCharacter other = (PoeCharacter)obj;
 		if (getPassiveAttributes() == null)
 		{
-			if (other.getPassiveAttributes() != null)
-			{
-				return false;
-			}
-		} else if (!getPassiveAttributes().equals(other.getPassiveAttributes()))
-		{
-			return false;
+			if (other.getPassiveAttributes() != null) { return false; }
 		}
+		else if (!getPassiveAttributes().equals(other.getPassiveAttributes())) { return false; }
 		if (stats == null)
 		{
-			if (other.stats != null)
-			{
-				return false;
-			}
-		} else if (!stats.equals(other.stats))
-		{
-			return false;
+			if (other.stats != null) { return false; }
 		}
+		else if (!stats.equals(other.stats)) { return false; }
 		return true;
 	}
 
@@ -186,5 +143,10 @@ public final class PoeCharacter
 	public String toString()
 	{
 		return "ImmutableCharacterProxy[stats=" + stats + ", passiveAttributes=" + getPassiveAttributes() + "]";
+	}
+
+	public List<PassiveSkill> getPassiveSkills()
+	{
+		return skillGraph.getPassiveSkills();
 	}
 }

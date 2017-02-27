@@ -10,29 +10,18 @@ public class PassiveSkillGraph
 {
 	private final UndirectedGraph<Integer, DefaultEdge> graph;
 
+	private final List<PassiveSkill> passiveSkills;
+
 	public PassiveSkillGraph()
 	{
 		graph = new SimpleGraph<>(DefaultEdge.class);
+		passiveSkills = new ArrayList<>();
 	}
 
-	public void add(final int passiveSkillId)
+	public void addPassiveSkill(final PassiveSkill passiveSkill)
 	{
-		graph.addVertex(passiveSkillId);
-	}
-
-	public void add(final int passiveSkillId1, final int passiveSkillId2)
-	{
-		if (!graph.containsVertex(passiveSkillId1))
-		{
-			graph.addVertex(passiveSkillId1);
-		}
-
-		if (!graph.containsVertex(passiveSkillId2))
-		{
-			graph.addVertex(passiveSkillId2);
-		}
-
-		graph.addEdge(passiveSkillId1, passiveSkillId2);
+		passiveSkills.add(passiveSkill);
+		graph.addVertex(passiveSkill.getId());
 	}
 
 	public List<Integer> getPassiveSkillIds()
@@ -48,5 +37,10 @@ public class PassiveSkillGraph
 	public boolean contains(final int id)
 	{
 		return graph.containsVertex(id);
+	}
+
+	public List<PassiveSkill> getPassiveSkills()
+	{
+		return passiveSkills;
 	}
 }

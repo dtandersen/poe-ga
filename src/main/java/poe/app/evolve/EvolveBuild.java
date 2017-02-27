@@ -64,23 +64,10 @@ public class EvolveBuild implements CommandLineRunner
 		System.out.println(chromosome);
 
 		final PoeCharacter character = new PoeCharacter();
-		// final PoeCharacter character = new PoeCharacter();
-		int i = 0;
-		int last = 0;
 		for (final SkillGene g : chromosome)
 		{
-			if (last == 0)
-			{
-				character.addSkill(g.passiveSkillId);
-			} else
-			{
-				if (!character.hasPassiveSkill(g.passiveSkillId))
-				{
-					character.addSkill(last, g.passiveSkillId);
-				}
-			}
-			last = g.passiveSkillId;
-			i++;
+			final PassiveSkill passiveSkill = pst.find(g.passiveSkillId);
+			character.addSkill(passiveSkill);
 		}
 		final PoeComUrlBuilder b = new PoeComUrlBuilder();
 		b.withCharacterClass(CharacterClass.MARAUDER);

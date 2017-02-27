@@ -10,4 +10,13 @@ public interface ImmutableCharacter
 	Collection<StatValue> getStatValues();
 
 	List<Integer> getPassiveSkillIds();
+
+	List<ImmutablePassiveSkill> getPassiveSkills();
+
+	public interface ImmutablePassiveSkill
+	{
+		int getPassiveSkillId();
+
+		String getName();
+	}
 }

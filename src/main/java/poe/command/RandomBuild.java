@@ -1,7 +1,7 @@
 package poe.command;
 
 import java.util.List;
-import poe.command.PureImmutableCharacter.PureImmutableCharacterBuilder;
+import poe.command.PureImmutableCharacter.ImmutableCharacterBuilder;
 import poe.command.RandomBuild.RandomBuildRequest;
 import poe.command.RandomBuild.RandomBuildResult;
 import poe.entity.CharacterClass;
@@ -49,11 +49,13 @@ public class RandomBuild extends BaseCommand<RandomBuildRequest, RandomBuildResu
 				if (prevSkill == curSkill)
 				{
 					character.addSkill(curSkill);
-				} else
-				{
-					character.addSkill(curSkill, prevSkill);
 				}
-			} else
+				else
+				{
+					character.addSkill(curSkill);
+				}
+			}
+			else
 			{
 				System.out.println("already have " + curSkill.getName());
 			}
@@ -63,9 +65,10 @@ public class RandomBuild extends BaseCommand<RandomBuildRequest, RandomBuildResu
 			final int nextIndex = randomizer.nextInt(neighbors.size());
 			curSkill = skillTree.find(neighbors.get(nextIndex));
 			System.out.println("rolled " + nextIndex + " and got " + curSkill.getName());
-		} while (character.passiveSkillCount() < request.getSize());
+		}
+		while (character.passiveSkillCount() < request.getSize());
 
-		result.setCharacter(PureImmutableCharacterBuilder.character()
+		result.setCharacter(ImmutableCharacterBuilder.character()
 				.withPassiveSkillIds(character.getPassiveSkillIds())
 				.build());
 

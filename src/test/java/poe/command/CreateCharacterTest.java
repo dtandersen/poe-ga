@@ -1,23 +1,28 @@
 package poe.command;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hobsoft.hamcrest.compose.ComposeMatchers.compose;
+import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import static org.junit.Assert.assertThat;
-import static poe.entity.PoeMatchers.containsInAnyOrder;
-import static poe.entity.PoeMatchers.hasPassives;
+import static poe.entity.PoeMatchers.hasStats2;
 import java.util.Arrays;
 import java.util.List;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
+import org.junit.Before;
 import org.junit.Test;
 import poe.command.CreateCharacter.CreateCharacterRequest;
 import poe.command.CreateCharacter.CreateCharacterResult;
+import poe.command.PureImmutableSkill.ImmutablePassiveSkillBuilder;
 import poe.entity.Attribute;
 import poe.entity.CharacterClass;
 import poe.entity.ImmutableCharacter;
+import poe.entity.ImmutableCharacter.ImmutablePassiveSkill;
+import poe.entity.PassiveSkillTree;
 import poe.entity.PoeMatchers;
 import poe.entity.Stat;
-import poe.matcher.ComposableMatcher;
 import poe.repository.PassiveSkillRepository;
 import poe.repository.json.JsonPassiveSkillRepository;
 
@@ -26,6 +31,14 @@ public class CreateCharacterTest
 	private CreateCharacterResultImplementation result;
 
 	private final PassiveSkillRepository jsonSkillRepo = new JsonPassiveSkillRepository();
+
+	private PassiveSkillTree passiveSkillTree;
+
+	@Before
+	public void setUp()
+	{
+		passiveSkillTree = new PassiveSkillTree(jsonSkillRepo.all());
+	}
 
 	@Test
 	public void level1Witch()
@@ -40,6 +53,44 @@ public class CreateCharacterTest
 				.withStat(Attribute.MANA, 56)
 				.withStat(Attribute.EVASION_RATING, 58)
 				.withStat(Attribute.ACCURACY, 28));
+
+		assertThat(theCharacter(), hasPassive(passiveEqualTo(passsiveWithName(CharacterClass.WITCH.getRootPassiveSkillName()))));
+	}
+
+	private ImmutablePassiveSkill passsiveWithName(final String name)
+	{
+		return ImmutablePassiveSkillBuilder.passiveSkill().from(passiveSkillTree.findByName(name)).build();
+	}
+
+	private Matcher<ImmutablePassiveSkill> passiveEqualTo(final ImmutablePassiveSkill expected)
+	{
+		return compose("a passive skill with",
+				hasFeature("name", ImmutablePassiveSkill::getName, equalTo(expected.getName())));
+	}
+
+	private Matcher<ImmutableCharacter> hasPassive(final Matcher<ImmutablePassiveSkill> matcher)
+	{
+		return new TypeSafeDiagnosingMatcher<ImmutableCharacter>() {
+			@Override
+			public void describeTo(final Description description)
+			{
+				description.appendText("a character with ");
+				matcher.describeTo(description);
+			}
+
+			@Override
+			protected boolean matchesSafely(final ImmutableCharacter item, final Description mismatchDescription)
+			{
+				final Matcher<Iterable<? super ImmutablePassiveSkill>> has = Matchers.hasItem(matcher);
+				if (!has.matches(item.getPassiveSkills()))
+				{
+					has.describeMismatch(item.getPassiveSkills(), mismatchDescription);
+					return false;
+				}
+
+				return true;
+			}
+		};
 	}
 
 	@Test
@@ -62,7 +113,7 @@ public class CreateCharacterTest
 	{
 		createCharacter(CharacterClass.MARAUDER, new Integer[] { 60942, 6741 });
 
-		assertThat(theCharacter(), hasPassives()
+		assertThat(theCharacter(), hasStats2()
 				.withStatValue(Stat.DEXTERITY, 10)
 				.withStatValue(Stat.STRENGTH, 10));
 	}
@@ -72,37 +123,11 @@ public class CreateCharacterTest
 	{
 		createCharacter(CharacterClass.MARAUDER, new Integer[] { 31628, 31628 });
 
-		assertThat(theCharacter(), hasPassives()
+		assertThat(theCharacter(), hasStats2()
 				.withStatValue(Stat.MAX_LIFE_PLUS, 16)
 				.withStatValue(Stat.MELEE_PHYSICAL_DAMAGE, 16));
 
-		assertThat(theCharacter(), hasPassiveSkills(47175, 31628));
-	}
-
-	private Matcher<ImmutableCharacter> hasPassiveSkills(final Integer... expectedPassiveSkillIds)
-	{
-		final List<Integer> asList = Arrays.asList(expectedPassiveSkillIds);
-		final Matcher<Iterable<? extends Integer>> matcher = containsInAnyOrder(asList);
-		return new TypeSafeDiagnosingMatcher<ImmutableCharacter>() {
-			@Override
-			public void describeTo(final Description description)
-			{
-				description.appendText("a character with passives ");
-				description.appendValueList("", ",", "", expectedPassiveSkillIds);
-			}
-
-			@Override
-			protected boolean matchesSafely(final ImmutableCharacter item, final Description mismatchDescription)
-			{
-				final List<Integer> actualIds = item.getPassiveSkillIds();
-				if (!matcher.matches(actualIds))
-				{
-					matcher.describeMismatch(actualIds, mismatchDescription);
-					return false;
-				}
-				return true;
-			}
-		};
+		assertThat(theCharacter(), PoeMatchers.hasPassiveSkills(47175, 31628));
 	}
 
 	@Test
@@ -110,18 +135,7 @@ public class CreateCharacterTest
 	{
 		createCharacter(CharacterClass.MARAUDER, new Integer[] { 31628 });
 
-		assertThat(result, hasUrl(equalTo("https://www.pathofexile.com/passive-skill-tree/AAAABAEAAHuM")));
-	}
-
-	private Matcher<CreateCharacterResultImplementation> hasUrl(final Matcher<String> matcher)
-	{
-		return new ComposableMatcher<CreateCharacterTest.CreateCharacterResultImplementation, String>(matcher) {
-			@Override
-			protected String getValue(final CreateCharacterResultImplementation item)
-			{
-				return result.getUrl();
-			}
-		};
+		assertThat(result, PoeMatchers.hasUrl(equalTo("https://www.pathofexile.com/passive-skill-tree/AAAABAEAAHuM")));
 	}
 
 	private void createCharacter(final CharacterClass marauder, final Integer[] passiveSkillIds)
@@ -155,7 +169,7 @@ public class CreateCharacterTest
 		return result.character;
 	}
 
-	private final class CreateCharacterResultImplementation implements CreateCharacterResult
+	public final class CreateCharacterResultImplementation implements CreateCharacterResult
 	{
 		public ImmutableCharacter character;
 
@@ -177,6 +191,5 @@ public class CreateCharacterTest
 		{
 			this.url = url;
 		}
-
 	}
 }

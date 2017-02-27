@@ -17,21 +17,26 @@ public class PassiveSkill
 
 	private List<Integer> outputs;
 
-	private int type;
+	private CharacterClass classStartingPoint;
 
 	public List<StatValue> getStats()
 	{
 		return attributes;
 	}
 
-	public int getType()
+	public CharacterClass getClassStartingPoint()
 	{
-		return type;
+		return classStartingPoint;
 	}
 
-	public void setType(final int type)
+	public void setClassStartingPoint(final CharacterClass classStartingPoint)
 	{
-		this.type = type;
+		this.classStartingPoint = classStartingPoint;
+	}
+
+	public boolean isClassStartingNode()
+	{
+		return classStartingPoint != null;
 	}
 
 	public PassiveSkill(final String name)
@@ -45,7 +50,7 @@ public class PassiveSkill
 		this.name = passiveSkillBuilder.name;
 		this.outputs = passiveSkillBuilder.outputs;
 		this.attributes = passiveSkillBuilder.stats;
-		this.type = passiveSkillBuilder.type;
+		this.classStartingPoint = passiveSkillBuilder.classStartingPoint;
 	}
 
 	public String getName()
@@ -134,7 +139,7 @@ public class PassiveSkill
 
 		private List<StatValue> stats;
 
-		private int type;
+		private CharacterClass classStartingPoint;
 
 		public PassiveSkillBuilder withId(final int id)
 		{
@@ -165,12 +170,6 @@ public class PassiveSkill
 			return this;
 		}
 
-		public PassiveSkillBuilder withType(final int type)
-		{
-			this.type = type;
-			return this;
-		}
-
 		public PassiveSkill build()
 		{
 			return new PassiveSkill(this);
@@ -179,6 +178,12 @@ public class PassiveSkill
 		public static PassiveSkillBuilder passiveSkill()
 		{
 			return new PassiveSkillBuilder();
+		}
+
+		public PassiveSkillBuilder withClassStartingPoint(final CharacterClass characterClass)
+		{
+			this.classStartingPoint = characterClass;
+			return this;
 		}
 	}
 }

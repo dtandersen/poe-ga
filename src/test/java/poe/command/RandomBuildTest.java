@@ -39,7 +39,7 @@ public class RandomBuildTest
 				.withName("MARAUDER")
 				.withId(47175)
 				.withOutputs(31628, 50904, 17765, 24704, 29294)
-				.withType(5));
+				.withClassStartingPoint(CharacterClass.MARAUDER));
 		passiveRepo.create(passiveSkill()
 				.withName("Melee Damage and Life")
 				.withId(31628)
@@ -60,7 +60,7 @@ public class RandomBuildTest
 				.withName("WITCH")
 				.withId(1)
 				.withOutputs(2, 3)
-				.withType(5));
+				.withClassStartingPoint(CharacterClass.WITCH));
 		passiveRepo.create(passiveSkill()
 				.withName("Melee Damage and Life")
 				.withId(2)

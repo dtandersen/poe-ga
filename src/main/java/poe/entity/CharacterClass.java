@@ -66,4 +66,14 @@ public enum CharacterClass
 
 		return false;
 	}
+
+	public static CharacterClass byId(final int classId)
+	{
+		for (final CharacterClass c : values())
+		{
+			if (c.getId() == classId) { return c; }
+		}
+
+		return null;
+	}
 }

@@ -179,7 +179,7 @@ public final class PoeCharacter
 			@Override
 			public boolean test(final PassiveSkill t)
 			{
-				return t.getType() != 5;
+				return !t.isClassStartingNode();
 			}
 		}).collect(Collectors.toList());
 	}

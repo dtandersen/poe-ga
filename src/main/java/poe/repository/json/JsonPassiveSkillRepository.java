@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import com.google.gson.Gson;
+import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
 import poe.entity.PassiveSkillTree;
 import poe.entity.Stat;
@@ -34,7 +35,10 @@ public class JsonPassiveSkillRepository implements PassiveSkillRepository
 			final PassiveSkill e = new PassiveSkill(n.dn);
 			e.setId(n.id);
 			e.setOutputs(n.out);
-			e.setType(n.spc.size() > 0 ? 5 : 0);
+			if (n.spc.size() > 0)
+			{
+				e.setClassStartingPoint(CharacterClass.byId(n.spc.get(0)));
+			}
 			for (final String s : n.sd)
 			{
 				boolean matched = false;

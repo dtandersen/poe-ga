@@ -30,12 +30,11 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 		final List<PassiveSkill> passiveTree = passiveSkillRepository.all();
 		final PassiveSkillTree pst = new PassiveSkillTree(passiveTree);
 		final PassiveSkill root = pst.findByName(request.getCharacterClass().getRootPassiveSkillName());
-		character.apply(root);
+		// character.apply(root);
 		character.applyPassives(request.getPassiveSkillIds(), pst);
 
 		final ImmutableCharacter pure = new ImmutableCharacterBuilder()
-				.withPassiveSkillIds(character.getPassiveSkillIds())
-				.withPassiveSkill(character.getPassiveSkills())
+				.withPassiveSkills(character.getPassiveSkills())
 				.withStats(character.getStats())
 				.withStatValues(character.getStatValues())
 				.build();

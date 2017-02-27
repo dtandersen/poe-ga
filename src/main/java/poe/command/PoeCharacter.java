@@ -65,6 +65,8 @@ public final class PoeCharacter
 	public void apply(final PassiveSkill passive)
 	{
 		if (passive == null) { return; }
+		if (skillGraph.contains(passive.getId())) { return; }
+
 		skillGraph.addPassiveSkill(passive);
 		if (passive.getAttributes() == null) { return; }
 		for (final StatValue attribute : passive.getAttributes())

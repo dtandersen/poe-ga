@@ -1,12 +1,17 @@
 package poe.entity;
 
+import static org.hamcrest.Matchers.equalTo;
+import static org.hobsoft.hamcrest.compose.ComposeMatchers.compose;
+import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import java.util.Arrays;
 import java.util.List;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 import poe.command.CreateCharacterTest;
 import poe.command.CreateCharacterTest.CreateCharacterResultImplementation;
+import poe.entity.ImmutableCharacter.ImmutablePassiveSkill;
 import poe.matcher.ComposableMatcher;
 
 public class PoeMatchers
@@ -47,7 +52,7 @@ public class PoeMatchers
 				description.appendText("a character with passives ");
 				description.appendValueList("", ",", "", expectedPassiveSkillIds);
 			}
-	
+
 			@Override
 			protected boolean matchesSafely(final ImmutableCharacter item, final Description mismatchDescription)
 			{
@@ -71,5 +76,65 @@ public class PoeMatchers
 				return item.getUrl();
 			}
 		};
+	}
+
+	public static Matcher<ImmutableCharacter> hasPassive(final Matcher<ImmutablePassiveSkill> matcher)
+	{
+		return new TypeSafeDiagnosingMatcher<ImmutableCharacter>() {
+			@Override
+			public void describeTo(final Description description)
+			{
+				description.appendText("a character with ");
+				matcher.describeTo(description);
+			}
+
+			@Override
+			protected boolean matchesSafely(final ImmutableCharacter item, final Description mismatchDescription)
+			{
+				final Matcher<Iterable<? super ImmutablePassiveSkill>> has = Matchers.hasItem(matcher);
+				if (!has.matches(item.getPassiveSkills()))
+				{
+					has.describeMismatch(item.getPassiveSkills(), mismatchDescription);
+					return false;
+				}
+
+				return true;
+			}
+		};
+	}
+
+	public static Matcher<ImmutableCharacter> hasPassive(final ImmutablePassiveSkill expected)
+	{
+		return hasPassive(passiveEqualTo(expected));
+	}
+
+	public static Matcher<ImmutableCharacter> hasPassives(final Matcher<Iterable<? extends ImmutablePassiveSkill>> matcher)
+	{
+		return new TypeSafeDiagnosingMatcher<ImmutableCharacter>() {
+			@Override
+			public void describeTo(final Description description)
+			{
+				description.appendText("a character with ");
+				matcher.describeTo(description);
+			}
+
+			@Override
+			protected boolean matchesSafely(final ImmutableCharacter item, final Description mismatchDescription)
+			{
+				if (!matcher.matches(item.getPassiveSkills()))
+				{
+					matcher.describeMismatch(item.getPassiveSkills(), mismatchDescription);
+					return false;
+				}
+
+				return true;
+			}
+		};
+	}
+
+	public static Matcher<ImmutablePassiveSkill> passiveEqualTo(final ImmutablePassiveSkill expected)
+	{
+		return compose("a passive skill with",
+				hasFeature("name", ImmutablePassiveSkill::getName, equalTo(expected.getName())));
 	}
 }

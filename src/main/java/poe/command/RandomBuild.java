@@ -69,7 +69,7 @@ public class RandomBuild extends BaseCommand<RandomBuildRequest, RandomBuildResu
 		while (character.passiveSkillCount() < request.getSize());
 
 		result.setCharacter(ImmutableCharacterBuilder.character()
-				.withPassiveSkillIds(character.getPassiveSkillIds())
+				.withPassiveSkills(character.getPassiveSkills())
 				.build());
 
 		result.setUrl(new PoeComUrlBuilder()

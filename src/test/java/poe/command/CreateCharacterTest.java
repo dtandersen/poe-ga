@@ -1,11 +1,13 @@
 package poe.command;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.hobsoft.hamcrest.compose.ComposeMatchers.compose;
-import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import static org.junit.Assert.assertThat;
+import static poe.entity.CharacterClass.MARAUDER;
+import static poe.entity.CharacterClass.WITCH;
 import static poe.entity.PoeMatchers.hasStats2;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -15,7 +17,7 @@ import org.junit.Before;
 import org.junit.Test;
 import poe.command.CreateCharacter.CreateCharacterRequest;
 import poe.command.CreateCharacter.CreateCharacterResult;
-import poe.command.PureImmutableSkill.ImmutablePassiveSkillBuilder;
+import poe.command.PureImmutablePassiveSkill.ImmutablePassiveSkillBuilder;
 import poe.entity.Attribute;
 import poe.entity.CharacterClass;
 import poe.entity.ImmutableCharacter;
@@ -30,20 +32,21 @@ public class CreateCharacterTest
 {
 	private CreateCharacterResultImplementation result;
 
-	private final PassiveSkillRepository jsonSkillRepo = new JsonPassiveSkillRepository();
+	private PassiveSkillRepository jsonSkillRepo;
 
 	private PassiveSkillTree passiveSkillTree;
 
 	@Before
 	public void setUp()
 	{
+		jsonSkillRepo = new JsonPassiveSkillRepository();
 		passiveSkillTree = new PassiveSkillTree(jsonSkillRepo.all());
 	}
 
 	@Test
 	public void level1Witch()
 	{
-		createCharacter(CharacterClass.WITCH);
+		createCharacter(WITCH);
 
 		assertThat(theCharacter(), PoeMatchers.hasStats()
 				.withStat(Attribute.STRENGTH, 14)
@@ -54,49 +57,13 @@ public class CreateCharacterTest
 				.withStat(Attribute.EVASION_RATING, 58)
 				.withStat(Attribute.ACCURACY, 28));
 
-		assertThat(theCharacter(), hasPassive(passiveEqualTo(passsiveWithName(CharacterClass.WITCH.getRootPassiveSkillName()))));
-	}
-
-	private ImmutablePassiveSkill passsiveWithName(final String name)
-	{
-		return ImmutablePassiveSkillBuilder.passiveSkill().from(passiveSkillTree.findByName(name)).build();
-	}
-
-	private Matcher<ImmutablePassiveSkill> passiveEqualTo(final ImmutablePassiveSkill expected)
-	{
-		return compose("a passive skill with",
-				hasFeature("name", ImmutablePassiveSkill::getName, equalTo(expected.getName())));
-	}
-
-	private Matcher<ImmutableCharacter> hasPassive(final Matcher<ImmutablePassiveSkill> matcher)
-	{
-		return new TypeSafeDiagnosingMatcher<ImmutableCharacter>() {
-			@Override
-			public void describeTo(final Description description)
-			{
-				description.appendText("a character with ");
-				matcher.describeTo(description);
-			}
-
-			@Override
-			protected boolean matchesSafely(final ImmutableCharacter item, final Description mismatchDescription)
-			{
-				final Matcher<Iterable<? super ImmutablePassiveSkill>> has = Matchers.hasItem(matcher);
-				if (!has.matches(item.getPassiveSkills()))
-				{
-					has.describeMismatch(item.getPassiveSkills(), mismatchDescription);
-					return false;
-				}
-
-				return true;
-			}
-		};
+		assertThat(theCharacter(), hasNoPassiveSkills());
 	}
 
 	@Test
 	public void level1Marauder()
 	{
-		createCharacter(CharacterClass.MARAUDER);
+		createCharacter(MARAUDER);
 
 		assertThat(theCharacter(), PoeMatchers.hasStats()
 				.withStat(Attribute.STRENGTH, 32)
@@ -106,6 +73,32 @@ public class CreateCharacterTest
 				.withStat(Attribute.MANA, 47)
 				.withStat(Attribute.EVASION_RATING, 58)
 				.withStat(Attribute.ACCURACY, 28));
+
+		// assertThat(theCharacter(), hasPassive(classPassive(MARAUDER)));
+		assertThat(theCharacter(), hasNoPassiveSkills());
+	}
+
+	private Matcher<ImmutableCharacter> hasNoPassiveSkills()
+	{
+		return new TypeSafeDiagnosingMatcher<ImmutableCharacter>() {
+			@Override
+			public void describeTo(final Description description)
+			{
+				description.appendText("a character with no passive skills");
+			}
+
+			@Override
+			protected boolean matchesSafely(final ImmutableCharacter item, final Description mismatchDescription)
+			{
+				final Matcher<Collection<? extends Object>> matcher = Matchers.empty();
+				if (!matcher.matches(item.getPassiveSkills()))
+				{
+					matcher.describeMismatch(item.getPassiveSkills(), mismatchDescription);
+					return false;
+				}
+				return true;
+			}
+		};
 	}
 
 	@Test
@@ -116,6 +109,22 @@ public class CreateCharacterTest
 		assertThat(theCharacter(), hasStats2()
 				.withStatValue(Stat.DEXTERITY, 10)
 				.withStatValue(Stat.STRENGTH, 10));
+
+		assertThat(theCharacter(), hasPassives(
+				passiveWithId(60942),
+				passiveWithId(6741)));
+	}
+
+	private Matcher<ImmutableCharacter> hasPassives(final ImmutablePassiveSkill... classPassive)
+	{
+		final Collection<Matcher<? super ImmutablePassiveSkill>> x = new ArrayList<>();
+		for (final ImmutablePassiveSkill ps : classPassive)
+		{
+			x.add(PoeMatchers.passiveEqualTo(ps));
+		}
+		final Matcher<Iterable<? extends ImmutablePassiveSkill>> containsInAnyOrder = Matchers.containsInAnyOrder(x);
+
+		return PoeMatchers.hasPassives(containsInAnyOrder);
 	}
 
 	@Test
@@ -127,7 +136,7 @@ public class CreateCharacterTest
 				.withStatValue(Stat.MAX_LIFE_PLUS, 16)
 				.withStatValue(Stat.MELEE_PHYSICAL_DAMAGE, 16));
 
-		assertThat(theCharacter(), PoeMatchers.hasPassiveSkills(47175, 31628));
+		assertThat(theCharacter(), PoeMatchers.hasPassiveSkills(31628));
 	}
 
 	@Test
@@ -167,6 +176,21 @@ public class CreateCharacterTest
 	private ImmutableCharacter theCharacter()
 	{
 		return result.character;
+	}
+
+	private ImmutablePassiveSkill classPassive(final CharacterClass characterClass)
+	{
+		return passsiveNamed(characterClass.getRootPassiveSkillName());
+	}
+
+	private ImmutablePassiveSkill passsiveNamed(final String name)
+	{
+		return ImmutablePassiveSkillBuilder.passiveSkill().from(passiveSkillTree.findByName(name)).build();
+	}
+
+	private ImmutablePassiveSkill passiveWithId(final int passiveSkillId)
+	{
+		return ImmutablePassiveSkillBuilder.passiveSkill().from(passiveSkillTree.find(passiveSkillId)).build();
 	}
 
 	public final class CreateCharacterResultImplementation implements CreateCharacterResult

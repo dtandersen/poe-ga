@@ -3,13 +3,13 @@ package poe.command;
 import poe.entity.ImmutableCharacter.ImmutablePassiveSkill;
 import poe.entity.PassiveSkill;
 
-public class PureImmutableSkill implements ImmutablePassiveSkill
+public class PureImmutablePassiveSkill implements ImmutablePassiveSkill
 {
 	private final int passiveSkillId;
 
 	private final String name;
 
-	public PureImmutableSkill(final ImmutablePassiveSkillBuilder immutablePassiveSkillBuilder)
+	public PureImmutablePassiveSkill(final ImmutablePassiveSkillBuilder immutablePassiveSkillBuilder)
 	{
 		this.passiveSkillId = immutablePassiveSkillBuilder.passiveSkillId;
 		this.name = immutablePassiveSkillBuilder.name;
@@ -25,6 +25,14 @@ public class PureImmutableSkill implements ImmutablePassiveSkill
 	public String getName()
 	{
 		return name;
+	}
+
+	@Override
+	public String toString()
+	{
+		return this.getClass().getSimpleName() + "[" +
+				"passiveSkillId=" + passiveSkillId +
+				", name=" + name + "]";
 	}
 
 	public static class ImmutablePassiveSkillBuilder
@@ -54,7 +62,7 @@ public class PureImmutableSkill implements ImmutablePassiveSkill
 
 		public ImmutablePassiveSkill build()
 		{
-			return new PureImmutableSkill(this);
+			return new PureImmutablePassiveSkill(this);
 		}
 
 		public static ImmutablePassiveSkillBuilder passiveSkill()

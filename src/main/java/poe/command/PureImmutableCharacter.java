@@ -3,7 +3,9 @@ package poe.command;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import poe.command.PureImmutableSkill.ImmutablePassiveSkillBuilder;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import poe.command.PureImmutablePassiveSkill.ImmutablePassiveSkillBuilder;
 import poe.entity.AttributeValue;
 import poe.entity.ImmutableCharacter;
 import poe.entity.PassiveSkill;
@@ -11,7 +13,7 @@ import poe.entity.StatValue;
 
 public class PureImmutableCharacter implements ImmutableCharacter
 {
-	private final List<Integer> passiveSkillIds;
+	// private final List<Integer> passiveSkillIds;
 
 	private final Collection<StatValue> statValues;
 
@@ -21,7 +23,7 @@ public class PureImmutableCharacter implements ImmutableCharacter
 
 	public PureImmutableCharacter(final ImmutableCharacterBuilder pureImmutableCharacterBuilder)
 	{
-		this.passiveSkillIds = pureImmutableCharacterBuilder.passiveSkillIds;
+		// this.passiveSkillIds = pureImmutableCharacterBuilder.passiveSkillIds;
 		this.statValues = pureImmutableCharacterBuilder.statValues;
 		this.stats = pureImmutableCharacterBuilder.stats;
 		this.passiveSkills = pureImmutableCharacterBuilder.passiveSkills;
@@ -42,7 +44,15 @@ public class PureImmutableCharacter implements ImmutableCharacter
 	@Override
 	public List<Integer> getPassiveSkillIds()
 	{
-		return passiveSkillIds;
+		return passiveSkills.stream()
+				.map(new Function<ImmutablePassiveSkill, Integer>() {
+					@Override
+					public Integer apply(final ImmutablePassiveSkill passiveSkill)
+					{
+						return passiveSkill.getPassiveSkillId();
+					}
+				})
+				.collect(Collectors.toList());
 	}
 
 	@Override
@@ -53,7 +63,7 @@ public class PureImmutableCharacter implements ImmutableCharacter
 
 	public static class ImmutableCharacterBuilder
 	{
-		private List<Integer> passiveSkillIds;
+		// private List<Integer> passiveSkillIds;
 
 		private Collection<StatValue> statValues;
 
@@ -66,11 +76,11 @@ public class PureImmutableCharacter implements ImmutableCharacter
 			passiveSkills = new ArrayList<>();
 		}
 
-		public ImmutableCharacterBuilder withPassiveSkillIds(final List<Integer> passiveSkillIds)
-		{
-			this.passiveSkillIds = passiveSkillIds;
-			return this;
-		}
+		// public ImmutableCharacterBuilder withPassiveSkillIds(final List<Integer> passiveSkillIds)
+		// {
+		// this.passiveSkillIds = passiveSkillIds;
+		// return this;
+		// }
 
 		public ImmutableCharacterBuilder withStatValues(final Collection<StatValue> statValues)
 		{
@@ -84,7 +94,7 @@ public class PureImmutableCharacter implements ImmutableCharacter
 			return this;
 		}
 
-		public ImmutableCharacterBuilder withPassiveSkill(final List<PassiveSkill> passiveSkills)
+		public ImmutableCharacterBuilder withPassiveSkills(final List<PassiveSkill> passiveSkills)
 		{
 			for (final PassiveSkill passiveSkill : passiveSkills)
 			{

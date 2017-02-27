@@ -55,7 +55,6 @@ public class EvolveBuild implements CommandLineRunner
 		// 4.) Start the execution (evolution) and
 		// collect the result.
 		final Genotype<SkillGene> result = engine.stream()
-				// .
 				.limit(1000)
 				.collect(EvolutionResult.toBestGenotype());
 
@@ -63,7 +62,7 @@ public class EvolveBuild implements CommandLineRunner
 
 		System.out.println(chromosome);
 
-		final PoeCharacter character = new PoeCharacter();
+		final PoeCharacter character = new PoeCharacter(CharacterClass.MARAUDER);
 		for (final SkillGene g : chromosome)
 		{
 			final PassiveSkill passiveSkill = pst.find(g.passiveSkillId);

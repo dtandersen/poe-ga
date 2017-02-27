@@ -22,11 +22,13 @@ public final class PoeCharacter
 
 	private final CharacterState character;
 
-	public PoeCharacter()
+	public PoeCharacter(final CharacterClass characterClass)
 	{
 		attributes = new HashMap<>();
 		stats = new StatValues();
 		character = new CharacterState();
+
+		calculateBaseAttributes(1, characterClass);
 	}
 
 	public float getAttributeValue(final Attribute attribute)
@@ -37,11 +39,6 @@ public final class PoeCharacter
 	public Collection<AttributeValue> getAttributes()
 	{
 		return attributes.values();
-	}
-
-	public void setAttributeValue(final Attribute attribute, final float value)
-	{
-		attributes.put(attribute, new AttributeValue(attribute, value));
 	}
 
 	public Collection<StatValue> getStatValues()
@@ -59,11 +56,6 @@ public final class PoeCharacter
 		return stats;
 	}
 
-	public void apply(final StatValue attribute)
-	{
-		stats.increment(attribute);
-	}
-
 	public boolean addPassiveSkill(final PassiveSkill passiveSkill)
 	{
 		if (passiveSkill == null) { return false; }
@@ -71,7 +63,13 @@ public final class PoeCharacter
 		if (!hasNeighbor(passiveSkill)) { return false; }
 
 		character.addPassiveSkill(passiveSkill);
-		apply(passiveSkill);
+
+		if (passiveSkill.getStatValues() == null) { return true; }
+
+		for (final StatValue statValue : passiveSkill.getStatValues())
+		{
+			stats.increment(statValue);
+		}
 
 		return true;
 	}
@@ -81,15 +79,6 @@ public final class PoeCharacter
 		for (final PassiveSkill passiveSkill : passiveSkills)
 		{
 			addPassiveSkill(passiveSkill);
-		}
-	}
-
-	private void apply(final PassiveSkill passive)
-	{
-		if (passive.getAttributes() == null) { return; }
-		for (final StatValue attribute : passive.getAttributes())
-		{
-			apply(attribute);
 		}
 	}
 
@@ -116,6 +105,37 @@ public final class PoeCharacter
 	public Collection<PassiveSkill> getPassiveSkills()
 	{
 		return character.getPassiveSkills();
+	}
+
+	public Collection<PassiveSkill> getPassiveSkillsWithoutRoot()
+	{
+		return character.getPassiveSkillMap().values().stream().filter(new Predicate<PassiveSkill>() {
+			@Override
+			public boolean test(final PassiveSkill t)
+			{
+				return !t.isClassStartingNode();
+			}
+		}).collect(Collectors.toList());
+	}
+
+	private void calculateBaseAttributes(final int level, final CharacterClass characterClass)
+	{
+		final Attribute attribute = Attribute.STRENGTH;
+		attributes.put(attribute, new AttributeValue(attribute, (float)characterClass.getStrength()));
+		final Attribute attribute1 = Attribute.DEXTERITY;
+		attributes.put(attribute1, new AttributeValue(attribute1, (float)characterClass.getDexterity()));
+		final Attribute attribute2 = Attribute.INTELLIGENCE;
+		attributes.put(attribute2, new AttributeValue(attribute2, (float)characterClass.getIntelligence()));
+		final Attribute attribute3 = Attribute.LIFE;
+		attributes.put(attribute3, new AttributeValue(attribute3, 38 + level * 12 + getAttributeValue(Attribute.STRENGTH) / 2));
+		final Attribute attribute4 = Attribute.MANA;
+		attributes.put(attribute4, new AttributeValue(attribute4, (40 - 6) + level * 6 + getAttributeValue(Attribute.INTELLIGENCE) / 2));
+		final float attributeValue = getAttributeValue(Attribute.DEXTERITY);
+		final int dexdiv5 = CreateCharacter.div5(attributeValue);
+		final Attribute attribute5 = Attribute.EVASION_RATING;
+		attributes.put(attribute5, new AttributeValue(attribute5, (float)(53 + level * 3 + dexdiv5)));
+		final Attribute attribute6 = Attribute.ACCURACY;
+		attributes.put(attribute6, new AttributeValue(attribute6, getAttributeValue(Attribute.DEXTERITY) * 2));
 	}
 
 	private boolean hasNeighbor(final PassiveSkill passiveSkill)
@@ -158,29 +178,5 @@ public final class PoeCharacter
 	public String toString()
 	{
 		return "ImmutableCharacterProxy[stats=" + attributes + ", passiveAttributes=" + getPassiveAttributes() + "]";
-	}
-
-	public void baseAttributes(final int level, final CharacterClass characterClass)
-	{
-		setAttributeValue(Attribute.STRENGTH, characterClass.getStrength());
-		setAttributeValue(Attribute.DEXTERITY, characterClass.getDexterity());
-		setAttributeValue(Attribute.INTELLIGENCE, characterClass.getIntelligence());
-		setAttributeValue(Attribute.LIFE, 38 + level * 12 + getAttributeValue(Attribute.STRENGTH) / 2);
-		setAttributeValue(Attribute.MANA, (40 - 6) + level * 6 + getAttributeValue(Attribute.INTELLIGENCE) / 2);
-		final float attributeValue = getAttributeValue(Attribute.DEXTERITY);
-		final int dexdiv5 = CreateCharacter.div5(attributeValue);
-		setAttributeValue(Attribute.EVASION_RATING, 53 + level * 3 + dexdiv5);
-		setAttributeValue(Attribute.ACCURACY, getAttributeValue(Attribute.DEXTERITY) * 2);
-	}
-
-	public Collection<PassiveSkill> getPassiveSkillsWithoutRoot()
-	{
-		return character.getPassiveSkillMap().values().stream().filter(new Predicate<PassiveSkill>() {
-			@Override
-			public boolean test(final PassiveSkill t)
-			{
-				return !t.isClassStartingNode();
-			}
-		}).collect(Collectors.toList());
 	}
 }

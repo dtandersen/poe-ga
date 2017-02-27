@@ -23,14 +23,13 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 	@Override
 	public void execute()
 	{
-		final int level = 1;
-		final PoeCharacter character = new PoeCharacter();
+		// final int level = 1;
+		final PoeCharacter character = new PoeCharacter(request.getCharacterClass());
 
-		character.baseAttributes(level, request.getCharacterClass());
+		// character.baseAttributes(level, request.getCharacterClass());
 		final List<PassiveSkill> passiveTree = passiveSkillRepository.all();
 		final PassiveSkillTree pst = new PassiveSkillTree(passiveTree);
 		final PassiveSkill root = pst.findByName(request.getCharacterClass().getRootPassiveSkillName());
-		// character.addRoot(root);
 		character.addPassiveSkill(root);
 		final List<PassiveSkill> passiveSkills = new ArrayList<>();
 		for (final int PassiveSkillId : request.getPassiveSkillIds())

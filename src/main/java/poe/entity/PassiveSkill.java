@@ -79,7 +79,7 @@ public class PassiveSkill
 		return false;
 	}
 
-	public List<StatValue> getAttributes()
+	public List<StatValue> getStatValues()
 	{
 		return attributes;
 	}

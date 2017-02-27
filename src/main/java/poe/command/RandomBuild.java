@@ -36,7 +36,7 @@ public class RandomBuild extends BaseCommand<RandomBuildRequest, RandomBuildResu
 		PassiveSkill curSkill = skillTree.findByName(request.getCharacterClass().getRootPassiveSkillName());
 		PassiveSkill prevSkill = curSkill;
 
-		final PoeCharacter character = new PoeCharacter();
+		final PoeCharacter character = new PoeCharacter(request.getCharacterClass());
 		final PassiveSkill root = curSkill;
 		character.addPassiveSkill(root);
 

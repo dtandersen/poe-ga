@@ -5,13 +5,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import poe.command.CommandFactory;
 import poe.command.ListSkills;
 import poe.command.ListSkills.ListSkillsResult;
-import poe.entity.Stat;
 import poe.entity.PassiveSkill;
+import poe.entity.Stat;
 
 @SpringBootApplication
+@ComponentScan(basePackages = { "poe.app.config" }, excludeFilters = {})
 public class Booter implements CommandLineRunner
 {
 	@Autowired

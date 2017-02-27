@@ -1,6 +1,7 @@
 package poe.repository;
 
 import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static poe.entity.PassiveSkill.PassiveSkillBuilder.passiveSkill;
 import static poe.entity.StatValue.StatBuilder.stat;
@@ -31,7 +32,7 @@ public class JsonPassiveSkillRepositoryTest
 						.withName("Herbalism")
 						.withId(19858)
 						.withOutputs(9206)
-						.withType(2)
+						.withType(0)
 						.withStats(
 								stat(Stat.LIFE_MAX, 10),
 								stat(Stat.FLASK_LIFE, 20),
@@ -42,7 +43,7 @@ public class JsonPassiveSkillRepositoryTest
 						.withName("Armour Mastery")
 						.withId(10542)
 						.withOutputs()
-						.withType(2)
+						.withType(0)
 						.withStats(
 								stat(Stat.ARMOUR, 24),
 								stat(Stat.MOVEMENT_SPEED, 3),
@@ -53,7 +54,7 @@ public class JsonPassiveSkillRepositoryTest
 						.withName("Minion Instability")
 						.withId(18663)
 						.withOutputs()
-						.withType(1)
+						.withType(0)
 						.withStats(stat(Stat.MINION_INSTABILITY, 0))));
 
 		assertThat(passiveNamed("Phase Acrobatics"), PoeMatchers.passiveSkillEqualTo(
@@ -61,7 +62,7 @@ public class JsonPassiveSkillRepositoryTest
 						.withName("Phase Acrobatics")
 						.withId(14914)
 						.withOutputs()
-						.withType(1)
+						.withType(0)
 						.withStats(stat(Stat.DODGE_SPELL, 30))));
 
 		assertThat(passiveNamed("MARAUDER"), PoeMatchers.passiveSkillEqualTo(
@@ -71,6 +72,8 @@ public class JsonPassiveSkillRepositoryTest
 						.withOutputs(31628, 50904, 17765, 24704, 29294)
 						.withType(5)
 						.withStats()));
+
+		assertThat("Don't include ascendency skills", passiveNamed("Fast and Deadly"), nullValue());
 	}
 
 	private PassiveSkill passiveNamed(final String name)

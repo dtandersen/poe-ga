@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import poe.command.CommandFactory;
 import poe.command.RandomBuild.RandomBuildRequest;
 import poe.command.RandomBuild.RandomBuildResult;
@@ -13,6 +14,7 @@ import poe.entity.ImmutableCharacter;
 import poe.repository.PassiveSkillRepository;
 
 @SpringBootApplication
+@ComponentScan(basePackages = { "poe.app.config" }, excludeFilters = {})
 public class RandomBuild implements CommandLineRunner
 {
 	@Autowired

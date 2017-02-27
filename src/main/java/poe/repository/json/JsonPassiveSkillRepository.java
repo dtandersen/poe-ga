@@ -27,14 +27,14 @@ public class JsonPassiveSkillRepository implements PassiveSkillRepository
 
 		for (final Node22 n : x.nodes)
 		{
-			if (n.asc)
+			if (n.asc || n.ascendancyName != null)
 			{
 				continue;
 			}
 			final PassiveSkill e = new PassiveSkill(n.dn);
 			e.setId(n.id);
 			e.setOutputs(n.out);
-			e.setType(n.type);
+			e.setType(n.spc.size() > 0 ? 5 : 0);
 			for (final String s : n.sd)
 			{
 				boolean matched = false;
@@ -79,6 +79,8 @@ public class JsonPassiveSkillRepository implements PassiveSkillRepository
 
 		public static final class Node22
 		{
+			String ascendancyName;
+
 			/**
 			 * skill id
 			 */
@@ -102,6 +104,8 @@ public class JsonPassiveSkillRepository implements PassiveSkillRepository
 			int type;
 
 			boolean asc;
+
+			List<Integer> spc;
 		}
 	}
 

@@ -22,6 +22,11 @@ public class StatValue
 		this.value = value;
 	}
 
+	public StatValue(final StatBuilder statBuilder)
+	{
+		this(statBuilder.stat, statBuilder.value);
+	}
+
 	@Override
 	public int hashCode()
 	{
@@ -48,5 +53,41 @@ public class StatValue
 	public String toString()
 	{
 		return getStat() + "=" + value;
+	}
+
+	public static class StatBuilder
+	{
+		private Stat stat;
+
+		private float value;
+
+		public StatBuilder withStat(final Stat stat)
+		{
+			this.stat = stat;
+			return this;
+		}
+
+		public StatBuilder withValue(final float value)
+		{
+			this.value = value;
+			return this;
+		}
+
+		public StatValue build()
+		{
+			return new StatValue(this);
+		}
+
+		public static StatBuilder stat()
+		{
+			return new StatBuilder();
+		}
+
+		public static StatBuilder stat(final Stat stat, final float value)
+		{
+			return stat()
+					.withStat(stat)
+					.withValue(value);
+		}
 	}
 }

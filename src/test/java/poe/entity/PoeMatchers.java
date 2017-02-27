@@ -14,6 +14,7 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
 import poe.command.CreateCharacterTest;
 import poe.command.CreateCharacterTest.CreateCharacterResultImplementation;
 import poe.entity.ImmutableCharacter.ImmutablePassiveSkill;
+import poe.entity.PassiveSkill.PassiveSkillBuilder;
 import poe.matcher.ComposableMatcher;
 
 public class PoeMatchers
@@ -23,9 +24,15 @@ public class PoeMatchers
 		return org.hamcrest.Matchers.containsInAnyOrder(MatcherHelper.listToArray(values));
 	}
 
-	public static PassiveSkillMatcher skill()
+	public static Matcher<PassiveSkill> passiveSkillEqualTo(final PassiveSkillBuilder expected)
 	{
-		return PassiveSkillMatcher.skill();
+		final PassiveSkill passiveSkill = expected.build();
+		return compose("a passive skill with",
+				hasFeature("name", PassiveSkill::getName, equalTo(passiveSkill.getName())))
+						.and(hasFeature("id", PassiveSkill::getId, equalTo(passiveSkill.getId())))
+						.and(hasFeature("outputs", PassiveSkill::getOutputs, equalTo(passiveSkill.getOutputs())))
+						.and(hasFeature("type", PassiveSkill::getType, equalTo(passiveSkill.getType())))
+						.and(hasFeature("stats", PassiveSkill::getStats, containsInAnyOrder(passiveSkill.getStats())));
 	}
 
 	public static StatValueMatcher attribute(final Stat stat, final float value)
@@ -148,7 +155,7 @@ public class PoeMatchers
 			x.add(passiveEqualTo(ps));
 		}
 		final Matcher<Iterable<? extends ImmutablePassiveSkill>> containsInAnyOrder = Matchers.containsInAnyOrder(x);
-	
+
 		return hasPassives(containsInAnyOrder);
 	}
 }

@@ -34,6 +34,7 @@ public class JsonPassiveSkillRepository implements PassiveSkillRepository
 			final PassiveSkill e = new PassiveSkill(n.dn);
 			e.setId(n.id);
 			e.setOutputs(n.out);
+			e.setType(n.type);
 			for (final String s : n.sd)
 			{
 				boolean matched = false;
@@ -97,6 +98,8 @@ public class JsonPassiveSkillRepository implements PassiveSkillRepository
 			 * output nodes
 			 */
 			List<Integer> out;
+
+			int type;
 
 			boolean asc;
 		}

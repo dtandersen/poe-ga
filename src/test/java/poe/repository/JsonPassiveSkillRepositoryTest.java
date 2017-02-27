@@ -1,9 +1,11 @@
 package poe.repository;
 
-import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.junit.Assert.assertThat;
+import static poe.entity.PassiveSkill.PassiveSkillBuilder.passiveSkill;
+import static poe.entity.StatValue.StatBuilder.stat;
 import java.util.List;
+import java.util.Objects;
 import org.hamcrest.Matcher;
 import org.junit.Test;
 import poe.entity.PassiveSkill;
@@ -17,44 +19,60 @@ public class JsonPassiveSkillRepositoryTest
 {
 	private final JsonPassiveSkillRepository repo = new JsonPassiveSkillRepository();
 
+	private List<PassiveSkill> skills;
+
 	@Test
 	public void test()
 	{
-		final List<PassiveSkill> skills = repo.all();
+		skills = repo.all();
 
-		assertThat(skills, hasItem(PoeMatchers.skill()
-				.withName("Herbalism")
-				.withId(19858)
-				.withAttributes(
-						PoeMatchers.attribute(Stat.LIFE_MAX, 10),
-						PoeMatchers.attribute(Stat.FLASK_LIFE, 20),
-						PoeMatchers.attribute(Stat.FLASK_RECOVERY, 20))));
+		assertThat(passiveNamed("Herbalism"), PoeMatchers.passiveSkillEqualTo(
+				passiveSkill()
+						.withName("Herbalism")
+						.withId(19858)
+						.withOutputs(9206)
+						.withType(2)
+						.withStats(
+								stat(Stat.LIFE_MAX, 10),
+								stat(Stat.FLASK_LIFE, 20),
+								stat(Stat.FLASK_RECOVERY, 20))));
 
-		assertThat(skills, hasItem(PoeMatchers.skill()
-				.withName("Armour Mastery")
-				.withId(10542)
-				.withAttributes(
-						PoeMatchers.attribute(Stat.ARMOUR, 24),
-						PoeMatchers.attribute(Stat.MOVEMENT_SPEED, 3),
-						PoeMatchers.attribute(Stat.REGEN, 0.5f))));
+		assertThat(passiveNamed("Armour Mastery"), PoeMatchers.passiveSkillEqualTo(
+				passiveSkill()
+						.withName("Armour Mastery")
+						.withId(10542)
+						.withOutputs()
+						.withType(2)
+						.withStats(
+								stat(Stat.ARMOUR, 24),
+								stat(Stat.MOVEMENT_SPEED, 3),
+								stat(Stat.REGEN, 0.5f))));
 
-		assertThat(skills, hasItem(PoeMatchers.skill()
-				.withName("Minion Instability")
-				.withId(18663)
-				.withAttributes(
-						PoeMatchers.attribute(Stat.MINION_INSTABILITY, 0))));
+		assertThat(passiveNamed("Minion Instability"), PoeMatchers.passiveSkillEqualTo(
+				passiveSkill()
+						.withName("Minion Instability")
+						.withId(18663)
+						.withOutputs()
+						.withType(1)
+						.withStats(stat(Stat.MINION_INSTABILITY, 0))));
 
-		assertThat(skills, hasItem(PoeMatchers.skill()
-				.withName("Phase Acrobatics")
-				.withId(14914)
-				.withAttributes(
-						PoeMatchers.attribute(Stat.DODGE_SPELL, 30))));
+		assertThat(passiveNamed("Phase Acrobatics"), PoeMatchers.passiveSkillEqualTo(
+				passiveSkill()
+						.withName("Phase Acrobatics")
+						.withId(14914)
+						.withOutputs()
+						.withType(1)
+						.withStats(stat(Stat.DODGE_SPELL, 30))));
+	}
 
-		assertThat(skills, hasItem(PoeMatchers.skill()
-				.withName("Phase Acrobatics")
-				.withId(14914)
-				.withAttributes(
-						PoeMatchers.attribute(Stat.DODGE_SPELL, 30))));
+	private PassiveSkill passiveNamed(final String name)
+	{
+		for (final PassiveSkill passiveSkill : skills)
+		{
+			if (Objects.equals(name, passiveSkill.getName())) { return passiveSkill; }
+		}
+
+		return null;
 	}
 
 	@Test

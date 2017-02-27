@@ -5,16 +5,34 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import poe.entity.StatValue.StatBuilder;
 
 public class PassiveSkill
 {
 	private final String name;
 
-	private final List<StatValue> attributes = new ArrayList<>();
+	private List<StatValue> attributes = new ArrayList<>();
 
 	private int id;
 
 	private List<Integer> outputs;
+
+	private int type;
+
+	public List<StatValue> getStats()
+	{
+		return attributes;
+	}
+
+	public int getType()
+	{
+		return type;
+	}
+
+	public void setType(final int type)
+	{
+		this.type = type;
+	}
 
 	public PassiveSkill(final String name)
 	{
@@ -26,6 +44,8 @@ public class PassiveSkill
 		this.id = passiveSkillBuilder.id;
 		this.name = passiveSkillBuilder.name;
 		this.outputs = passiveSkillBuilder.outputs;
+		this.attributes = passiveSkillBuilder.stats;
+		this.type = passiveSkillBuilder.type;
 	}
 
 	public String getName()
@@ -79,38 +99,6 @@ public class PassiveSkill
 		outputs = out;
 	}
 
-	public static class PassiveSkillBuilder
-	{
-		private int id;
-
-		private String name;
-
-		private List<Integer> outputs;
-
-		public PassiveSkill build()
-		{
-			return new PassiveSkill(this);
-		}
-
-		public PassiveSkillBuilder withId(final int id)
-		{
-			this.id = id;
-			return this;
-		}
-
-		public PassiveSkillBuilder withName(final String name)
-		{
-			this.name = name;
-			return this;
-		}
-
-		public PassiveSkillBuilder withOutputs(final Integer... outputs)
-		{
-			this.outputs = Arrays.asList(outputs);
-			return this;
-		}
-	}
-
 	public boolean isNeighbor(final Collection<PassiveSkill> neighbors)
 	{
 		for (final PassiveSkill neighbor : neighbors)
@@ -134,5 +122,63 @@ public class PassiveSkill
 	public boolean isRootSkill()
 	{
 		return CharacterClass.isRootSkill(name);
+	}
+
+	public static class PassiveSkillBuilder
+	{
+		private int id;
+
+		private String name;
+
+		private List<Integer> outputs;
+
+		private List<StatValue> stats;
+
+		private int type;
+
+		public PassiveSkillBuilder withId(final int id)
+		{
+			this.id = id;
+			return this;
+		}
+
+		public PassiveSkillBuilder withName(final String name)
+		{
+			this.name = name;
+			return this;
+		}
+
+		public PassiveSkillBuilder withOutputs(final Integer... outputs)
+		{
+			this.outputs = Arrays.asList(outputs);
+			return this;
+		}
+
+		public PassiveSkillBuilder withStats(final StatBuilder... statBuilders)
+		{
+			stats = new ArrayList<>();
+			for (final StatBuilder statBuilder : statBuilders)
+			{
+				stats.add(statBuilder.build());
+			}
+
+			return this;
+		}
+
+		public PassiveSkillBuilder withType(final int type)
+		{
+			this.type = type;
+			return this;
+		}
+
+		public PassiveSkill build()
+		{
+			return new PassiveSkill(this);
+		}
+
+		public static PassiveSkillBuilder passiveSkill()
+		{
+			return new PassiveSkillBuilder();
+		}
 	}
 }

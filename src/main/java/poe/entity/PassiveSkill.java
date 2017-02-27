@@ -2,6 +2,7 @@ package poe.entity;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -110,7 +111,7 @@ public class PassiveSkill
 		}
 	}
 
-	public boolean isNeighbor(final List<PassiveSkill> neighbors)
+	public boolean isNeighbor(final Collection<PassiveSkill> neighbors)
 	{
 		for (final PassiveSkill neighbor : neighbors)
 		{

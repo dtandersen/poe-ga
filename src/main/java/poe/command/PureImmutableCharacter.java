@@ -13,8 +13,6 @@ import poe.entity.StatValue;
 
 public class PureImmutableCharacter implements ImmutableCharacter
 {
-	// private final List<Integer> passiveSkillIds;
-
 	private final Collection<StatValue> statValues;
 
 	private final Collection<AttributeValue> stats;
@@ -23,7 +21,6 @@ public class PureImmutableCharacter implements ImmutableCharacter
 
 	public PureImmutableCharacter(final ImmutableCharacterBuilder pureImmutableCharacterBuilder)
 	{
-		// this.passiveSkillIds = pureImmutableCharacterBuilder.passiveSkillIds;
 		this.statValues = pureImmutableCharacterBuilder.statValues;
 		this.stats = pureImmutableCharacterBuilder.stats;
 		this.passiveSkills = pureImmutableCharacterBuilder.passiveSkills;
@@ -63,8 +60,6 @@ public class PureImmutableCharacter implements ImmutableCharacter
 
 	public static class ImmutableCharacterBuilder
 	{
-		// private List<Integer> passiveSkillIds;
-
 		private Collection<StatValue> statValues;
 
 		private Collection<AttributeValue> stats;
@@ -75,12 +70,6 @@ public class PureImmutableCharacter implements ImmutableCharacter
 		{
 			passiveSkills = new ArrayList<>();
 		}
-
-		// public ImmutableCharacterBuilder withPassiveSkillIds(final List<Integer> passiveSkillIds)
-		// {
-		// this.passiveSkillIds = passiveSkillIds;
-		// return this;
-		// }
 
 		public ImmutableCharacterBuilder withStatValues(final Collection<StatValue> statValues)
 		{
@@ -94,7 +83,7 @@ public class PureImmutableCharacter implements ImmutableCharacter
 			return this;
 		}
 
-		public ImmutableCharacterBuilder withPassiveSkills(final List<PassiveSkill> passiveSkills)
+		public ImmutableCharacterBuilder withPassiveSkills(final Collection<PassiveSkill> passiveSkills)
 		{
 			for (final PassiveSkill passiveSkill : passiveSkills)
 			{

@@ -49,11 +49,13 @@ public class RandomBuild extends BaseCommand<RandomBuildRequest, RandomBuildResu
 				System.out.println("added " + curSkill.getName());
 				if (prevSkill == curSkill)
 				{
-					character.addSkill(curSkill);
+					final PassiveSkill passiveSkill = curSkill;
+					character.addPassiveSkill(passiveSkill);
 				}
 				else
 				{
-					character.addSkill(curSkill);
+					final PassiveSkill passiveSkill = curSkill;
+					character.addPassiveSkill(passiveSkill);
 				}
 			}
 			else

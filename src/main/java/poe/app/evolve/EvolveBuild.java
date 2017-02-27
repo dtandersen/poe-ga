@@ -67,7 +67,7 @@ public class EvolveBuild implements CommandLineRunner
 		for (final SkillGene g : chromosome)
 		{
 			final PassiveSkill passiveSkill = pst.find(g.passiveSkillId);
-			character.addSkill(passiveSkill);
+			character.addPassiveSkill(passiveSkill);
 		}
 		final PoeComUrlBuilder b = new PoeComUrlBuilder();
 		b.withCharacterClass(CharacterClass.MARAUDER);

@@ -5,7 +5,6 @@ import static org.junit.Assert.assertThat;
 import static poe.entity.CharacterClass.MARAUDER;
 import static poe.entity.CharacterClass.WITCH;
 import static poe.entity.PoeMatchers.hasStats2;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -89,7 +88,7 @@ public class CreateCharacterTest
 				.withStatValue(Stat.DEXTERITY, 5)
 				.withStatValue(Stat.INTELLIGENCE, 5));
 
-		assertThat(theCharacter(), hasPassives(
+		assertThat(theCharacter(), PoeMatchers.hasPassives(
 				passiveWithId(62103),
 				passiveWithId(2151)));
 	}
@@ -117,18 +116,6 @@ public class CreateCharacterTest
 		};
 	}
 
-	private Matcher<ImmutableCharacter> hasPassives(final ImmutablePassiveSkill... classPassive)
-	{
-		final Collection<Matcher<? super ImmutablePassiveSkill>> x = new ArrayList<>();
-		for (final ImmutablePassiveSkill ps : classPassive)
-		{
-			x.add(PoeMatchers.passiveEqualTo(ps));
-		}
-		final Matcher<Iterable<? extends ImmutablePassiveSkill>> containsInAnyOrder = Matchers.containsInAnyOrder(x);
-
-		return PoeMatchers.hasPassives(containsInAnyOrder);
-	}
-
 	@Test
 	public void marauderSkillsDeduplicate()
 	{
@@ -138,7 +125,7 @@ public class CreateCharacterTest
 				.withStatValue(Stat.MAX_LIFE_PLUS, 16)
 				.withStatValue(Stat.MELEE_PHYSICAL_DAMAGE, 16));
 
-		assertThat(theCharacter(), hasPassives(passiveWithId(31628)));
+		assertThat(theCharacter(), PoeMatchers.hasPassives(passiveWithId(31628)));
 	}
 
 	@Test
@@ -150,7 +137,7 @@ public class CreateCharacterTest
 				.withStatValue(Stat.MAX_LIFE_PLUS, 16)
 				.withStatValue(Stat.MELEE_PHYSICAL_DAMAGE, 16));
 
-		assertThat(theCharacter(), hasPassives(passiveWithId(31628)));
+		assertThat(theCharacter(), PoeMatchers.hasPassives(passiveWithId(31628)));
 	}
 
 	@Test

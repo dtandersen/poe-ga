@@ -3,7 +3,9 @@ package poe.entity;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.compose;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -136,5 +138,17 @@ public class PoeMatchers
 	{
 		return compose("a passive skill with",
 				hasFeature("name", ImmutablePassiveSkill::getName, equalTo(expected.getName())));
+	}
+
+	public static Matcher<ImmutableCharacter> hasPassives(final ImmutablePassiveSkill... classPassive)
+	{
+		final Collection<Matcher<? super ImmutablePassiveSkill>> x = new ArrayList<>();
+		for (final ImmutablePassiveSkill ps : classPassive)
+		{
+			x.add(passiveEqualTo(ps));
+		}
+		final Matcher<Iterable<? extends ImmutablePassiveSkill>> containsInAnyOrder = Matchers.containsInAnyOrder(x);
+	
+		return hasPassives(containsInAnyOrder);
 	}
 }

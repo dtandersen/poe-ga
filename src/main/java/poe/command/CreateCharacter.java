@@ -36,7 +36,7 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 
 		final ImmutableCharacter pure = new ImmutableCharacterBuilder()
 				.withPassiveSkills(character.getPassiveSkills())
-				.withStats(character.getStats())
+				.withStats(character.getAttributes())
 				.withStatValues(character.getStatValues())
 				.build();
 
@@ -50,19 +50,19 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 	private void baseStats(final int level, final PoeCharacter character)
 	{
 		final CharacterClass characterClass = request.getCharacterClass();
-		character.stat(Attribute.STRENGTH, characterClass.getStrength());
-		character.stat(Attribute.DEXTERITY, characterClass.getDexterity());
-		character.stat(Attribute.INTELLIGENCE, characterClass.getIntelligence());
-		character.stat(Attribute.LIFE, 38 + level * 12 + character.stat(Attribute.STRENGTH) / 2);
-		character.stat(Attribute.MANA, (40 - 6) + level * 6 + character.stat(Attribute.INTELLIGENCE) / 2);
+		character.setAttributeValue(Attribute.STRENGTH, characterClass.getStrength());
+		character.setAttributeValue(Attribute.DEXTERITY, characterClass.getDexterity());
+		character.setAttributeValue(Attribute.INTELLIGENCE, characterClass.getIntelligence());
+		character.setAttributeValue(Attribute.LIFE, 38 + level * 12 + character.getAttributeValue(Attribute.STRENGTH) / 2);
+		character.setAttributeValue(Attribute.MANA, (40 - 6) + level * 6 + character.getAttributeValue(Attribute.INTELLIGENCE) / 2);
 		final int dexdiv5 = dexDiv5(character);
-		character.stat(Attribute.EVASION_RATING, 53 + level * 3 + dexdiv5);
-		character.stat(Attribute.ACCURACY, character.stat(Attribute.DEXTERITY) * 2);
+		character.setAttributeValue(Attribute.EVASION_RATING, 53 + level * 3 + dexdiv5);
+		character.setAttributeValue(Attribute.ACCURACY, character.getAttributeValue(Attribute.DEXTERITY) * 2);
 	}
 
 	private int dexDiv5(final PoeCharacter character)
 	{
-		final float dex = character.stat(Attribute.DEXTERITY);
+		final float dex = character.getAttributeValue(Attribute.DEXTERITY);
 		final float gg = dex % 5;
 		if (gg == 0) { return (int)(dex / 5); }
 

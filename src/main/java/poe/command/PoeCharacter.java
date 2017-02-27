@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 import poe.entity.Attribute;
 import poe.entity.AttributeValue;
+import poe.entity.CharacterState;
 import poe.entity.PassiveSkill;
-import poe.entity.PassiveSkillGraph;
 import poe.entity.PassiveSkillTree;
 import poe.entity.StatValue;
 import poe.entity.StatValueBag;
@@ -18,28 +18,28 @@ public final class PoeCharacter
 
 	private final StatValueBag passiveAttributes;
 
-	private final PassiveSkillGraph skillGraph;
+	private final CharacterState character;
 
 	public PoeCharacter()
 	{
 		stats = new HashMap<>();
 		passiveAttributes = new StatValueBag();
-		skillGraph = new PassiveSkillGraph();
+		character = new CharacterState();
 	}
 
-	public float stat(final Attribute attribute)
+	public float getAttributeValue(final Attribute attribute)
 	{
 		return stats.get(attribute).getValue();
 	}
 
-	public Collection<AttributeValue> getStats()
+	public Collection<AttributeValue> getAttributes()
 	{
 		return stats.values();
 	}
 
-	public void stat(final Attribute stat, final float value)
+	public void setAttributeValue(final Attribute attribute, final float value)
 	{
-		stats.put(stat, new AttributeValue(stat, value));
+		stats.put(attribute, new AttributeValue(attribute, value));
 	}
 
 	public Collection<StatValue> getStatValues()
@@ -49,7 +49,7 @@ public final class PoeCharacter
 
 	public List<Integer> getPassiveSkillIds()
 	{
-		return skillGraph.getPassiveSkillIds();
+		return character.getPassiveSkillIds();
 	}
 
 	public StatValueBag getPassiveAttributes()
@@ -62,9 +62,20 @@ public final class PoeCharacter
 		passiveAttributes.increment(attribute);
 	}
 
+	public boolean addPassiveSkill(final PassiveSkill passiveSkill)
+	{
+		if (passiveSkill == null) { return false; }
+		if (hasPassiveSkill(passiveSkill.getId())) { return false; }
+		if (!hasNeighbor(passiveSkill)) { return false; }
+
+		character.addPassiveSkill(passiveSkill);
+
+		return true;
+	}
+
 	public void apply(final PassiveSkill passive)
 	{
-		if (skillGraph.addPassiveSkill(passive))
+		if (addPassiveSkill(passive))
 		{
 			if (passive.getAttributes() == null) { return; }
 			for (final StatValue attribute : passive.getAttributes())
@@ -85,19 +96,14 @@ public final class PoeCharacter
 		}
 	}
 
-	public void addSkill(final PassiveSkill passiveSkill)
-	{
-		skillGraph.addPassiveSkill(passiveSkill);
-	}
-
 	public int passiveSkillCount()
 	{
-		return skillGraph.size();
+		return character.size();
 	}
 
 	public boolean hasPassiveSkill(final PassiveSkill passiveSkill)
 	{
-		return skillGraph.contains(passiveSkill.getId());
+		return hasPassiveSkill(passiveSkill.getId());
 	}
 
 	public boolean hasAllPassiveSkills(final List<PassiveSkill> skills)
@@ -107,7 +113,22 @@ public final class PoeCharacter
 
 	public boolean hasPassiveSkill(final int passiveSkillId)
 	{
-		return skillGraph.contains(passiveSkillId);
+		return character.contains(passiveSkillId);
+	}
+
+	public Collection<PassiveSkill> getPassiveSkills()
+	{
+		return character.getPassiveSkills();
+	}
+
+	public void addRoot(final PassiveSkill root)
+	{
+		character.setRootPassiveSkill(root);
+	}
+
+	private boolean hasNeighbor(final PassiveSkill passiveSkill)
+	{
+		return passiveSkill.isNeighbor(character.getPassiveSkills()) || passiveSkill.isNeighbor(character.getRootPassiveSkill());
 	}
 
 	@Override
@@ -144,15 +165,5 @@ public final class PoeCharacter
 	public String toString()
 	{
 		return "ImmutableCharacterProxy[stats=" + stats + ", passiveAttributes=" + getPassiveAttributes() + "]";
-	}
-
-	public List<PassiveSkill> getPassiveSkills()
-	{
-		return skillGraph.getPassiveSkills();
-	}
-
-	public void addRoot(final PassiveSkill root)
-	{
-		skillGraph.addRoot(root);
 	}
 }

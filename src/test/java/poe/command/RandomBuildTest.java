@@ -2,22 +2,16 @@ package poe.command;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import org.hamcrest.Description;
-import org.hamcrest.Matcher;
-import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.junit.Before;
 import org.junit.Test;
+import poe.command.PureImmutablePassiveSkill.ImmutablePassiveSkillBuilder;
 import poe.command.RandomBuild.RandomBuildRequest;
 import poe.command.RandomBuild.RandomBuildResult;
 import poe.entity.CharacterClass;
 import poe.entity.ImmutableCharacter;
-import poe.entity.PassiveSkill;
+import poe.entity.ImmutableCharacter.ImmutablePassiveSkill;
 import poe.entity.PassiveSkill.PassiveSkillBuilder;
-import poe.matcher.ComposableMatcher;
+import poe.entity.PoeMatchers;
 import poe.repository.InMemoryPassiveSkillRepository;
 import poe.repository.Randomizer;
 import poe.repository.RandomizerStub;
@@ -99,9 +93,9 @@ public class RandomBuildTest
 		command.setResult(result);
 		command.execute();
 
-		assertThat(theCharacter(), hasPassives(
-				"Melee Damage and Life",
-				"Melee Damage"));
+		assertThat(theCharacter(), PoeMatchers.hasPassives(
+				passive("Melee Damage and Life"),
+				passive("Melee Damage")));
 	}
 
 	@Test
@@ -127,9 +121,9 @@ public class RandomBuildTest
 		command.setResult(result);
 		command.execute();
 
-		assertThat(theCharacter(), hasPassives(
-				"Melee Damage and Life",
-				"Melee Damage"));
+		assertThat(theCharacter(), PoeMatchers.hasPassives(
+				passive("Melee Damage and Life"),
+				passive("Melee Damage")));
 	}
 
 	@Test
@@ -155,9 +149,9 @@ public class RandomBuildTest
 		command.setResult(result);
 		command.execute();
 
-		assertThat(theCharacter(), hasPassives(
-				"Melee Damage and Life",
-				"Melee Damage"));
+		assertThat(theCharacter(), PoeMatchers.hasPassives(
+				passive("Melee Damage and Life"),
+				passive("Melee Damage")));
 	}
 
 	@Test
@@ -202,49 +196,6 @@ public class RandomBuildTest
 		return new PassiveSkillBuilder();
 	}
 
-	private Matcher<ImmutableCharacter> hasPassives(final int i)
-	{
-		final List<Integer> asList = Arrays.asList(new Integer[] { i });
-		return new ComposableMatcher<ImmutableCharacter, Object>(equalTo(asList)) {
-			@Override
-			public void describeTo(final Description description)
-			{
-				description.appendText("an ImmutableCharacter with ");
-				description.appendText("the passive skills " + i);
-			}
-
-			@Override
-			protected Object getValue(final ImmutableCharacter item)
-			{
-				return item.getPassiveSkillIds();
-			}
-		};
-	}
-
-	private Matcher<ImmutableCharacter> hasPassives(final String... names)
-	{
-		final List<Integer> asList = new ArrayList<>();
-		for (final String name : names)
-		{
-			final PassiveSkill passiveSkill = passiveRepo.findByName(name);
-			asList.add(passiveSkill.getId());
-		}
-		return new ComposableMatcher<ImmutableCharacter, Object>(equalTo(asList)) {
-			@Override
-			public void describeTo(final Description description)
-			{
-				description.appendText("an ImmutableCharacter with ");
-				description.appendText("the passive skills " + asList);
-			}
-
-			@Override
-			protected Object getValue(final ImmutableCharacter item)
-			{
-				return item.getPassiveSkillIds();
-			}
-		};
-	}
-
 	private ImmutableCharacter theCharacter()
 	{
 		return result.getCharacter();
@@ -268,33 +219,9 @@ public class RandomBuildTest
 		}
 	}
 
-	private final class TypeSafeDiagnosingMatcherExtension extends TypeSafeDiagnosingMatcher<PoeCharacter>
+	private ImmutablePassiveSkill passive(final String string)
 	{
-		private final ImmutableCharacter expectedCharacter;
-
-		public TypeSafeDiagnosingMatcherExtension(final ImmutableCharacter expectedCharacter)
-		{
-			this.expectedCharacter = expectedCharacter;
-		}
-
-		@Override
-		public void describeTo(final Description description)
-		{
-			description.appendText("a ");
-			description.appendValue(expectedCharacter);
-		}
-
-		@Override
-		protected boolean matchesSafely(final PoeCharacter item, final Description mismatchDescription)
-		{
-			if (!Objects.equals(item, expectedCharacter))
-			{
-				mismatchDescription.appendValue(item);
-				return false;
-			}
-
-			return true;
-		}
+		return ImmutablePassiveSkillBuilder.passiveSkill().from(passiveRepo.findByName(string)).build();
 	}
 
 	private final class RandomBuildResultImplementation implements RandomBuildResult

@@ -73,7 +73,6 @@ public class CreateCharacterTest
 				.withStat(Attribute.EVASION_RATING, 58)
 				.withStat(Attribute.ACCURACY, 28));
 
-		// assertThat(theCharacter(), hasPassive(classPassive(MARAUDER)));
 		assertThat(theCharacter(), hasNoPassiveSkills());
 	}
 

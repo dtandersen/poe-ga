@@ -4,7 +4,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.compose;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import org.hamcrest.Description;
@@ -35,11 +34,6 @@ public class PoeMatchers
 						.and(hasFeature("stats", PassiveSkill::getStats, containsInAnyOrder(passiveSkill.getStats())));
 	}
 
-	public static StatValueMatcher attribute(final Stat stat, final float value)
-	{
-		return StatValueMatcher.attribute(stat, value);
-	}
-
 	public static CharacterStatMatcher hasStats2()
 	{
 		return CharacterStatMatcher.passiveMatcher();
@@ -48,32 +42,6 @@ public class PoeMatchers
 	public static StatValuesMatcher hasStats()
 	{
 		return StatValuesMatcher.hasStats();
-	}
-
-	public static Matcher<ImmutableCharacter> hasPassiveSkills(final Integer... expectedPassiveSkillIds)
-	{
-		final List<Integer> asList = Arrays.asList(expectedPassiveSkillIds);
-		final Matcher<Iterable<? extends Integer>> matcher = containsInAnyOrder(asList);
-		return new TypeSafeDiagnosingMatcher<ImmutableCharacter>() {
-			@Override
-			public void describeTo(final Description description)
-			{
-				description.appendText("a character with passives ");
-				description.appendValueList("", ",", "", expectedPassiveSkillIds);
-			}
-
-			@Override
-			protected boolean matchesSafely(final ImmutableCharacter item, final Description mismatchDescription)
-			{
-				final List<Integer> actualIds = item.getPassiveSkillIds();
-				if (!matcher.matches(actualIds))
-				{
-					matcher.describeMismatch(actualIds, mismatchDescription);
-					return false;
-				}
-				return true;
-			}
-		};
 	}
 
 	public static Matcher<CreateCharacterResultImplementation> hasUrl(final Matcher<String> matcher)
@@ -85,36 +53,6 @@ public class PoeMatchers
 				return item.getUrl();
 			}
 		};
-	}
-
-	public static Matcher<ImmutableCharacter> hasPassive(final Matcher<ImmutablePassiveSkill> matcher)
-	{
-		return new TypeSafeDiagnosingMatcher<ImmutableCharacter>() {
-			@Override
-			public void describeTo(final Description description)
-			{
-				description.appendText("a character with ");
-				matcher.describeTo(description);
-			}
-
-			@Override
-			protected boolean matchesSafely(final ImmutableCharacter item, final Description mismatchDescription)
-			{
-				final Matcher<Iterable<? super ImmutablePassiveSkill>> has = Matchers.hasItem(matcher);
-				if (!has.matches(item.getPassiveSkills()))
-				{
-					has.describeMismatch(item.getPassiveSkills(), mismatchDescription);
-					return false;
-				}
-
-				return true;
-			}
-		};
-	}
-
-	public static Matcher<ImmutableCharacter> hasPassive(final ImmutablePassiveSkill expected)
-	{
-		return hasPassive(passiveEqualTo(expected));
 	}
 
 	public static Matcher<ImmutableCharacter> hasPassives(final Matcher<Iterable<? extends ImmutablePassiveSkill>> matcher)

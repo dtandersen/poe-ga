@@ -24,6 +24,11 @@ public class PoeCharacter
 		calculateBaseAttributes(1, characterClass);
 	}
 
+	public PoeCharacter(final CharacterBuilder characterBuilder)
+	{
+		this(characterBuilder.characterClass);
+	}
+
 	public float getAttributeValue(final Attribute attribute)
 	{
 		return attributes.get(attribute).getValue();
@@ -222,5 +227,21 @@ public class PoeCharacter
 		final int g = (int)(attributeValue - gg);
 		final int f = g / 5;
 		return f;
+	}
+
+	public static class CharacterBuilder
+	{
+		private CharacterClass characterClass;
+
+		public PoeCharacter build()
+		{
+			return new PoeCharacter(this);
+		}
+
+		public CharacterBuilder withCharacterClass(final CharacterClass marauder)
+		{
+			characterClass = marauder;
+			return this;
+		}
 	}
 }

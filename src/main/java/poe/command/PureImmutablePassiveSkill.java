@@ -2,6 +2,7 @@ package poe.command;
 
 import poe.entity.ImmutableCharacter.ImmutablePassiveSkill;
 import poe.entity.PassiveSkill;
+import poe.entity.PassiveSkill.PassiveSkillBuilder;
 
 public class PureImmutablePassiveSkill implements ImmutablePassiveSkill
 {
@@ -57,6 +58,12 @@ public class PureImmutablePassiveSkill implements ImmutablePassiveSkill
 		{
 			this.passiveSkillId = passiveSkill.getId();
 			this.name = passiveSkill.getName();
+			return this;
+		}
+
+		public ImmutablePassiveSkillBuilder from(final PassiveSkillBuilder builder)
+		{
+			from(builder.build());
 			return this;
 		}
 

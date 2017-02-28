@@ -14,11 +14,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import poe.command.CommandFactory;
-import poe.command.PoeCharacter;
 import poe.command.PoeComUrlBuilder;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
 import poe.entity.PassiveSkillTree;
+import poe.entity.PoeCharacter;
 import poe.repository.PassiveSkillRepository;
 
 @SpringBootApplication

@@ -1,4 +1,4 @@
-package poe.command;
+package poe.entity;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -6,15 +6,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
-import poe.entity.Attribute;
-import poe.entity.AttributeValue;
-import poe.entity.CharacterClass;
-import poe.entity.CharacterState;
-import poe.entity.PassiveSkill;
-import poe.entity.StatValue;
-import poe.entity.StatValues;
 
-public final class PoeCharacter
+public class PoeCharacter
 {
 	private final Map<Attribute, AttributeValue> attributes;
 
@@ -121,19 +114,19 @@ public final class PoeCharacter
 	private void calculateBaseAttributes(final int level, final CharacterClass characterClass)
 	{
 		final Attribute attribute = Attribute.STRENGTH;
-		attributes.put(attribute, new AttributeValue(attribute, (float)characterClass.getStrength()));
+		attributes.put(attribute, new AttributeValue(attribute, characterClass.getStrength()));
 		final Attribute attribute1 = Attribute.DEXTERITY;
-		attributes.put(attribute1, new AttributeValue(attribute1, (float)characterClass.getDexterity()));
+		attributes.put(attribute1, new AttributeValue(attribute1, characterClass.getDexterity()));
 		final Attribute attribute2 = Attribute.INTELLIGENCE;
-		attributes.put(attribute2, new AttributeValue(attribute2, (float)characterClass.getIntelligence()));
+		attributes.put(attribute2, new AttributeValue(attribute2, characterClass.getIntelligence()));
 		final Attribute attribute3 = Attribute.LIFE;
 		attributes.put(attribute3, new AttributeValue(attribute3, 38 + level * 12 + getAttributeValue(Attribute.STRENGTH) / 2));
 		final Attribute attribute4 = Attribute.MANA;
 		attributes.put(attribute4, new AttributeValue(attribute4, (40 - 6) + level * 6 + getAttributeValue(Attribute.INTELLIGENCE) / 2));
 		final float attributeValue = getAttributeValue(Attribute.DEXTERITY);
-		final int dexdiv5 = CreateCharacter.div5(attributeValue);
+		final int dexdiv5 = PoeCharacter.div5(attributeValue);
 		final Attribute attribute5 = Attribute.EVASION_RATING;
-		attributes.put(attribute5, new AttributeValue(attribute5, (float)(53 + level * 3 + dexdiv5)));
+		attributes.put(attribute5, new AttributeValue(attribute5, 53 + level * 3 + dexdiv5));
 		final Attribute attribute6 = Attribute.ACCURACY;
 		attributes.put(attribute6, new AttributeValue(attribute6, getAttributeValue(Attribute.DEXTERITY) * 2));
 	}
@@ -178,5 +171,15 @@ public final class PoeCharacter
 	public String toString()
 	{
 		return "ImmutableCharacterProxy[stats=" + attributes + ", passiveAttributes=" + getPassiveAttributes() + "]";
+	}
+
+	public static int div5(final float attributeValue)
+	{
+		final float gg = attributeValue % 5;
+		if (gg == 0) { return (int)(attributeValue / 5); }
+	
+		final int g = (int)(attributeValue - gg);
+		final int f = g / 5;
+		return f;
 	}
 }

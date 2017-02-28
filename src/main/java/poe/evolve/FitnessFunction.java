@@ -1,4 +1,4 @@
-package poe.app.evolve;
+package poe.evolve;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -6,7 +6,7 @@ import org.jenetics.Genotype;
 import poe.entity.PassiveSkill;
 import poe.entity.PassiveSkillTree;
 
-final class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
+public class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
 {
 	private final class ConsumerImplementation implements Consumer<SkillGene>
 	{
@@ -22,7 +22,7 @@ final class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
 		@Override
 		public void accept(final SkillGene t)
 		{
-			if (t.passiveSkillId == id)
+			if (t.getPassiveSkillId() == id)
 			{
 				count++;
 			}

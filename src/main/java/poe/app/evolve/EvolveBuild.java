@@ -19,6 +19,9 @@ import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
 import poe.entity.PassiveSkillTree;
 import poe.entity.PoeCharacter;
+import poe.evolve.FitnessFunction;
+import poe.evolve.SkillChromosome;
+import poe.evolve.SkillGene;
 import poe.repository.PassiveSkillRepository;
 
 @SpringBootApplication
@@ -65,7 +68,7 @@ public class EvolveBuild implements CommandLineRunner
 		final PoeCharacter character = new PoeCharacter(CharacterClass.MARAUDER);
 		for (final SkillGene g : chromosome)
 		{
-			final PassiveSkill passiveSkill = pst.find(g.passiveSkillId);
+			final PassiveSkill passiveSkill = pst.find(g.getPassiveSkillId());
 			character.addPassiveSkill(passiveSkill);
 		}
 		final PoeComUrlBuilder b = new PoeComUrlBuilder();

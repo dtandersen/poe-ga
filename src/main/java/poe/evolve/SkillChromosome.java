@@ -1,4 +1,4 @@
-package poe.app.evolve;
+package poe.evolve;
 
 import java.util.List;
 import org.jenetics.AbstractChromosome;
@@ -7,7 +7,7 @@ import org.jenetics.util.ISeq;
 import org.jenetics.util.MSeq;
 
 @SuppressWarnings("serial")
-class SkillChromosome extends AbstractChromosome<SkillGene>
+public class SkillChromosome extends AbstractChromosome<SkillGene>
 {
 	private final List<Integer> skills;
 

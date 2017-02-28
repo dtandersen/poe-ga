@@ -1,4 +1,4 @@
-package poe.app.evolve;
+package poe.evolve;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +12,7 @@ public class SkillGene implements Gene<Integer, SkillGene>,
 {
 	List<Integer> skills = new ArrayList<>();
 
-	final int passiveSkillId;
+	private final int passiveSkillId;
 
 	public SkillGene(final List<Integer> passiveSkillIds)
 	{
@@ -30,19 +30,19 @@ public class SkillGene implements Gene<Integer, SkillGene>,
 	@Override
 	public boolean isValid()
 	{
-		return skills.contains(passiveSkillId);
+		return skills.contains(getPassiveSkillId());
 	}
 
 	@Override
 	public int compareTo(final SkillGene o)
 	{
-		return o.passiveSkillId - passiveSkillId;
+		return o.getPassiveSkillId() - getPassiveSkillId();
 	}
 
 	@Override
 	public Integer getAllele()
 	{
-		return passiveSkillId;
+		return getPassiveSkillId();
 	}
 
 	@Override
@@ -67,6 +67,11 @@ public class SkillGene implements Gene<Integer, SkillGene>,
 	@Override
 	public String toString()
 	{
-		return "" + passiveSkillId;
+		return "" + getPassiveSkillId();
+	}
+
+	public int getPassiveSkillId()
+	{
+		return passiveSkillId;
 	}
 }

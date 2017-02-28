@@ -21,9 +21,11 @@ import poe.entity.Attribute;
 import poe.entity.CharacterClass;
 import poe.entity.ImmutableCharacter;
 import poe.entity.ImmutableCharacter.ImmutablePassiveSkill;
+import poe.entity.PassiveSkill.PassiveSkillBuilder;
 import poe.entity.PassiveSkillTree;
 import poe.entity.PoeMatchers;
 import poe.entity.Stat;
+import poe.repository.InMemoryPassiveSkillRepository;
 import poe.repository.PassiveSkillRepository;
 import poe.repository.json.JsonPassiveSkillRepository;
 
@@ -116,6 +118,44 @@ public class CreateCharacterTest
 		assertThat(theCharacter(), PoeMatchers.hasPassives(passiveWithId(31628)));
 	}
 
+	@Test
+	public void dontAllowAnotherRoot()
+	{
+		final InMemoryPassiveSkillRepository memRepo = new InMemoryPassiveSkillRepository();
+		memRepo.create(PassiveSkillBuilder.passiveSkill()
+				.withId(1)
+				.withName(CharacterClass.SHADOW.getRootPassiveSkillName())
+				.withClassStartingPoint(CharacterClass.SHADOW)
+				.withOutputs(2));
+		memRepo.create(PassiveSkillBuilder.passiveSkill()
+				.withId(2)
+				.withName("some skill")
+				.withOutputs(3));
+		memRepo.create(PassiveSkillBuilder.passiveSkill()
+				.withId(3)
+				.withName(CharacterClass.DUELIST.getRootPassiveSkillName())
+				.withClassStartingPoint(CharacterClass.DUELIST)
+				.withOutputs(4));
+		memRepo.create(PassiveSkillBuilder.passiveSkill()
+				.withId(4)
+				.withName("can't get this"));
+
+		jsonSkillRepo = memRepo;
+		passiveSkillTree = new PassiveSkillTree(memRepo.all());
+
+		createCharacter(CharacterClass.SHADOW, new Integer[] { 2, 3, 4 });
+
+		assertThat(theCharacter(), PoeMatchers.hasPassives(passiveWithId(2)));
+	}
+
+	@Test
+	public void marauderUrl()
+	{
+		createCharacter(CharacterClass.MARAUDER, new Integer[] { 31628 });
+
+		assertThat(result, PoeMatchers.hasUrl(equalTo("https://www.pathofexile.com/passive-skill-tree/AAAABAEAAHuM")));
+	}
+
 	private Matcher<ImmutableCharacter> hasNoPassiveSkills()
 	{
 		return new TypeSafeDiagnosingMatcher<ImmutableCharacter>() {
@@ -137,14 +177,6 @@ public class CreateCharacterTest
 				return true;
 			}
 		};
-	}
-
-	@Test
-	public void marauderUrl()
-	{
-		createCharacter(CharacterClass.MARAUDER, new Integer[] { 31628 });
-
-		assertThat(result, PoeMatchers.hasUrl(equalTo("https://www.pathofexile.com/passive-skill-tree/AAAABAEAAHuM")));
 	}
 
 	private void createCharacter(final CharacterClass marauder, final Integer[] passiveSkillIds)

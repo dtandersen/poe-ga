@@ -51,13 +51,29 @@ public class PoeCharacter
 
 	public boolean addPassiveSkill(final PassiveSkill passiveSkill)
 	{
-		if (passiveSkill == null) { return false; }
-		if (hasPassiveSkill(passiveSkill.getId())) { return false; }
-		if (!hasNeighbor(passiveSkill)) { return false; }
+		if (passiveSkill == null)
+		{
+			return false;
+		}
+		if (hasPassiveSkill(passiveSkill.getId()))
+		{
+			return false;
+		}
+		if (character.size() > 0 && passiveSkill.isClassStartingNode())
+		{
+			return false;
+		}
+		if (!hasNeighbor(passiveSkill))
+		{
+			return false;
+		}
 
 		character.addPassiveSkill(passiveSkill);
 
-		if (passiveSkill.getStatValues() == null) { return true; }
+		if (passiveSkill.getStatValues() == null)
+		{
+			return true;
+		}
 
 		for (final StatValue statValue : passiveSkill.getStatValues())
 		{
@@ -133,7 +149,10 @@ public class PoeCharacter
 
 	private boolean hasNeighbor(final PassiveSkill passiveSkill)
 	{
-		if (this.character.size() == 0) { return true; }
+		if (this.character.size() == 0)
+		{
+			return true;
+		}
 		return passiveSkill.isNeighbor(character.getPassiveSkills());
 	}
 
@@ -150,20 +169,39 @@ public class PoeCharacter
 	@Override
 	public boolean equals(final Object obj)
 	{
-		if (this == obj) { return true; }
-		if (obj == null) { return false; }
-		if (getClass() != obj.getClass()) { return false; }
+		if (this == obj)
+		{
+			return true;
+		}
+		if (obj == null)
+		{
+			return false;
+		}
+		if (getClass() != obj.getClass())
+		{
+			return false;
+		}
 		final PoeCharacter other = (PoeCharacter)obj;
 		if (getPassiveAttributes() == null)
 		{
-			if (other.getPassiveAttributes() != null) { return false; }
+			if (other.getPassiveAttributes() != null)
+			{
+				return false;
+			}
+		} else if (!getPassiveAttributes().equals(other.getPassiveAttributes()))
+		{
+			return false;
 		}
-		else if (!getPassiveAttributes().equals(other.getPassiveAttributes())) { return false; }
 		if (attributes == null)
 		{
-			if (other.attributes != null) { return false; }
+			if (other.attributes != null)
+			{
+				return false;
+			}
+		} else if (!attributes.equals(other.attributes))
+		{
+			return false;
 		}
-		else if (!attributes.equals(other.attributes)) { return false; }
 		return true;
 	}
 
@@ -176,8 +214,11 @@ public class PoeCharacter
 	public static int div5(final float attributeValue)
 	{
 		final float gg = attributeValue % 5;
-		if (gg == 0) { return (int)(attributeValue / 5); }
-	
+		if (gg == 0)
+		{
+			return (int)(attributeValue / 5);
+		}
+
 		final int g = (int)(attributeValue - gg);
 		final int f = g / 5;
 		return f;

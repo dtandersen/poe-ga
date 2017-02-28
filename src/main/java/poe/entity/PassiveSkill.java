@@ -73,7 +73,10 @@ public class PassiveSkill
 	{
 		for (final StatValue a : attributes)
 		{
-			if (Objects.equals(a.getStat(), expectedAttributeType)) { return true; }
+			if (Objects.equals(a.getStat(), expectedAttributeType))
+			{
+				return true;
+			}
 		}
 
 		return false;
@@ -108,7 +111,10 @@ public class PassiveSkill
 	{
 		for (final PassiveSkill neighbor : neighbors)
 		{
-			if (isNeighbor(neighbor)) { return true; }
+			if (isNeighbor(neighbor))
+			{
+				return true;
+			}
 		}
 
 		return false;
@@ -135,9 +141,9 @@ public class PassiveSkill
 
 		private String name;
 
-		private List<Integer> outputs;
+		private List<Integer> outputs = new ArrayList<>();
 
-		private List<StatValue> stats;
+		private List<StatValue> stats = new ArrayList<>();
 
 		private CharacterClass classStartingPoint;
 

@@ -18,7 +18,11 @@ public class StatValues
 		final StatValue existing = find(statValue.getStat());
 		if (existing == null)
 		{
-			passives.put(statValue.getStat(), statValue);
+			passives.put(statValue.getStat(), new StatValue(statValue.getStat(), statValue.getValue()));
+		}
+		else
+		{
+			passives.put(statValue.getStat(), new StatValue(statValue.getStat(), existing.getValue() + statValue.getValue()));
 		}
 	}
 

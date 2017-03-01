@@ -5,6 +5,7 @@ import static org.junit.Assert.assertThat;
 import static poe.entity.CharacterClass.MARAUDER;
 import static poe.entity.CharacterClass.WITCH;
 import static poe.entity.PoeMatchers.hasStats2;
+import static poe.entity.PoeMatchers.passiveSkillEqualTo;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -21,10 +22,13 @@ import poe.entity.Attribute;
 import poe.entity.CharacterClass;
 import poe.entity.ImmutableCharacter;
 import poe.entity.ImmutableCharacter.ImmutablePassiveSkill;
+import poe.entity.PassiveSkill;
 import poe.entity.PassiveSkill.PassiveSkillBuilder;
 import poe.entity.PassiveSkillTree;
 import poe.entity.PoeMatchers;
 import poe.entity.Stat;
+import poe.entity.StatValue;
+import poe.entity.StatValue.StatBuilder;
 import poe.repository.InMemoryPassiveSkillRepository;
 import poe.repository.PassiveSkillRepository;
 import poe.repository.json.JsonPassiveSkillRepository;
@@ -146,6 +150,89 @@ public class CreateCharacterTest
 		createCharacter(CharacterClass.SHADOW, new Integer[] { 2, 3, 4 });
 
 		assertThat(theCharacter(), PoeMatchers.hasPassives(passiveWithId(2)));
+	}
+
+	@Test
+	public void statsShouldAdd()
+	{
+		final InMemoryPassiveSkillRepository memRepo = new InMemoryPassiveSkillRepository();
+		memRepo.create(PassiveSkillBuilder.passiveSkill()
+				.withId(1)
+				.withName(CharacterClass.SHADOW.getRootPassiveSkillName())
+				.withClassStartingPoint(CharacterClass.SHADOW)
+				.withOutputs(2));
+		final PassiveSkillBuilder passive2 = PassiveSkillBuilder.passiveSkill()
+				.withId(2)
+				.withName("some skill")
+				.withOutputs(3)
+				.withStats(StatBuilder.stat().withStat(Stat.STRENGTH).withValue(10));
+		memRepo.create(passive2);
+		final PassiveSkillBuilder passive3 = PassiveSkillBuilder.passiveSkill()
+				.withId(3)
+				.withOutputs(4)
+				.withStats(StatBuilder.stat().withStat(Stat.STRENGTH).withValue(20));
+		memRepo.create(passive3);
+		final PassiveSkillBuilder passive4 = PassiveSkillBuilder.passiveSkill()
+				.withId(4)
+				.withOutputs(5)
+				.withStats(StatBuilder.stat().withStat(Stat.STRENGTH).withValue(100));
+		memRepo.create(passive4);
+
+		jsonSkillRepo = memRepo;
+		passiveSkillTree = new PassiveSkillTree(memRepo.all());
+
+		createCharacter(CharacterClass.SHADOW, new Integer[] { 2, 3, 4 });
+
+		assertThat(theCharacter(), PoeMatchers.hasPassives(
+				ImmutablePassiveSkillBuilder.passiveSkill().from(passive2).build(),
+				ImmutablePassiveSkillBuilder.passiveSkill().from(passive3).build(),
+				ImmutablePassiveSkillBuilder.passiveSkill().from(passive4).build()));
+		assertThat(theCharacter().getStatValues(), Matchers.contains(new StatValue(Stat.STRENGTH, 130)));
+	}
+
+	@Test
+	public void statsShouldntChange()
+	{
+		final InMemoryPassiveSkillRepository memRepo = new InMemoryPassiveSkillRepository();
+		memRepo.create(PassiveSkillBuilder.passiveSkill()
+				.withId(1)
+				.withName(CharacterClass.SHADOW.getRootPassiveSkillName())
+				.withClassStartingPoint(CharacterClass.SHADOW)
+				.withOutputs(2));
+		final PassiveSkillBuilder passive2 = PassiveSkillBuilder.passiveSkill()
+				.withId(2)
+				.withName("some skill")
+				.withOutputs(3)
+				.withStats(StatBuilder.stat().withStat(Stat.STRENGTH).withValue(10));
+		memRepo.create(passive2);
+		final PassiveSkillBuilder passive3 = PassiveSkillBuilder.passiveSkill()
+				.withId(3)
+				.withOutputs(4)
+				.withStats(StatBuilder.stat().withStat(Stat.STRENGTH).withValue(20));
+		memRepo.create(passive3);
+		final PassiveSkillBuilder passive4 = PassiveSkillBuilder.passiveSkill()
+				.withId(4)
+				.withOutputs(5)
+				.withStats(StatBuilder.stat().withStat(Stat.STRENGTH).withValue(100));
+		memRepo.create(passive4);
+
+		jsonSkillRepo = memRepo;
+		passiveSkillTree = new PassiveSkillTree(memRepo.all());
+
+		createCharacter(CharacterClass.SHADOW, new Integer[] { 2, 3, 4 });
+		createCharacter(CharacterClass.SHADOW, new Integer[] { 2, 3, 4 });
+
+		assertThat(find(2), passiveSkillEqualTo(passive2));
+	}
+
+	private PassiveSkill find(final int i)
+	{
+		for (final PassiveSkill passive : jsonSkillRepo.all())
+		{
+			if (passive.getId() == i) { return passive; }
+		}
+
+		return null;
 	}
 
 	@Test

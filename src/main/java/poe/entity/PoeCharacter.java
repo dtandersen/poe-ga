@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -57,29 +58,14 @@ public class PoeCharacter
 
 	public boolean addPassiveSkill(final PassiveSkill passiveSkill)
 	{
-		if (passiveSkill == null)
-		{
-			return false;
-		}
-		if (hasPassiveSkill(passiveSkill.getId()))
-		{
-			return false;
-		}
-		if (character.size() > 0 && passiveSkill.isClassStartingNode())
-		{
-			return false;
-		}
-		if (!hasNeighbor(passiveSkill))
-		{
-			return false;
-		}
+		if (passiveSkill == null) { return false; }
+		if (hasPassiveSkill(passiveSkill.getId())) { return false; }
+		if (character.size() > 0 && passiveSkill.isClassStartingNode()) { return false; }
+		if (!hasNeighbor(passiveSkill)) { return false; }
 
 		character.addPassiveSkill(passiveSkill);
 
-		if (passiveSkill.getStatValues() == null)
-		{
-			return true;
-		}
+		if (passiveSkill.getStatValues() == null) { return true; }
 
 		for (final StatValue statValue : passiveSkill.getStatValues())
 		{
@@ -155,10 +141,7 @@ public class PoeCharacter
 
 	private boolean hasNeighbor(final PassiveSkill passiveSkill)
 	{
-		if (this.character.size() == 0)
-		{
-			return true;
-		}
+		if (this.character.size() == 0) { return true; }
 		return passiveSkill.isNeighbor(character.getPassiveSkills());
 	}
 
@@ -175,39 +158,20 @@ public class PoeCharacter
 	@Override
 	public boolean equals(final Object obj)
 	{
-		if (this == obj)
-		{
-			return true;
-		}
-		if (obj == null)
-		{
-			return false;
-		}
-		if (getClass() != obj.getClass())
-		{
-			return false;
-		}
+		if (this == obj) { return true; }
+		if (obj == null) { return false; }
+		if (getClass() != obj.getClass()) { return false; }
 		final PoeCharacter other = (PoeCharacter)obj;
 		if (getPassiveAttributes() == null)
 		{
-			if (other.getPassiveAttributes() != null)
-			{
-				return false;
-			}
-		} else if (!getPassiveAttributes().equals(other.getPassiveAttributes()))
-		{
-			return false;
+			if (other.getPassiveAttributes() != null) { return false; }
 		}
+		else if (!getPassiveAttributes().equals(other.getPassiveAttributes())) { return false; }
 		if (attributes == null)
 		{
-			if (other.attributes != null)
-			{
-				return false;
-			}
-		} else if (!attributes.equals(other.attributes))
-		{
-			return false;
+			if (other.attributes != null) { return false; }
 		}
+		else if (!attributes.equals(other.attributes)) { return false; }
 		return true;
 	}
 
@@ -220,10 +184,7 @@ public class PoeCharacter
 	public static int div5(final float attributeValue)
 	{
 		final float gg = attributeValue % 5;
-		if (gg == 0)
-		{
-			return (int)(attributeValue / 5);
-		}
+		if (gg == 0) { return (int)(attributeValue / 5); }
 
 		final int g = (int)(attributeValue - gg);
 		final int f = g / 5;
@@ -254,10 +215,7 @@ public class PoeCharacter
 	public float getStat3(final Stat stat)
 	{
 		final StatValue statValue = getStat(stat);
-		if (statValue == null)
-		{
-			return 0;
-		}
+		if (statValue == null) { return 0; }
 
 		return statValue.getValue();
 	}
@@ -276,7 +234,8 @@ public class PoeCharacter
 				if (addPassiveSkill(passive))
 				{
 					keepGoing = true;
-				} else
+				}
+				else
 				{
 					notAdded.add(passive);
 				}
@@ -285,5 +244,15 @@ public class PoeCharacter
 			notAdded = new ArrayList<>();
 		}
 
+	}
+
+	public boolean hasPassiveNamed(final String string)
+	{
+		for (final PassiveSkill passive : character.getPassiveSkills())
+		{
+			if (Objects.equals(string, passive.getName())) { return true; }
+		}
+
+		return false;
 	}
 }

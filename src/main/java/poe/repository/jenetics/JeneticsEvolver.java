@@ -2,6 +2,8 @@ package poe.repository.jenetics;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.jenetics.Chromosome;
@@ -25,7 +27,9 @@ public class JeneticsEvolver implements Evolver
 			final CharacterClass characterClass,
 			final PassiveSkillTree pst)
 	{
+		final int cycles = 50000;
 		final int length = 50;
+		final int threads = 10;
 		final List<Integer> ids = passives.stream().map(new Function<PassiveSkill, Integer>() {
 			@Override
 			public Integer apply(final PassiveSkill t)
@@ -35,14 +39,17 @@ public class JeneticsEvolver implements Evolver
 		}).collect(Collectors.toList());
 		final Factory<Genotype<SkillGene>> gtf = Genotype.of(SkillChromosome.seq(ids, length));
 
+		final ExecutorService exec = Executors.newFixedThreadPool(threads);
+
 		final Engine<SkillGene, Integer> engine = Engine
 				.builder(new FitnessFunction(pst, characterClass), gtf)
-				.populationSize(50)
-				.alterers(new Mutator<>(.75), new SinglePointCrossover<>(.2))
+				.populationSize(100)
+				.alterers(new Mutator<>(1f / length), new SinglePointCrossover<>(.2))
+				.executor(exec)
 				.build();
 
 		final Genotype<SkillGene> result = engine.stream()
-				.limit(50000)
+				.limit(cycles)
 				.peek(new EvolutionStatistics())
 				.collect(EvolutionResult.toBestGenotype());
 

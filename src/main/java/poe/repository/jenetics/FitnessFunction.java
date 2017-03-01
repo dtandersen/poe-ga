@@ -42,8 +42,8 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
 		character.sneakyAdd(passives);
 		final int value = (int)character.getStat3(Stat.STRENGTH);
 
-		final int fitness = value + character.passiveSkillCount() * 100;
-		System.out.println(fitness);
+		final int fitness = value + character.passiveSkillCount() * 1;
+		// System.out.println(fitness);
 		return fitness;
 	}
 }

@@ -6,6 +6,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.jenetics.Chromosome;
 import org.jenetics.Genotype;
+import org.jenetics.Mutator;
+import org.jenetics.SinglePointCrossover;
 import org.jenetics.engine.Engine;
 import org.jenetics.engine.EvolutionResult;
 import org.jenetics.util.Factory;
@@ -35,16 +37,19 @@ public class JeneticsEvolver implements Evolver
 
 		final Engine<SkillGene, Integer> engine = Engine
 				.builder(new FitnessFunction(pst, characterClass), gtf)
-				// .populationSize(20)
+				.populationSize(50)
+				.alterers(new Mutator<>(.75), new SinglePointCrossover<>(.2))
+				// .s
 				.build();
 
 		final Genotype<SkillGene> result = engine.stream()
-				.limit(10000)
+				.limit(50000)
+				// .
+
+				.peek(new EvolutionStatistics())
 				.collect(EvolutionResult.toBestGenotype());
 
 		final Chromosome<SkillGene> chromosome = result.getChromosome(0);
-
-		System.out.println(chromosome);
 
 		final PoeCharacter character = new PoeCharacter(characterClass);
 		character.addPassiveSkill(pst.findByName(characterClass.getRootPassiveSkillName()));

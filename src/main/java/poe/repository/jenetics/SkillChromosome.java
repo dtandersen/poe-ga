@@ -37,7 +37,7 @@ public class SkillChromosome extends AbstractChromosome<SkillGene>
 
 	public static Iterable<SkillChromosome> seq(final List<Integer> ids, final int length)
 	{
-		return MSeq.<SkillChromosome> ofLength(length)
+		return MSeq.<SkillChromosome> ofLength(1)
 				.fill(() -> new SkillChromosome(ids, length))
 				.toISeq();
 		// return null;

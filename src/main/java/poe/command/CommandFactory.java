@@ -1,6 +1,7 @@
 package poe.command;
 
 import java.util.Random;
+import poe.repository.Evolver;
 import poe.repository.PassiveSkillRepository;
 import poe.repository.Randomizer;
 
@@ -8,10 +9,14 @@ public class CommandFactory
 {
 	private final PassiveSkillRepository passiveSkillRepository;
 
+	private final Evolver evolver;
+
 	public CommandFactory(
-			final PassiveSkillRepository passiveSkillRepository)
+			final PassiveSkillRepository passiveSkillRepository,
+			final Evolver evolver)
 	{
 		this.passiveSkillRepository = passiveSkillRepository;
+		this.evolver = evolver;
 	}
 
 	public ListSkills list()
@@ -35,5 +40,10 @@ public class CommandFactory
 				return random.nextInt(range);
 			}
 		});
+	}
+
+	public EvolveCharacter evolveCharacter()
+	{
+		return new EvolveCharacter(evolver, passiveSkillRepository);
 	}
 }

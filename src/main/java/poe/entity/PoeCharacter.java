@@ -1,5 +1,6 @@
 package poe.entity;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -243,5 +244,46 @@ public class PoeCharacter
 			characterClass = marauder;
 			return this;
 		}
+	}
+
+	public StatValue getStat(final Stat stat)
+	{
+		return stats.find(stat);
+	}
+
+	public float getStat3(final Stat stat)
+	{
+		final StatValue statValue = getStat(stat);
+		if (statValue == null)
+		{
+			return 0;
+		}
+
+		return statValue.getValue();
+	}
+
+	public void sneakyAdd(final List<PassiveSkill> passives)
+	{
+		List<PassiveSkill> tryToAdd = new ArrayList<>(passives);
+		List<PassiveSkill> notAdded = new ArrayList<>();
+
+		boolean keepGoing = true;
+		while (keepGoing)
+		{
+			keepGoing = false;
+			for (final PassiveSkill passive : tryToAdd)
+			{
+				if (addPassiveSkill(passive))
+				{
+					keepGoing = true;
+				} else
+				{
+					notAdded.add(passive);
+				}
+			}
+			tryToAdd = notAdded;
+			notAdded = new ArrayList<>();
+		}
+
 	}
 }

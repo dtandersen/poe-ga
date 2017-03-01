@@ -1,4 +1,4 @@
-package poe.evolve;
+package poe.repository.jenetics;
 
 import java.util.List;
 import org.jenetics.AbstractChromosome;

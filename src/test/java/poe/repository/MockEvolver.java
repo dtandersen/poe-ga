@@ -3,6 +3,7 @@ package poe.repository;
 import java.util.List;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
+import poe.entity.PassiveSkillTree;
 import poe.entity.PoeCharacter;
 
 public class MockEvolver implements Evolver
@@ -16,7 +17,8 @@ public class MockEvolver implements Evolver
 	@Override
 	public PoeCharacter getBest(
 			final List<PassiveSkill> passives,
-			final CharacterClass characterClass)
+			final CharacterClass characterClass,
+			final PassiveSkillTree passiveSkillTree)
 	{
 		this.passives = passives;
 		this.characterClass = characterClass;

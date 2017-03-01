@@ -22,7 +22,7 @@ public class StatValues
 		}
 	}
 
-	private StatValue find(final Stat attributeType)
+	public StatValue find(final Stat attributeType)
 	{
 		return passives.get(attributeType);
 	}

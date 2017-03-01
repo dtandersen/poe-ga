@@ -19,10 +19,10 @@ import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
 import poe.entity.PassiveSkillTree;
 import poe.entity.PoeCharacter;
-import poe.evolve.FitnessFunction;
-import poe.evolve.SkillChromosome;
-import poe.evolve.SkillGene;
 import poe.repository.PassiveSkillRepository;
+import poe.repository.jenetics.FitnessFunction;
+import poe.repository.jenetics.SkillChromosome;
+import poe.repository.jenetics.SkillGene;
 
 @SpringBootApplication
 @ComponentScan(basePackages = { "poe.app.config" }, excludeFilters = {})
@@ -51,7 +51,7 @@ public class EvolveBuild implements CommandLineRunner
 
 		// 3.) Create the execution environment.
 		final Engine<SkillGene, Integer> engine = Engine
-				.builder(new FitnessFunction(pst), gtf)
+				.builder(new FitnessFunction(pst, CharacterClass.MARAUDER), gtf)
 				// .builder(EvolveBuild::eval, gtf)
 				.build();
 

@@ -39,13 +39,10 @@ public class JeneticsEvolver implements Evolver
 				.builder(new FitnessFunction(pst, characterClass), gtf)
 				.populationSize(50)
 				.alterers(new Mutator<>(.75), new SinglePointCrossover<>(.2))
-				// .s
 				.build();
 
 		final Genotype<SkillGene> result = engine.stream()
 				.limit(50000)
-				// .
-
 				.peek(new EvolutionStatistics())
 				.collect(EvolutionResult.toBestGenotype());
 

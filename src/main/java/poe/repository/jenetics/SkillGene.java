@@ -16,9 +16,9 @@ public class SkillGene implements Gene<Integer, SkillGene>,
 
 	public SkillGene(final List<Integer> passiveSkillIds)
 	{
-		this.skills = passiveSkillIds;
-		final int randomIndex = RandomRegistry.getRandom().nextInt(passiveSkillIds.size());
-		this.passiveSkillId = passiveSkillIds.get(randomIndex);
+		this(
+				passiveSkillIds,
+				passiveSkillIds.get(RandomRegistry.getRandom().nextInt(passiveSkillIds.size())));
 	}
 
 	public SkillGene(final List<Integer> skills, final Integer value)
@@ -30,19 +30,19 @@ public class SkillGene implements Gene<Integer, SkillGene>,
 	@Override
 	public boolean isValid()
 	{
-		return skills.contains(getPassiveSkillId());
+		return skills.contains(passiveSkillId);
 	}
 
 	@Override
 	public int compareTo(final SkillGene o)
 	{
-		return o.getPassiveSkillId() - getPassiveSkillId();
+		return o.passiveSkillId - passiveSkillId;
 	}
 
 	@Override
 	public Integer getAllele()
 	{
-		return getPassiveSkillId();
+		return passiveSkillId;
 	}
 
 	@Override
@@ -64,14 +64,14 @@ public class SkillGene implements Gene<Integer, SkillGene>,
 				.toISeq();
 	}
 
+	public int getPassiveSkillId()
+	{
+		return passiveSkillId;
+	}
+
 	@Override
 	public String toString()
 	{
 		return "" + getPassiveSkillId();
-	}
-
-	public int getPassiveSkillId()
-	{
-		return passiveSkillId;
 	}
 }

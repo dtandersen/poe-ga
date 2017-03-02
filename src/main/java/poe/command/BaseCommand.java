@@ -4,7 +4,7 @@ public abstract class BaseCommand<REQ, RES>
 {
 	protected RES result;
 
-	protected REQ request;
+	public REQ request;
 
 	public void setRequest(final REQ request)
 	{

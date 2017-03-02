@@ -46,10 +46,7 @@ public class PassiveSkillTree
 	{
 		for (final PassiveSkill ps : passiveSkills)
 		{
-			if (Objects.equals(string, ps.getName()))
-			{
-				return ps;
-			}
+			if (Objects.equals(string, ps.getName())) { return ps; }
 		}
 		return null;
 	}
@@ -58,10 +55,7 @@ public class PassiveSkillTree
 	{
 		for (final PassiveSkill ps : passiveSkills)
 		{
-			if (id == ps.getId())
-			{
-				return ps;
-			}
+			if (id == ps.getId()) { return ps; }
 		}
 		return null;
 	}
@@ -69,5 +63,10 @@ public class PassiveSkillTree
 	public List<Integer> neighbors(final int passiveSkillId)
 	{
 		return Graphs.neighborListOf(graph, passiveSkillId);
+	}
+
+	public int count()
+	{
+		return passiveSkills.size();
 	}
 }

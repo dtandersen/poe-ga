@@ -93,9 +93,9 @@ public class PoeCharacter
 		return hasPassiveSkill(passiveSkill.getId());
 	}
 
-	public boolean hasAllPassiveSkills(final List<PassiveSkill> skills)
+	public boolean hasAmountOfSkills(final int size)
 	{
-		return passiveSkillCount() == skills.size();
+		return passiveSkillCount() == size;
 	}
 
 	public boolean hasPassiveSkill(final int passiveSkillId)

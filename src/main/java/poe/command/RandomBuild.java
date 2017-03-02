@@ -11,6 +11,7 @@ import poe.entity.ImmutableCharacter;
 import poe.entity.PassiveSkill;
 import poe.entity.PassiveSkillTree;
 import poe.entity.PoeCharacter;
+import poe.entity.RandomCharacterGenerator;
 import poe.repository.PassiveSkillRepository;
 import poe.repository.Randomizer;
 
@@ -18,7 +19,7 @@ public class RandomBuild extends BaseCommand<RandomBuildRequest, RandomBuildResu
 {
 	private final PassiveSkillRepository passiveSkillRepository;
 
-	private final Randomizer randomizer;
+	public final Randomizer randomizer;
 
 	public RandomBuild(
 			final PassiveSkillRepository passiveSkillRepository,
@@ -33,47 +34,9 @@ public class RandomBuild extends BaseCommand<RandomBuildRequest, RandomBuildResu
 	{
 		final List<PassiveSkill> skills = passiveSkillRepository.all();
 		final PassiveSkillTree skillTree = new PassiveSkillTree(skills);
-
-		PassiveSkill curSkill = skillTree.findByName(request.getCharacterClass().getRootPassiveSkillName());
-		PassiveSkill prevSkill = curSkill;
-
-		final PoeCharacter character = new PoeCharacter(request.getCharacterClass());
-		final PassiveSkill root = curSkill;
-		character.addPassiveSkill(root);
-
-		do
-		{
-			if (character.hasAllPassiveSkills(skills))
-			{
-				break;
-			}
-
-			if (!(character.hasPassiveSkill(curSkill) || curSkill.isRootSkill()))
-			{
-				System.out.println("added " + curSkill.getName());
-				if (prevSkill == curSkill)
-				{
-					final PassiveSkill passiveSkill = curSkill;
-					character.addPassiveSkill(passiveSkill);
-				}
-				else
-				{
-					final PassiveSkill passiveSkill = curSkill;
-					character.addPassiveSkill(passiveSkill);
-				}
-			}
-			else
-			{
-				System.out.println("already have " + curSkill.getName());
-			}
-			prevSkill = curSkill;
-			final List<Integer> neighbors = skillTree.neighbors(curSkill.getId());
-			System.out.println("neighbors of " + curSkill.getName() + " are " + neighbors);
-			final int nextIndex = randomizer.nextInt(neighbors.size());
-			curSkill = skillTree.find(neighbors.get(nextIndex));
-			System.out.println("rolled " + nextIndex + " and got " + curSkill.getName());
-		}
-		while ((character.passiveSkillCount()) - 1 < request.getSize());
+		final PoeCharacter character = new RandomCharacterGenerator(skillTree, randomizer)
+				.withCharacterClass(request.getCharacterClass())
+				.generate(request.getSize());
 
 		result.setCharacter(ImmutableCharacterBuilder.character()
 				.withPassiveSkills(character.getPassiveSkillsWithoutRoot())

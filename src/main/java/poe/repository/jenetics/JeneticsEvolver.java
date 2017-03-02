@@ -30,7 +30,7 @@ public class JeneticsEvolver implements Evolver
 			final PassiveSkillTree pst)
 	{
 		final int cycles = 50000;
-		final int pop = 250;
+		final int pop = 50;
 		final int length = 70;
 		final int threads = 10;
 		final float mutRate = (1f / length) * 5;

@@ -134,7 +134,7 @@ public enum Stat
 
 	// totem
 	TOTEM_DAMAGE(INT + "% increased Totem Damage"),
-	TOTEM_PLACE(INT + "% increased Totem Placement speed"),
+	TOTEM_PLACEMENT_SPEED(INT + "% increased Totem Placement speed"),
 	TOTEM_LIFE(INT + "% increased Totem Life"),
 	TOTEM_HELM("Skills in your Helm can have up to 1 additional Totem Summoned at a time"),
 	TOTEM_RES("Totems have " + INT + "% additional Physical Damage Reduction"),

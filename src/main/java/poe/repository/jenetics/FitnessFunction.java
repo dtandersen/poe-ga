@@ -45,6 +45,7 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
 		value += (int)character.getStat3(Stat.DEXTERITY) * 5;
 		value += (int)character.getStat3(Stat.TOTEM_CAST_SPEED) * 100;
 		value += (int)character.getStat3(Stat.TOTEM_ATTACK_SPEED) * 100;
+		value += (int)character.getStat3(Stat.TOTEM_PLACEMENT_SPEED) * 100;
 		value += (int)character.getStat3(Stat.TOTEM_DAMAGE) * 100;
 		value += (int)(character.getStat3(Stat.MELEE_CSC) * (1 + character.getStat3(Stat.MELEE_CSM))) * 10;
 		value += (int)(character.getStat3(Stat.LIFE_MAX) * (1 + character.getStat3(Stat.MAX_LIFE_PLUS)));

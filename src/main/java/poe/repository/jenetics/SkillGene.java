@@ -2,6 +2,8 @@ package poe.repository.jenetics;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import org.jenetics.Gene;
 import org.jenetics.util.ISeq;
 import org.jenetics.util.MSeq;
@@ -14,11 +16,11 @@ public class SkillGene implements Gene<Integer, SkillGene>,
 
 	private final int passiveSkillId;
 
-	public SkillGene(final List<Integer> passiveSkillIds)
+	public SkillGene(final List<Integer> allowedSkills)
 	{
 		this(
-				passiveSkillIds,
-				passiveSkillIds.get(RandomRegistry.getRandom().nextInt(passiveSkillIds.size())));
+				allowedSkills,
+				allowedSkills.get(RandomRegistry.getRandom().nextInt(allowedSkills.size())));
 	}
 
 	public SkillGene(final List<Integer> skills, final Integer value)
@@ -62,6 +64,22 @@ public class SkillGene implements Gene<Integer, SkillGene>,
 		return MSeq.<SkillGene> ofLength(length)
 				.fill(() -> new SkillGene(passiveSkillIds))
 				.toISeq();
+	}
+
+	public static ISeq<? extends SkillGene> seq(final List<Integer> ids, final List<Integer> passiveSkillIds)
+	{
+		final MSeq<SkillGene> ofLength = MSeq.<SkillGene> ofLength(passiveSkillIds.size());
+		ofLength.setAll(passiveSkillIds.stream()
+				.map(new Function<Integer, SkillGene>() {
+
+					@Override
+					public SkillGene apply(final Integer t)
+					{
+						return new SkillGene(ids, t);
+					}
+				})
+				.collect(Collectors.toList()));
+		return ofLength.toISeq();
 	}
 
 	public int getPassiveSkillId()

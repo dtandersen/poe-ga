@@ -7,6 +7,17 @@ import poe.repository.Randomizer;
 
 public class CommandFactory
 {
+	public static class RandomizerImplementation implements Randomizer
+	{
+		Random random = new Random();
+
+		@Override
+		public int nextInt(final int range)
+		{
+			return random.nextInt(range);
+		}
+	}
+
 	private final PassiveSkillRepository passiveSkillRepository;
 
 	private final Evolver evolver;
@@ -31,15 +42,7 @@ public class CommandFactory
 
 	public RandomBuild randomCharacter()
 	{
-		return new RandomBuild(passiveSkillRepository, new Randomizer() {
-			Random random = new Random();
-
-			@Override
-			public int nextInt(final int range)
-			{
-				return random.nextInt(range);
-			}
-		});
+		return new RandomBuild(passiveSkillRepository, new RandomizerImplementation());
 	}
 
 	public EvolveCharacter evolveCharacter()

@@ -13,10 +13,12 @@ import org.jenetics.SinglePointCrossover;
 import org.jenetics.engine.Engine;
 import org.jenetics.engine.EvolutionResult;
 import org.jenetics.util.Factory;
+import poe.command.CommandFactory.RandomizerImplementation;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
 import poe.entity.PassiveSkillTree;
 import poe.entity.PoeCharacter;
+import poe.entity.RandomCharacterGenerator;
 import poe.repository.Evolver;
 
 public class JeneticsEvolver implements Evolver
@@ -28,8 +30,11 @@ public class JeneticsEvolver implements Evolver
 			final PassiveSkillTree pst)
 	{
 		final int cycles = 50000;
-		final int length = 50;
+		final int pop = 250;
+		final int length = 70;
 		final int threads = 10;
+		final float mutRate = (1f / length) * 5;
+
 		final List<Integer> ids = passives.stream().map(new Function<PassiveSkill, Integer>() {
 			@Override
 			public Integer apply(final PassiveSkill t)
@@ -37,14 +42,24 @@ public class JeneticsEvolver implements Evolver
 				return t.getId();
 			}
 		}).collect(Collectors.toList());
-		final Factory<Genotype<SkillGene>> gtf = Genotype.of(SkillChromosome.seq(ids, length));
+		// final Factory<Genotype<SkillGene>> gtf = Genotype.of(SkillChromosome.seq(ids, length));
+		final Factory<Genotype<SkillGene>> gtf = new Factory<Genotype<SkillGene>>() {
+			@Override
+			public Genotype<SkillGene> newInstance()
+			{
+				final PoeCharacter character = new RandomCharacterGenerator(pst, new RandomizerImplementation())
+						.withCharacterClass(characterClass)
+						.generate(length);
+				return Genotype.of(SkillChromosome.seq(ids, length, character.getPassiveSkillIds()));
+			}
+		};
 
 		final ExecutorService exec = Executors.newFixedThreadPool(threads);
 
 		final Engine<SkillGene, Integer> engine = Engine
 				.builder(new FitnessFunction(pst, characterClass), gtf)
-				.populationSize(100)
-				.alterers(new Mutator<>(1f / length), new SinglePointCrossover<>(.2))
+				.populationSize(pop)
+				.alterers(new Mutator<>(mutRate), new SinglePointCrossover<>(.2))
 				.executor(exec)
 				.build();
 

@@ -1,7 +1,9 @@
 package poe.entity;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import org.jgrapht.Graphs;
 import org.jgrapht.UndirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
@@ -68,5 +70,13 @@ public class PassiveSkillTree
 	public int count()
 	{
 		return passiveSkills.size();
+	}
+
+	public Set<Integer> neighbors(final List<Integer> passiveSkillIds)
+	{
+		final Set<Integer> neighbors = new HashSet<>();
+		passiveSkillIds.stream().forEach(passiveSkillId -> neighbors.addAll(neighbors(passiveSkillId)));
+
+		return neighbors;
 	}
 }

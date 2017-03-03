@@ -31,9 +31,9 @@ public class JeneticsEvolver implements Evolver
 	{
 		final int cycles = 50000;
 		final int pop = 50;
-		final int length = 70;
-		final int threads = 10;
-		final float mutRate = (1f / length) * 5;
+		final int length = 100;
+		final int threads = Runtime.getRuntime().availableProcessors();
+		final float mutRate = (1f / length);
 
 		final List<Integer> ids = passives.stream().map(new Function<PassiveSkill, Integer>() {
 			@Override
@@ -59,7 +59,10 @@ public class JeneticsEvolver implements Evolver
 		final Engine<SkillGene, Integer> engine = Engine
 				.builder(new FitnessFunction(pst, characterClass), gtf)
 				.populationSize(pop)
-				.alterers(new Mutator<>(mutRate), new SinglePointCrossover<>(.2))
+				.alterers(
+						new Mutator<>(mutRate / 2),
+						new BetterMutator(mutRate * 2, pst),
+						new SinglePointCrossover<>(.2))
 				.executor(exec)
 				.build();
 

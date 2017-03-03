@@ -41,8 +41,8 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
 		}
 		character.sneakyAdd(passives);
 		int value = (int)character.getStat3(Stat.STRENGTH) * 10;
-		value += (int)character.getStat3(Stat.INTELLIGENCE) * 5;
-		value += (int)character.getStat3(Stat.DEXTERITY) * 5;
+		value += (int)character.getStat3(Stat.INTELLIGENCE) * 1;
+		value += (int)character.getStat3(Stat.DEXTERITY) * 1;
 		value += (int)character.getStat3(Stat.TOTEM_CAST_SPEED) * 100;
 		value += (int)character.getStat3(Stat.TOTEM_ATTACK_SPEED) * 100;
 		value += (int)character.getStat3(Stat.TOTEM_PLACEMENT_SPEED) * 100;
@@ -52,14 +52,14 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
 		// System.out.println("strength=" + value);
 
 		int fitness = value + character.passiveSkillCount() * 10;
-		if (character.hasPassiveNamed("Slaughter"))
-		{
-			fitness += 100000;
-		}
-		if (character.hasPassiveNamed("Ancestral Bond"))
-		{
-			fitness += 100000;
-		}
+		// if (character.hasPassiveNamed("Slaughter"))
+		// {
+		// fitness += 100000;
+		// }
+		// if (character.hasPassiveNamed("Ancestral Bond"))
+		// {
+		// fitness += 100000;
+		// }
 		if (character.hasPassiveNamed("Constitution"))
 		{
 			fitness += 100000;

@@ -11,7 +11,6 @@ import org.hamcrest.Matcher;
 import org.junit.Test;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
-import poe.entity.PassiveSkillTree;
 import poe.entity.PoeMatchers;
 import poe.entity.Stat;
 import poe.matcher.ComposableMatcher;
@@ -34,7 +33,7 @@ public class JsonPassiveSkillRepositoryTest
 						.withId(19858)
 						.withOutputs(9206)
 						.withStats(
-								stat(Stat.LIFE_MAX, 10),
+								stat(Stat.INCRESED_MAXIMUM_LIFE, 10),
 								stat(Stat.FLASK_LIFE, 20),
 								stat(Stat.FLASK_RECOVERY, 20))));
 

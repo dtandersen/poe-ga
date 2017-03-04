@@ -2,22 +2,48 @@ package poe.command;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static poe.command.FitnessConfig.FitnessConfigBuilder.config;
+import static poe.command.SimpleEvolveCharacterRequest.SimpleEvolveCharacterRequestBuilder.request;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.junit.Before;
 import org.junit.Test;
-import poe.command.EvolveCharacter.EvolveCharacterRequest;
 import poe.command.EvolveCharacter.EvolveCharacterResult;
+import poe.command.FitnessConfig.ElementConfig.ElementConfigBuilder;
 import poe.command.PureImmutablePassiveSkill.ImmutablePassiveSkillBuilder;
+import poe.command.SimpleEvolveCharacterRequest.SimpleEvolveCharacterRequestBuilder;
 import poe.entity.CharacterClass;
 import poe.entity.ImmutableCharacter;
 import poe.entity.PassiveSkill.PassiveSkillBuilder;
-import poe.entity.PoeCharacter.CharacterBuilder;
 import poe.entity.PoeMatchers;
-import poe.repository.MockEvolver;
+import poe.entity.Stat;
+import poe.entity.StatValue.StatBuilder;
 import poe.repository.PassiveSkillRepository;
+import poe.repository.PassiveSkillTree;
 import poe.repository.RepoBuilder;
+import poe.repository.jenetics.AltererType;
+import poe.repository.jenetics.JeneticsEvolver;
 
 public class EvolveCharacterTest
 {
 	private EvolveCharacterResultImplementation result;
+
+	private final List<AltererConfig> alterers = new ArrayList<>();
+
+	private final List<AltererType> mutators = new ArrayList<>();
+
+	private PassiveSkillTree passiveSkillTree;
+
+	private PassiveSkillRepository repo;
+
+	private JeneticsEvolver evolver;
+
+	@Before
+	public void setUp()
+	{
+		// passiveSkillTree=pass
+	}
 
 	@Test
 	public void test()
@@ -28,41 +54,125 @@ public class EvolveCharacterTest
 				.withOutputs(2)
 				.withClassStartingPoint(CharacterClass.MARAUDER);
 		final PassiveSkillBuilder passive2 = PassiveSkillBuilder.passiveSkill()
-				.withName("Melee Damage")
-				.withId(2);
-		final PassiveSkillRepository repo = new RepoBuilder()
+				.withName("Strength")
+				.withId(2)
+				.withStats(StatBuilder.stat()
+						.withStat(Stat.STRENGTH)
+						.withValue(10));
+		repo = new RepoBuilder()
 				.withPassiveSkills(passive1, passive2)
 				.build();
-		final MockEvolver evolver = new MockEvolver();
-		evolver.best = new CharacterBuilder()
+		passiveSkillTree = new PassiveSkillTree(repo.all());
+		evolver = new JeneticsEvolver(passiveSkillTree);
+
+		givenAlterers(new AltererConfig(AltererType.NULL));
+
+		whenBuildEvolved(request()
 				.withCharacterClass(CharacterClass.MARAUDER)
+				.withPopulation(1)
+				.withGenerations(1)
+				.withSkillCount(10)
+				.withFitnessConfig(config()
+						.withElement(ElementConfigBuilder.element()
+								.withExpression("passiveSkillCount"))
+						.withElement(ElementConfigBuilder.element()
+								.withExpression("strength * 10"))));
+
+		assertThat(result.character, PoeMatchers.hasPassives(
+				ImmutablePassiveSkillBuilder.passiveSkill().from(passive2).build()));
+		assertThat(result.getGenerations(), equalTo(1L));
+		assertThat(result.getFitness(), equalTo(101));
+		assertThat(result.character.getCharacterClass(), equalTo(CharacterClass.MARAUDER));
+	}
+
+	@Test
+	public void duelist()
+	{
+		final PassiveSkillBuilder passive1 = PassiveSkillBuilder.passiveSkill()
+				.withName(CharacterClass.MARAUDER.getRootPassiveSkillName())
+				.withId(1)
+				.withOutputs(2)
+				.withClassStartingPoint(CharacterClass.MARAUDER);
+		final PassiveSkillBuilder passive2 = PassiveSkillBuilder.passiveSkill()
+				.withName("Strength")
+				.withId(2)
+				.withStats(StatBuilder.stat()
+						.withStat(Stat.STRENGTH)
+						.withValue(10));
+		repo = new RepoBuilder()
+				.withPassiveSkills(passive1, passive2)
 				.build();
-		final EvolveCharacter command = new EvolveCharacter(evolver, repo);
-		command.setRequest(new EvolveCharacterRequest() {
-			@Override
-			public CharacterClass getCharacterClass()
-			{
-				return CharacterClass.MARAUDER;
-			}
-		});
+		passiveSkillTree = new PassiveSkillTree(repo.all());
+		evolver = new JeneticsEvolver(passiveSkillTree);
+
+		givenAlterers(new AltererConfig(AltererType.NULL));
+
+		whenBuildEvolved(request()
+				.withCharacterClass(CharacterClass.DUELIST)
+				.withPopulation(1)
+				.withGenerations(1)
+				.withSkillCount(10)
+				.withFitnessConfig(config()
+						.withElement(ElementConfigBuilder.element()
+								.withExpression("passiveSkillCount"))
+						.withElement(ElementConfigBuilder.element()
+								.withExpression("strength * 10"))));
+
+		assertThat(result.character, PoeMatchers.hasPassives(
+				ImmutablePassiveSkillBuilder.passiveSkill().from(passive2).build()));
+		assertThat(result.character.getCharacterClass(), equalTo(CharacterClass.DUELIST));
+		assertThat(result.getGenerations(), equalTo(1L));
+		assertThat(result.getFitness(), equalTo(101));
+	}
+
+	private void givenAlterers(final AltererConfig... mutatorTypes)
+	{
+		Arrays.asList(mutatorTypes).stream().forEach(altererConfig -> alterers.add(altererConfig));
+	}
+
+	private void whenBuildEvolved(final SimpleEvolveCharacterRequestBuilder evolutionContextBuilder)
+	{
+		final EvolveCharacter command = new EvolveCharacter(evolver, repo, passiveSkillTree);
+		command.setRequest(evolutionContextBuilder.build());
 		result = new EvolveCharacterResultImplementation();
 		command.setResult(result);
 		command.execute();
-
-		assertThat(evolver.passives, equalTo(repo.all()));
-		assertThat(evolver.characterClass, equalTo(CharacterClass.MARAUDER));
-		assertThat(result.character, PoeMatchers.hasPassives(
-				ImmutablePassiveSkillBuilder.passiveSkill().from(passive2).build()));
 	}
 
 	private final class EvolveCharacterResultImplementation implements EvolveCharacterResult
 	{
 		public ImmutableCharacter character;
 
+		private long generations;
+
+		private int fitness;
+
 		@Override
 		public void setCharacter(final ImmutableCharacter character)
 		{
 			this.character = character;
+		}
+
+		public int getFitness()
+		{
+			return fitness;
+		}
+
+		public long getGenerations()
+		{
+			return generations;
+		}
+
+		@Override
+		public void setGenerations(final long generations)
+		{
+			this.generations = generations;
+		}
+
+		@Override
+		public void setFitness(final int fitness)
+		{
+			this.fitness = fitness;
 		}
 	}
 }

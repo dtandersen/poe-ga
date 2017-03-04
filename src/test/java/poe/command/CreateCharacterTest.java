@@ -24,13 +24,13 @@ import poe.entity.ImmutableCharacter;
 import poe.entity.ImmutableCharacter.ImmutablePassiveSkill;
 import poe.entity.PassiveSkill;
 import poe.entity.PassiveSkill.PassiveSkillBuilder;
-import poe.entity.PassiveSkillTree;
 import poe.entity.PoeMatchers;
 import poe.entity.Stat;
 import poe.entity.StatValue;
 import poe.entity.StatValue.StatBuilder;
 import poe.repository.InMemoryPassiveSkillRepository;
 import poe.repository.PassiveSkillRepository;
+import poe.repository.PassiveSkillTree;
 import poe.repository.json.JsonPassiveSkillRepository;
 
 public class CreateCharacterTest
@@ -104,7 +104,7 @@ public class CreateCharacterTest
 		createCharacter(CharacterClass.MARAUDER, new Integer[] { 31628, 31628 });
 
 		assertThat(theCharacter(), hasStats2()
-				.withStatValue(Stat.MAX_LIFE_PLUS, 16)
+				.withStatValue(Stat.MAXIMUM_LIFE, 16)
 				.withStatValue(Stat.MELEE_PHYSICAL_DAMAGE, 16));
 
 		assertThat(theCharacter(), PoeMatchers.hasPassives(passiveWithId(31628)));
@@ -116,7 +116,7 @@ public class CreateCharacterTest
 		createCharacter(CharacterClass.MARAUDER, new Integer[] { 31628, 38148 });
 
 		assertThat(theCharacter(), hasStats2()
-				.withStatValue(Stat.MAX_LIFE_PLUS, 16)
+				.withStatValue(Stat.MAXIMUM_LIFE, 16)
 				.withStatValue(Stat.MELEE_PHYSICAL_DAMAGE, 16));
 
 		assertThat(theCharacter(), PoeMatchers.hasPassives(passiveWithId(31628)));

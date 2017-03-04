@@ -1,4 +1,4 @@
-package poe.entity;
+package poe.repository;
 
 import java.util.HashSet;
 import java.util.List;
@@ -8,6 +8,7 @@ import org.jgrapht.Graphs;
 import org.jgrapht.UndirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.SimpleGraph;
+import poe.entity.PassiveSkill;
 
 public class PassiveSkillTree
 {
@@ -19,11 +20,13 @@ public class PassiveSkillTree
 	{
 		this.passiveSkills = passiveSkills;
 		graph = new SimpleGraph<>(DefaultEdge.class);
+
 		for (final PassiveSkill passiveSkill : passiveSkills)
 		{
 			final int id = passiveSkill.getId();
 			graph.addVertex(id);
 		}
+
 		for (final PassiveSkill passiveSkill : passiveSkills)
 		{
 			final Integer v1 = passiveSkill.getId();

@@ -7,7 +7,6 @@ import java.util.Map;
 import java.util.Objects;
 import poe.entity.PassiveSkill;
 import poe.entity.PassiveSkill.PassiveSkillBuilder;
-import poe.entity.PassiveSkillTree;
 
 public class InMemoryPassiveSkillRepository implements PassiveSkillRepository
 {

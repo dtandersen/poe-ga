@@ -6,13 +6,13 @@ import java.util.stream.Collectors;
 import org.jenetics.Mutator;
 import org.jenetics.util.MSeq;
 import org.jenetics.util.RandomRegistry;
-import poe.entity.PassiveSkillTree;
+import poe.repository.PassiveSkillTree;
 
-public class BetterMutator extends Mutator<SkillGene, Integer>
+public class NeighboringSkillMutator extends Mutator<SkillGene, Integer>
 {
 	private final PassiveSkillTree pst;
 
-	public BetterMutator(final float mutationRate, final PassiveSkillTree pst)
+	public NeighboringSkillMutator(final float mutationRate, final PassiveSkillTree pst)
 	{
 		super(mutationRate);
 		this.pst = pst;

@@ -8,9 +8,9 @@ import poe.command.PureImmutableCharacter.ImmutableCharacterBuilder;
 import poe.entity.CharacterClass;
 import poe.entity.ImmutableCharacter;
 import poe.entity.PassiveSkill;
-import poe.entity.PassiveSkillTree;
 import poe.entity.PoeCharacter;
 import poe.repository.PassiveSkillRepository;
+import poe.repository.PassiveSkillTree;
 
 public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateCharacterResult>
 {

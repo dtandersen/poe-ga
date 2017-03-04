@@ -13,6 +13,8 @@ public interface ImmutableCharacter
 
 	List<ImmutablePassiveSkill> getPassiveSkills();
 
+	CharacterClass getCharacterClass();
+
 	public interface ImmutablePassiveSkill
 	{
 		int getPassiveSkillId();

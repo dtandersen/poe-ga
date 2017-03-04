@@ -17,8 +17,11 @@ public class PoeCharacter
 
 	private final CharacterState character;
 
+	private final CharacterClass characterClass;
+
 	public PoeCharacter(final CharacterClass characterClass)
 	{
+		this.characterClass = characterClass;
 		attributes = new HashMap<>();
 		stats = new StatValues();
 		character = new CharacterState();
@@ -207,14 +210,14 @@ public class PoeCharacter
 		}
 	}
 
-	public StatValue getStat(final Stat stat)
+	public StatValue getStatValue(final Stat stat)
 	{
 		return stats.find(stat);
 	}
 
-	public float getStat3(final Stat stat)
+	public float getStat(final Stat stat)
 	{
-		final StatValue statValue = getStat(stat);
+		final StatValue statValue = getStatValue(stat);
 		if (statValue == null) { return 0; }
 
 		return statValue.getValue();
@@ -254,5 +257,10 @@ public class PoeCharacter
 		}
 
 		return false;
+	}
+
+	public CharacterClass getCharacterClass()
+	{
+		return characterClass;
 	}
 }

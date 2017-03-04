@@ -8,11 +8,11 @@ import java.util.regex.Matcher;
 import com.google.gson.Gson;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
-import poe.entity.PassiveSkillTree;
 import poe.entity.Stat;
 import poe.entity.StatValue;
 import poe.entity.UnknownStatValue;
 import poe.repository.PassiveSkillRepository;
+import poe.repository.PassiveSkillTree;
 import poe.repository.json.JsonPassiveSkillRepository.Stuff.Node22;
 
 public class JsonPassiveSkillRepository implements PassiveSkillRepository

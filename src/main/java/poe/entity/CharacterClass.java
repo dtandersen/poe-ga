@@ -76,4 +76,14 @@ public enum CharacterClass
 
 		return null;
 	}
+
+	public static CharacterClass find(final String characterClass)
+	{
+		for (final CharacterClass klazz : values())
+		{
+			if (klazz.name().equalsIgnoreCase(characterClass)) { return klazz; }
+		}
+
+		return null;
+	}
 }

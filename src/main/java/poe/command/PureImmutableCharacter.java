@@ -7,6 +7,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import poe.command.PureImmutablePassiveSkill.ImmutablePassiveSkillBuilder;
 import poe.entity.AttributeValue;
+import poe.entity.CharacterClass;
 import poe.entity.ImmutableCharacter;
 import poe.entity.PassiveSkill;
 import poe.entity.StatValue;
@@ -19,11 +20,14 @@ public class PureImmutableCharacter implements ImmutableCharacter
 
 	private final List<ImmutablePassiveSkill> passiveSkills;
 
+	private final CharacterClass characterClass;
+
 	public PureImmutableCharacter(final ImmutableCharacterBuilder pureImmutableCharacterBuilder)
 	{
 		this.statValues = pureImmutableCharacterBuilder.statValues;
 		this.stats = pureImmutableCharacterBuilder.stats;
 		this.passiveSkills = pureImmutableCharacterBuilder.passiveSkills;
+		this.characterClass = pureImmutableCharacterBuilder.characterClass;
 	}
 
 	@Override
@@ -53,6 +57,12 @@ public class PureImmutableCharacter implements ImmutableCharacter
 	}
 
 	@Override
+	public CharacterClass getCharacterClass()
+	{
+		return characterClass;
+	}
+
+	@Override
 	public List<ImmutablePassiveSkill> getPassiveSkills()
 	{
 		return passiveSkills;
@@ -60,6 +70,8 @@ public class PureImmutableCharacter implements ImmutableCharacter
 
 	public static class ImmutableCharacterBuilder
 	{
+		public CharacterClass characterClass;
+
 		private Collection<StatValue> statValues;
 
 		private Collection<AttributeValue> stats;
@@ -93,6 +105,12 @@ public class PureImmutableCharacter implements ImmutableCharacter
 						.build();
 				this.passiveSkills.add(immutablePassiveSkill);
 			}
+			return this;
+		}
+
+		public ImmutableCharacterBuilder withCharacterClass(final CharacterClass characterClass)
+		{
+			this.characterClass = characterClass;
 			return this;
 		}
 

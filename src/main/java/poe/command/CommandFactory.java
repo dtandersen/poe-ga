@@ -1,33 +1,26 @@
 package poe.command;
 
-import java.util.Random;
 import poe.repository.Evolver;
+import poe.repository.JavaRandomizer;
 import poe.repository.PassiveSkillRepository;
-import poe.repository.Randomizer;
+import poe.repository.PassiveSkillTree;
 
 public class CommandFactory
 {
-	public static class RandomizerImplementation implements Randomizer
-	{
-		Random random = new Random();
-
-		@Override
-		public int nextInt(final int range)
-		{
-			return random.nextInt(range);
-		}
-	}
-
 	private final PassiveSkillRepository passiveSkillRepository;
 
 	private final Evolver evolver;
 
+	private final PassiveSkillTree passiveSkillTree;
+
 	public CommandFactory(
 			final PassiveSkillRepository passiveSkillRepository,
-			final Evolver evolver)
+			final Evolver evolver,
+			final PassiveSkillTree passiveSkillTree)
 	{
 		this.passiveSkillRepository = passiveSkillRepository;
 		this.evolver = evolver;
+		this.passiveSkillTree = passiveSkillTree;
 	}
 
 	public ListSkills list()
@@ -42,11 +35,11 @@ public class CommandFactory
 
 	public RandomBuild randomCharacter()
 	{
-		return new RandomBuild(passiveSkillRepository, new RandomizerImplementation());
+		return new RandomBuild(passiveSkillRepository, new JavaRandomizer());
 	}
 
 	public EvolveCharacter evolveCharacter()
 	{
-		return new EvolveCharacter(evolver, passiveSkillRepository);
+		return new EvolveCharacter(evolver, passiveSkillRepository, passiveSkillTree);
 	}
 }

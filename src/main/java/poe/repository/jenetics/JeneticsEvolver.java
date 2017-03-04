@@ -13,26 +13,31 @@ import org.jenetics.SinglePointCrossover;
 import org.jenetics.engine.Engine;
 import org.jenetics.engine.EvolutionResult;
 import org.jenetics.util.Factory;
-import poe.command.CommandFactory.RandomizerImplementation;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
-import poe.entity.PassiveSkillTree;
 import poe.entity.PoeCharacter;
-import poe.entity.RandomCharacterGenerator;
 import poe.repository.Evolver;
+import poe.repository.PassiveSkillTree;
 
 public class JeneticsEvolver implements Evolver
 {
-	@Override
-	public PoeCharacter getBest(
-			final List<PassiveSkill> passives,
-			final CharacterClass characterClass,
-			final PassiveSkillTree pst)
+	PassiveSkillTree passiveSkillTree;
+
+	public JeneticsEvolver(final PassiveSkillTree passiveSkillTree)
 	{
-		final int cycles = 50000;
-		final int pop = 50;
-		final int length = 100;
-		final int threads = Runtime.getRuntime().availableProcessors();
+		this.passiveSkillTree = passiveSkillTree;
+	}
+
+	@Override
+	public void evolve(
+			final PoeEvolutionContext evolutionContext,
+			final PoeEvolutionResult poeEvolutionResult)
+	{
+		final List<PassiveSkill> passives = passiveSkillTree.passiveSkills();
+		final CharacterClass characterClass = evolutionContext.getCharacterClass();
+		final int pop = evolutionContext.getPopulation();
+		final int length = evolutionContext.getSkills();
+		final int threads = evolutionContext.getThreads();// Runtime.getRuntime().availableProcessors();
 		final float mutRate = (1f / length);
 
 		final List<Integer> ids = passives.stream().map(new Function<PassiveSkill, Integer>() {
@@ -42,47 +47,39 @@ public class JeneticsEvolver implements Evolver
 				return t.getId();
 			}
 		}).collect(Collectors.toList());
-		// final Factory<Genotype<SkillGene>> gtf = Genotype.of(SkillChromosome.seq(ids, length));
-		final Factory<Genotype<SkillGene>> gtf = new Factory<Genotype<SkillGene>>() {
-			@Override
-			public Genotype<SkillGene> newInstance()
-			{
-				final PoeCharacter character = new RandomCharacterGenerator(pst, new RandomizerImplementation())
-						.withCharacterClass(characterClass)
-						.generate(length);
-				return Genotype.of(SkillChromosome.seq(ids, length, character.getPassiveSkillIds()));
-			}
-		};
+		final Factory<Genotype<SkillGene>> gtf = new FactoryImplementation(ids, length);
 
 		final ExecutorService exec = Executors.newFixedThreadPool(threads);
 
 		final Engine<SkillGene, Integer> engine = Engine
-				.builder(new FitnessFunction(pst, characterClass), gtf)
+				.builder(new FitnessFunction(passiveSkillTree, characterClass, evolutionContext.getCharacterEvaluator()), gtf)
 				.populationSize(pop)
 				.alterers(
 						new Mutator<>(mutRate / 2),
-						new BetterMutator(mutRate * 2, pst),
+						new NeighboringSkillMutator(mutRate * 2, passiveSkillTree),
 						new SinglePointCrossover<>(.2))
 				.executor(exec)
 				.build();
 
-		final Genotype<SkillGene> result = engine.stream()
-				.limit(cycles)
+		final EvolutionResult<SkillGene, Integer> result = engine.stream()
+				.limit(evolutionContext.getGenerationLimit())
 				.peek(new EvolutionStatistics())
-				.collect(EvolutionResult.toBestGenotype());
+				.collect(EvolutionResult.toBestEvolutionResult());
 
-		final Chromosome<SkillGene> chromosome = result.getChromosome(0);
+		final Chromosome<SkillGene> chromosome = result.getBestPhenotype().getGenotype().getChromosome(0);
 
 		final PoeCharacter character = new PoeCharacter(characterClass);
-		character.addPassiveSkill(pst.findByName(characterClass.getRootPassiveSkillName()));
+		character.addPassiveSkill(passiveSkillTree.findByName(characterClass.getRootPassiveSkillName()));
 		final List<PassiveSkill> myPassives = new ArrayList<>();
 		for (final SkillGene g : chromosome)
 		{
-			final PassiveSkill passiveSkill = pst.find(g.getPassiveSkillId());
+			final PassiveSkill passiveSkill = passiveSkillTree.find(g.getPassiveSkillId());
 			myPassives.add(passiveSkill);
 		}
 		character.sneakyAdd(myPassives);
 
-		return character;
+		poeEvolutionResult.setCharacter(character);
+		poeEvolutionResult.setGenerations(result.getTotalGenerations());
+		poeEvolutionResult.setFitness(result.getBestFitness());
 	}
 }

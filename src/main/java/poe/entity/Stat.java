@@ -12,9 +12,9 @@ public enum Stat
 	UNKNOWN("Unknown"),
 
 	// life
-	LIFE_MAX(INT + "% increased maximum Life"),
+	INCRESED_MAXIMUM_LIFE(INT + "% increased maximum Life"),
+	MAXIMUM_LIFE(PLUS + INT + " to maximum Life"),
 	LIFE_1("Maximum Life becomes 1, Immune to Chaos Damage"),
-	MAX_LIFE_PLUS(PLUS + INT + " to maximum Life"),
 	LIFE_ON_KILL(PLUS_INT + " Life gained on Kill"),
 	LIFE_ON_HIT(PLUS_INT + " Life gained for each Enemy hit by your Attacks"),
 
@@ -37,9 +37,9 @@ public enum Stat
 	// mana
 	MANA_BONUS(PLUS_INT + " to maximum Mana"),
 	MANA(INT + "% increased maximum Mana"),
-	REDUCE_MANA(INT + "% reduced Mana Cost of Skills"),
+	MANA_COST_REDUCED(INT + "% reduced Mana Cost of Skills"),
 	MANA_REGEN(INT + "% increased Mana Regeneration Rate"),
-	MANA_RESV(INT + "% reduced Mana Reserved"),
+	MANA_RESERVE(INT + "% reduced Mana Reserved"),
 	MANA_MOVE_REGEN(INT + "% increased Mana Regeneration if you've used a Movement Skill Recently"),
 	MANA_RESERVE_REDUCE(INT + "% less Mana Reserved"),
 	MANA_FLASK(INT + "% increased Mana Recovery from Flasks"),

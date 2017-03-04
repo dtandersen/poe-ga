@@ -182,6 +182,7 @@ public class EvolveCharacterTest
 		@Override
 		public void newBest(final ImmutableCharacter character)
 		{
+			characterUpdates = character;
 		}
 	}
 }

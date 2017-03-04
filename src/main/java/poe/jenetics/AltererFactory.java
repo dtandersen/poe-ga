@@ -1,4 +1,4 @@
-package poe.repository.jenetics;
+package poe.jenetics;
 
 import org.jenetics.Alterer;
 import org.jenetics.Mutator;

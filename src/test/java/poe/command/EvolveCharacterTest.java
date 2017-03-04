@@ -7,6 +7,7 @@ import static poe.command.SimpleEvolveCharacterRequest.SimpleEvolveCharacterRequ
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import poe.command.EvolveCharacter.EvolveCharacterResult;
@@ -19,11 +20,11 @@ import poe.entity.PassiveSkill.PassiveSkillBuilder;
 import poe.entity.PoeMatchers;
 import poe.entity.Stat;
 import poe.entity.StatValue.StatBuilder;
+import poe.jenetics.AltererType;
+import poe.jenetics.JeneticsEvolver;
 import poe.repository.PassiveSkillRepository;
 import poe.repository.PassiveSkillTree;
 import poe.repository.RepoBuilder;
-import poe.repository.jenetics.AltererType;
-import poe.repository.jenetics.JeneticsEvolver;
 
 public class EvolveCharacterTest
 {
@@ -83,6 +84,7 @@ public class EvolveCharacterTest
 		assertThat(result.getGenerations(), equalTo(1L));
 		assertThat(result.getFitness(), equalTo(101));
 		assertThat(result.character.getCharacterClass(), equalTo(CharacterClass.MARAUDER));
+		assertThat(result.characterUpdates, Matchers.instanceOf(ImmutableCharacter.class));
 	}
 
 	@Test
@@ -141,6 +143,8 @@ public class EvolveCharacterTest
 
 	private final class EvolveCharacterResultImplementation implements EvolveCharacterResult
 	{
+		public ImmutableCharacter characterUpdates;
+
 		public ImmutableCharacter character;
 
 		private long generations;
@@ -173,6 +177,11 @@ public class EvolveCharacterTest
 		public void setFitness(final int fitness)
 		{
 			this.fitness = fitness;
+		}
+
+		@Override
+		public void newBest(final ImmutableCharacter character)
+		{
 		}
 	}
 }

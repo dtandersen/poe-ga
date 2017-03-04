@@ -1,8 +1,9 @@
 package poe.repository;
 
 import poe.entity.CharacterClass;
+import poe.entity.ImmutableCharacter;
 import poe.entity.PoeCharacter;
-import poe.repository.jenetics.CharacterEvaluator;
+import poe.jenetics.CharacterEvaluator;
 
 public interface Evolver
 {
@@ -30,5 +31,7 @@ public interface Evolver
 		void setGenerations(long totalGenerations);
 
 		void setFitness(int bestFitness);
+
+		void newBest(ImmutableCharacter character);
 	}
 }

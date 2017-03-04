@@ -1,4 +1,4 @@
-package poe.repository.jenetics;
+package poe.jenetics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -150,13 +150,13 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
 		}
 
 		@Override
-		public float getManaBonus()
+		public float getMaxMana()
 		{
 			return character.getStat(Stat.MANA_BONUS);
 		}
 
 		@Override
-		public float getMana()
+		public float getIncreasedMaxMana()
 		{
 			return character.getStat(Stat.MANA);
 		}
@@ -1806,13 +1806,13 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
 		}
 
 		@Override
-		public float getMinionLl()
+		public float getMinionLifeLeech()
 		{
 			return character.getStat(Stat.MINION_LL);
 		}
 
 		@Override
-		public float getMinionRegen()
+		public float getMinionLifeRegeneration()
 		{
 			return character.getStat(Stat.MINION_REGEN);
 		}
@@ -1832,7 +1832,7 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
 		@Override
 		public float getMinionMaxLife()
 		{
-			return character.getStat(Stat.MINION_MAX_LIFE);
+			return character.getStat(Stat.MINION_MAXIMUM_LIFE);
 		}
 
 		@Override
@@ -1950,15 +1950,15 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
 		}
 
 		@Override
-		public float getEnergyShieldMax()
+		public float getMaxEnergyShield()
 		{
-			return character.getStat(Stat.ENERGY_SHIELD_MAX);
+			return character.getStat(Stat.MAX_ENERGY_SHIELD);
 		}
 
 		@Override
-		public float getEnergyShieldPct()
+		public float getIncreasedEnergyShield()
 		{
-			return character.getStat(Stat.ENERGY_SHIELD_PCT);
+			return character.getStat(Stat.INCREASED_ENERGY_SHIELD);
 		}
 
 		@Override
@@ -2094,13 +2094,13 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
 		}
 
 		@Override
-		public float getCurseNum()
+		public float getAdditionalCurse()
 		{
 			return character.getStat(Stat.CURSE_NUM);
 		}
 
 		@Override
-		public float getCurseDur()
+		public float getCurseDuration()
 		{
 			return character.getStat(Stat.CURSE_DUR);
 		}

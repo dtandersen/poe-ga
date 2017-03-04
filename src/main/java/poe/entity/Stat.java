@@ -427,7 +427,7 @@ public enum Stat
 	MINION_REGEN("Minions Regenerate " + FLOAT + "% Life per second"),
 	MINION_ELEM_RESIST("Minions have +" + INT + "% to all Elemental Resistances"),
 	MINION_CHAOS_RESIST("Minions have " + PLUS_INT + "% to Chaos Resistance"),
-	MINION_MAX_LIFE("Minions have " + INT + "% increased maximum Life"),
+	MINION_MAXIMUM_LIFE("Minions have " + INT + "% increased maximum Life"),
 	ZOMBIES(PLUS + " to Maximum number of Zombies"),
 	ZOMBIE_MAX(PLUS_INT + " to Maximum number of Zombies"),
 	SKEL(PLUS + " to Maximum number of Skeletons"),
@@ -455,8 +455,8 @@ public enum Stat
 	POISON_ON_HIT(INT + "% chance to Poison on Hit"),
 
 	// energy shield
-	ENERGY_SHIELD_MAX(PLUS + INT + " to maximum Energy Shield"),
-	ENERGY_SHIELD_PCT(INT + "% increased maximum Energy Shield"),
+	MAX_ENERGY_SHIELD(PLUS + INT + " to maximum Energy Shield"),
+	INCREASED_ENERGY_SHIELD(INT + "% increased maximum Energy Shield"),
 	ENERGY_SHIELD_PCT_2(INT + "% more maximum Energy Shield"),
 	ENERGY_SHIELD_MANA(INT + "% of Maximum Mana as Extra Maximum Energy Shield"),
 	ENERGY_SHIELD_MANA_2("Gain " + INT + "% of Maximum Mana as Extra Maximum Energy Shield"),

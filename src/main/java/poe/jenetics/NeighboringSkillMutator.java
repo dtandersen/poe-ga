@@ -1,4 +1,4 @@
-package poe.repository.jenetics;
+package poe.jenetics;
 
 import static org.jenetics.internal.math.random.indexes;
 import java.util.Set;

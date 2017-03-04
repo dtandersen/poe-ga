@@ -1,4 +1,4 @@
-package poe.repository.jenetics;
+package poe.jenetics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +48,7 @@ public class JeneticsEvolver implements Evolver
 			}
 		}).collect(Collectors.toList());
 		final Factory<Genotype<SkillGene>> gtf = new FactoryImplementation(ids, length);
+		// final Factory<Genotype<SkillGene>> gtf = new RandomWalkSkillGeneFactory(passiveSkillTree, characterClass, length, ids);
 
 		final ExecutorService exec = Executors.newFixedThreadPool(threads);
 
@@ -63,7 +64,7 @@ public class JeneticsEvolver implements Evolver
 
 		final EvolutionResult<SkillGene, Integer> result = engine.stream()
 				.limit(evolutionContext.getGenerationLimit())
-				.peek(new EvolutionStatistics())
+				.peek(new EvolutionWatcher(new CharacterUpdateCallback(poeEvolutionResult), passiveSkillTree, evolutionContext.getCharacterClass()))
 				.collect(EvolutionResult.toBestEvolutionResult());
 
 		final Chromosome<SkillGene> chromosome = result.getBestPhenotype().getGenotype().getChromosome(0);

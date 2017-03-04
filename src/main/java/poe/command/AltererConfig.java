@@ -1,6 +1,6 @@
 package poe.command;
 
-import poe.repository.jenetics.AltererType;
+import poe.jenetics.AltererType;
 
 public class AltererConfig
 {

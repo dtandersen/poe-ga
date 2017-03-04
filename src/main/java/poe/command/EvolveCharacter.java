@@ -7,13 +7,13 @@ import poe.command.PureImmutableCharacter.ImmutableCharacterBuilder;
 import poe.entity.CharacterClass;
 import poe.entity.ImmutableCharacter;
 import poe.entity.PoeCharacter;
+import poe.jenetics.CharacterEvaluator;
+import poe.jenetics.CharacterEvaluator.CharacterEvaluatorBuilder;
 import poe.repository.Evolver;
 import poe.repository.Evolver.PoeEvolutionContext;
 import poe.repository.Evolver.PoeEvolutionResult;
 import poe.repository.PassiveSkillRepository;
 import poe.repository.PassiveSkillTree;
-import poe.repository.jenetics.CharacterEvaluator;
-import poe.repository.jenetics.CharacterEvaluator.CharacterEvaluatorBuilder;
 
 public class EvolveCharacter extends BaseCommand<EvolveCharacterRequest, EvolveCharacterResult>
 {
@@ -59,6 +59,8 @@ public class EvolveCharacter extends BaseCommand<EvolveCharacterRequest, EvolveC
 		void setGenerations(long generations);
 
 		void setFitness(int fitness);
+
+		void newBest(ImmutableCharacter character);
 	}
 
 	private final class EvolutionContextAdapter implements PoeEvolutionContext
@@ -110,8 +112,11 @@ public class EvolveCharacter extends BaseCommand<EvolveCharacterRequest, EvolveC
 
 	private final class EvolutionResultAdapter implements PoeEvolutionResult
 	{
+		private final EvolveCharacterResult result;
+
 		public EvolutionResultAdapter(final EvolveCharacterResult result)
 		{
+			this.result = result;
 		}
 
 		@Override
@@ -133,6 +138,12 @@ public class EvolveCharacter extends BaseCommand<EvolveCharacterRequest, EvolveC
 		public void setFitness(final int fitness)
 		{
 			result.setFitness(fitness);
+		}
+
+		@Override
+		public void newBest(final ImmutableCharacter character)
+		{
+			result.newBest(character);
 		}
 	}
 }

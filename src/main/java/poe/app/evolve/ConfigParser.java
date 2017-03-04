@@ -6,9 +6,9 @@ import org.yaml.snakeyaml.Yaml;
 
 public class ConfigParser
 {
-	public static EvolveConfig read() throws FileNotFoundException
+	public static EvolveConfig read(final String filename) throws FileNotFoundException
 	{
 		final Yaml yaml = new Yaml();
-		return yaml.loadAs(new FileReader("config.yaml"), EvolveConfig.class);
+		return yaml.loadAs(new FileReader(filename), EvolveConfig.class);
 	}
 }

@@ -1,4 +1,4 @@
-package poe.repository.jenetics;
+package poe.jenetics;
 
 public interface ExpressionContext
 {
@@ -32,9 +32,9 @@ public interface ExpressionContext
 
 	float getIntelligence();
 
-	float getManaBonus();
+	float getMaxMana();
 
-	float getMana();
+	float getIncreasedMaxMana();
 
 	float getReducedManaCost();
 
@@ -584,9 +584,9 @@ public interface ExpressionContext
 
 	float getMinionDamage();
 
-	float getMinionLl();
+	float getMinionLifeLeech();
 
-	float getMinionRegen();
+	float getMinionLifeRegeneration();
 
 	float getMinionElemResist();
 
@@ -632,9 +632,9 @@ public interface ExpressionContext
 
 	float getPoisonOnHit();
 
-	float getEnergyShieldMax();
+	float getMaxEnergyShield();
 
-	float getEnergyShieldPct();
+	float getIncreasedEnergyShield();
 
 	float getEnergyShieldPct2();
 
@@ -680,9 +680,9 @@ public interface ExpressionContext
 
 	float getCurseEffect();
 
-	float getCurseNum();
+	float getAdditionalCurse();
 
-	float getCurseDur();
+	float getCurseDuration();
 
 	float getCurseCastSpeed();
 

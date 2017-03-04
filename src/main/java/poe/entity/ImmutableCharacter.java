@@ -21,4 +21,6 @@ public interface ImmutableCharacter
 
 		String getName();
 	}
+
+	String getUrl();
 }

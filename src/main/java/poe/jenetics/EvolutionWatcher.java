@@ -9,8 +9,10 @@ import org.jenetics.engine.EvolutionResult;
 import org.jenetics.util.ISeq;
 import poe.command.PureImmutableCharacter.ImmutableCharacterBuilder;
 import poe.entity.CharacterClass;
+import poe.entity.ImmutableCharacter;
 import poe.entity.PassiveSkill;
 import poe.entity.PoeCharacter;
+import poe.repository.EvolutionStatus.EvolutionStatusBuilder;
 import poe.repository.PassiveSkillTree;
 
 class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Integer>>
@@ -23,25 +25,37 @@ class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Integer>>
 
 	private final CharacterClass characterClass;
 
-	public EvolutionWatcher(final CharacterUpdateCallback callback, final PassiveSkillTree passiveSkillTree, final CharacterClass characterClass)
+	public EvolutionWatcher(
+			final CharacterUpdateCallback callback,
+			final PassiveSkillTree passiveSkillTree,
+			final CharacterClass characterClass)
 	{
 		this.callback = callback;
 		this.passiveSkillTree = passiveSkillTree;
 		this.characterClass = characterClass;
-
 	}
 
 	@Override
-	public void accept(final EvolutionResult<SkillGene, Integer> result)
+	public void accept(final EvolutionResult<SkillGene, Integer> evolutionResult)
 	{
-		if (best == null || best.compareTo(result.getBestPhenotype()) < 0)
+		if (best == null || best.compareTo(evolutionResult.getBestPhenotype()) < 0)
 		{
-			best = result.getBestPhenotype();
-			final long oldest = result.getWorstPhenotype().getAge(result.getGeneration());
-			System.out.println("Generation: " + result.getGeneration() + ", Fitness: " + result.getBestFitness() + ", Age: " + oldest);
+			best = evolutionResult.getBestPhenotype();
+			final long oldest = evolutionResult.getWorstPhenotype().getAge(evolutionResult.getGeneration());
+			System.out.println("Generation: " + evolutionResult.getGeneration() + ", Fitness: " + evolutionResult.getBestFitness() + ", Age: " + oldest);
 			final Genotype<SkillGene> genotype = best.getGenotype();
 			final PoeCharacter character = make(genotype);
-			callback.accept(ImmutableCharacterBuilder.character().from(character).build());
+
+			final ImmutableCharacter retchar = ImmutableCharacterBuilder.character()
+					.from(character)
+					.build();
+
+			System.out.println("gen=" + evolutionResult.getGeneration() + "," + retchar.getPassiveSkills());
+
+			callback.accept(new EvolutionStatusBuilder()
+					.withCharacter(retchar)
+					.withGeneration(evolutionResult.getTotalGenerations())
+					.build());
 		}
 	}
 

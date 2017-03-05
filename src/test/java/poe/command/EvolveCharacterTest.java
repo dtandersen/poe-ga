@@ -6,8 +6,9 @@ import static poe.command.FitnessConfig.FitnessConfigBuilder.config;
 import static poe.command.SimpleEvolveCharacterRequest.SimpleEvolveCharacterRequestBuilder.request;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import org.hamcrest.Matchers;
+import java.util.Map;
 import org.junit.Before;
 import org.junit.Test;
 import poe.command.EvolveCharacter.EvolveCharacterResult;
@@ -21,7 +22,9 @@ import poe.entity.PoeMatchers;
 import poe.entity.Stat;
 import poe.entity.StatValue.StatBuilder;
 import poe.jenetics.AltererType;
+import poe.jenetics.DeterministicMutator;
 import poe.jenetics.JeneticsEvolver;
+import poe.repository.EvolutionStatus;
 import poe.repository.PassiveSkillRepository;
 import poe.repository.PassiveSkillTree;
 import poe.repository.RepoBuilder;
@@ -30,9 +33,9 @@ public class EvolveCharacterTest
 {
 	private EvolveCharacterResultImplementation result;
 
-	private final List<AltererConfig> alterers = new ArrayList<>();
+	private List<AltererConfig> alterers;
 
-	private final List<AltererType> mutators = new ArrayList<>();
+	// private final List<AltererType> mutators = new ArrayList<>();
 
 	private PassiveSkillTree passiveSkillTree;
 
@@ -43,7 +46,6 @@ public class EvolveCharacterTest
 	@Before
 	public void setUp()
 	{
-		// passiveSkillTree=pass
 	}
 
 	@Test
@@ -66,40 +68,47 @@ public class EvolveCharacterTest
 		passiveSkillTree = new PassiveSkillTree(repo.all());
 		evolver = new JeneticsEvolver(passiveSkillTree);
 
+		final List<List<Integer>> testingGenes = new ArrayList<>();
+		final List<Integer> genes1 = Arrays.asList(new Integer[] { 1, 2 });
+		// final List<Integer> genes2 = Arrays.asList(new Integer[] { 1, 2 });
+		testingGenes.add(genes1);
+		// testingGenes.add(genes2);
+
 		givenAlterers(new AltererConfig(AltererType.NULL));
 
 		whenBuildEvolved(request()
 				.withCharacterClass(CharacterClass.MARAUDER)
 				.withPopulation(1)
 				.withGenerations(1)
-				.withSkillCount(10)
+				.withAlterers(new DeterministicMutator(testingGenes))
+				.withSkillCount(2)
 				.withFitnessConfig(config()
 						.withElement(ElementConfigBuilder.element()
 								.withExpression("passiveSkillCount"))
 						.withElement(ElementConfigBuilder.element()
 								.withExpression("strength * 10"))));
 
-		assertThat(result.character, PoeMatchers.hasPassives(
+		assertThat(result.finalCharacter, PoeMatchers.hasPassives(
 				ImmutablePassiveSkillBuilder.passiveSkill().from(passive2).build()));
 		assertThat(result.getGenerations(), equalTo(1L));
 		assertThat(result.getFitness(), equalTo(101));
-		assertThat(result.character.getCharacterClass(), equalTo(CharacterClass.MARAUDER));
-		assertThat(result.characterUpdates, Matchers.instanceOf(ImmutableCharacter.class));
+		assertThat(result.finalCharacter.getCharacterClass(), equalTo(CharacterClass.MARAUDER));
+		// assertThat(result.characterUpdates, Matchers.instanceOf(ImmutableCharacter.class));
 	}
 
 	@Test
 	public void duelist()
 	{
 		final PassiveSkillBuilder passive1 = PassiveSkillBuilder.passiveSkill()
-				.withName(CharacterClass.MARAUDER.getRootPassiveSkillName())
-				.withId(1)
-				.withOutputs(2)
-				.withClassStartingPoint(CharacterClass.MARAUDER);
+				.withName(CharacterClass.DUELIST.getRootPassiveSkillName())
+				.withId(3)
+				.withOutputs(4)
+				.withClassStartingPoint(CharacterClass.DUELIST);
 		final PassiveSkillBuilder passive2 = PassiveSkillBuilder.passiveSkill()
-				.withName("Strength")
-				.withId(2)
+				.withName("Dexterity")
+				.withId(4)
 				.withStats(StatBuilder.stat()
-						.withStat(Stat.STRENGTH)
+						.withStat(Stat.DEXTERITY)
 						.withValue(10));
 		repo = new RepoBuilder()
 				.withPassiveSkills(passive1, passive2)
@@ -107,28 +116,45 @@ public class EvolveCharacterTest
 		passiveSkillTree = new PassiveSkillTree(repo.all());
 		evolver = new JeneticsEvolver(passiveSkillTree);
 
-		givenAlterers(new AltererConfig(AltererType.NULL));
+		// givenAlterers(new AltererConfig(AltererType.NULL));
+		final List<List<Integer>> testingGenes = new ArrayList<>();
+		final List<Integer> genes1 = Arrays.asList(new Integer[] { 3, 3 });
+		final List<Integer> genes2 = Arrays.asList(new Integer[] { 3, 4 });
+		testingGenes.add(genes1);
+		testingGenes.add(genes2);
+		// givenAlterers(new DeterministicMutator(testingGenes));
 
 		whenBuildEvolved(request()
 				.withCharacterClass(CharacterClass.DUELIST)
 				.withPopulation(1)
-				.withGenerations(1)
-				.withSkillCount(10)
+				.withGenerations(2)
+				.withSkillCount(2)
+				.withAlterers(new DeterministicMutator(testingGenes))
+				// .withAlterers("deterministic")
 				.withFitnessConfig(config()
 						.withElement(ElementConfigBuilder.element()
 								.withExpression("passiveSkillCount"))
 						.withElement(ElementConfigBuilder.element()
-								.withExpression("strength * 10"))));
+								.withExpression("dexterity * 10"))));
 
-		assertThat(result.character, PoeMatchers.hasPassives(
+		assertThat(result.finalCharacter, PoeMatchers.hasPassives(
 				ImmutablePassiveSkillBuilder.passiveSkill().from(passive2).build()));
-		assertThat(result.character.getCharacterClass(), equalTo(CharacterClass.DUELIST));
-		assertThat(result.getGenerations(), equalTo(1L));
+		assertThat(result.finalCharacter.getCharacterClass(), equalTo(CharacterClass.DUELIST));
+		assertThat(result.getGenerations(), equalTo(2L));
 		assertThat(result.getFitness(), equalTo(101));
+		assertThat(genCharacter(1), PoeMatchers.hasPassives());
+		assertThat(genCharacter(2), PoeMatchers.hasPassives(
+				ImmutablePassiveSkillBuilder.passiveSkill().from(passive2).build()));
+	}
+
+	private ImmutableCharacter genCharacter(final long generation)
+	{
+		return result.characterUpdates.get(generation);
 	}
 
 	private void givenAlterers(final AltererConfig... mutatorTypes)
 	{
+		alterers = new ArrayList<>();
 		Arrays.asList(mutatorTypes).stream().forEach(altererConfig -> alterers.add(altererConfig));
 	}
 
@@ -143,9 +169,9 @@ public class EvolveCharacterTest
 
 	private final class EvolveCharacterResultImplementation implements EvolveCharacterResult
 	{
-		public ImmutableCharacter characterUpdates;
+		public Map<Long, ImmutableCharacter> characterUpdates = new HashMap<>();
 
-		public ImmutableCharacter character;
+		public ImmutableCharacter finalCharacter;
 
 		private long generations;
 
@@ -154,7 +180,7 @@ public class EvolveCharacterTest
 		@Override
 		public void setCharacter(final ImmutableCharacter character)
 		{
-			this.character = character;
+			this.finalCharacter = character;
 		}
 
 		public int getFitness()
@@ -180,9 +206,12 @@ public class EvolveCharacterTest
 		}
 
 		@Override
-		public void newBest(final ImmutableCharacter character)
+		public void newBest(final EvolutionStatus evolutionStatus)
 		{
-			characterUpdates = character;
+			final ImmutableCharacter character = evolutionStatus.getCharacter();
+			final long generation = evolutionStatus.getGeneration();
+			System.out.println("gen=" + generation + "," + character.getPassiveSkills());
+			characterUpdates.put(generation, character);
 		}
 	}
 }

@@ -1,9 +1,10 @@
 package poe.repository;
 
+import org.jenetics.Alterer;
 import poe.entity.CharacterClass;
-import poe.entity.ImmutableCharacter;
 import poe.entity.PoeCharacter;
 import poe.jenetics.CharacterEvaluator;
+import poe.jenetics.SkillGene;
 
 public interface Evolver
 {
@@ -22,6 +23,8 @@ public interface Evolver
 		int getSkills();
 
 		int getThreads();
+
+		Alterer<SkillGene, Integer>[] getAlterers();
 	}
 
 	public interface PoeEvolutionResult
@@ -32,6 +35,6 @@ public interface Evolver
 
 		void setFitness(int bestFitness);
 
-		void newBest(ImmutableCharacter character);
+		void newBest(EvolutionStatus evolutionStatus);
 	}
 }

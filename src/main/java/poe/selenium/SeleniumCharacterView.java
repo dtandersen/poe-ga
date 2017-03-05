@@ -4,8 +4,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import poe.entity.ImmutableCharacter;
 import poe.repository.CharacterView;
+import poe.repository.EvolutionStatus;
 
 public class SeleniumCharacterView implements CharacterView
 {
@@ -23,10 +23,10 @@ public class SeleniumCharacterView implements CharacterView
 	}
 
 	@Override
-	public void update(final ImmutableCharacter character)
+	public void update(final EvolutionStatus evolutionStatus)
 	{
 		final WebElement searchBox = driver.findElement(By.id("passive-tree-decode"));
-		searchBox.sendKeys(character.getUrl());
+		searchBox.sendKeys(evolutionStatus.getCharacter().getUrl());
 		final WebElement button = driver.findElement(By.id("passive-tree-decode-button"));
 		button.click();
 	}

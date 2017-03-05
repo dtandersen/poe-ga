@@ -6,10 +6,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+import org.jenetics.Alterer;
 import org.jenetics.Chromosome;
 import org.jenetics.Genotype;
-import org.jenetics.Mutator;
-import org.jenetics.SinglePointCrossover;
+import org.jenetics.PublicCompositeAlterer;
 import org.jenetics.engine.Engine;
 import org.jenetics.engine.EvolutionResult;
 import org.jenetics.util.Factory;
@@ -38,7 +38,7 @@ public class JeneticsEvolver implements Evolver
 		final int pop = evolutionContext.getPopulation();
 		final int length = evolutionContext.getSkills();
 		final int threads = evolutionContext.getThreads();// Runtime.getRuntime().availableProcessors();
-		final float mutRate = (1f / length);
+		// final float mutRate = (1f / length);
 
 		final List<Integer> ids = passives.stream().map(new Function<PassiveSkill, Integer>() {
 			@Override
@@ -48,18 +48,24 @@ public class JeneticsEvolver implements Evolver
 			}
 		}).collect(Collectors.toList());
 		final Factory<Genotype<SkillGene>> gtf = new FactoryImplementation(ids, length);
+		System.out.println("global length=" + length);
 		// final Factory<Genotype<SkillGene>> gtf = new RandomWalkSkillGeneFactory(passiveSkillTree, characterClass, length, ids);
 
 		final ExecutorService exec = Executors.newFixedThreadPool(threads);
 
+		final FitnessFunction fitnessFunction = new FitnessFunction(passiveSkillTree, characterClass, evolutionContext.getCharacterEvaluator());
+
+		System.out.println("altereds=" + evolutionContext.getAlterers().toString());
+		final Alterer<SkillGene, Integer>[] alterers = evolutionContext.getAlterers();
 		final Engine<SkillGene, Integer> engine = Engine
-				.builder(new FitnessFunction(passiveSkillTree, characterClass, evolutionContext.getCharacterEvaluator()), gtf)
+				.builder(fitnessFunction, gtf)
 				.populationSize(pop)
 				.alterers(
-						new Mutator<>(mutRate / 2),
-						new NeighboringSkillMutator(mutRate * 2, passiveSkillTree),
-						new SinglePointCrossover<>(.2))
-				.executor(exec)
+						PublicCompositeAlterer.of(alterers))
+				// new Mutator<>(mutRate / 2),
+				// new NeighboringSkillMutator(mutRate * 2, passiveSkillTree),
+				// new SinglePointCrossover<>(.2)))
+				// .executor(exec)
 				.build();
 
 		final EvolutionResult<SkillGene, Integer> result = engine.stream()

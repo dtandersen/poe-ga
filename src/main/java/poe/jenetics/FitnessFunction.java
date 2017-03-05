@@ -2082,9 +2082,9 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
 		}
 
 		@Override
-		public float getNonCurseAura()
+		public float getNonCurseAuraEffect()
 		{
-			return character.getStat(Stat.NON_CURSE_AURA);
+			return character.getStat(Stat.NON_CURSE_AURA_EFFECT);
 		}
 
 		@Override

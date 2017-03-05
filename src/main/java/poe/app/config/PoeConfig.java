@@ -4,10 +4,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import poe.command.CommandFactory;
 import poe.jenetics.JeneticsEvolver;
+import poe.repository.CharacterView;
 import poe.repository.Evolver;
 import poe.repository.PassiveSkillRepository;
 import poe.repository.PassiveSkillTree;
-import poe.repository.CharacterView;
 import poe.repository.json.JsonPassiveSkillRepository;
 import poe.selenium.SeleniumCharacterView;
 
@@ -44,6 +44,8 @@ public class PoeConfig
 	@Bean
 	CharacterView viewer()
 	{
-		return new SeleniumCharacterView();
+		return new MultiCharacterView(
+				new SeleniumCharacterView(),
+				new ConsoleCharacterView());
 	}
 }

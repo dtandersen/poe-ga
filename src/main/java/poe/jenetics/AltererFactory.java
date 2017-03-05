@@ -12,20 +12,19 @@ public class AltererFactory
 	public AltererFactory(final PassiveSkillTree passiveSkillTree)
 	{
 		this.passiveSkillTree = passiveSkillTree;
-
 	}
 
-	public Alterer<SkillGene, Integer> createMutator(final AltererType mutatorType, final float probability)
+	public Alterer<SkillGene, Integer> createMutator(final String altererName, final float probability)
 	{
-		switch (mutatorType)
+		switch (altererName.toLowerCase())
 		{
-		case NULL:
+		case "null":
 			return new NullMutator();
-		case CROSSOVER:
+		case "crossover":
 			return new SinglePointCrossover<>(probability);
-		case NEIGHBOR:
+		case "neighbor":
 			return new NeighboringSkillMutator(probability, passiveSkillTree);
-		case MUTATOR:
+		case "mutator":
 			return new Mutator<>(probability);
 		}
 

@@ -134,7 +134,7 @@ public class PureImmutableCharacter implements ImmutableCharacter
 		public ImmutableCharacterBuilder from(final PoeCharacter character)
 		{
 			withCharacterClass(character.getCharacterClass());
-			withPassiveSkills(character.getPassiveSkills());
+			withPassiveSkills(character.getPassiveSkillsWithoutRoot());
 			withStatValues(character.getStatValues());
 			withStats(character.getAttributes());
 			withUrl(new PoeComUrlBuilder()
@@ -145,7 +145,7 @@ public class PureImmutableCharacter implements ImmutableCharacter
 			return this;
 		}
 
-		public PureImmutableCharacter build()
+		public ImmutableCharacter build()
 		{
 			return new PureImmutableCharacter(this);
 		}

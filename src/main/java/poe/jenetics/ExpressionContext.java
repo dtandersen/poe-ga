@@ -676,7 +676,7 @@ public interface ExpressionContext
 
 	float getAuraRad();
 
-	float getNonCurseAura();
+	float getNonCurseAuraEffect();
 
 	float getCurseEffect();
 

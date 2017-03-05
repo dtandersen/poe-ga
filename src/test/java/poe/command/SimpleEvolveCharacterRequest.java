@@ -1,9 +1,13 @@
 package poe.command;
 
+import java.util.ArrayList;
 import java.util.List;
+import org.jenetics.Alterer;
 import poe.command.EvolveCharacter.EvolveCharacterRequest;
 import poe.command.FitnessConfig.FitnessConfigBuilder;
 import poe.entity.CharacterClass;
+import poe.jenetics.DeterministicMutator;
+import poe.jenetics.SkillGene;
 
 public class SimpleEvolveCharacterRequest implements EvolveCharacterRequest
 {
@@ -18,6 +22,8 @@ public class SimpleEvolveCharacterRequest implements EvolveCharacterRequest
 	private final int threads = 1;
 
 	private final int skills;
+
+	private final List<Alterer<SkillGene, Integer>> alterers;
 
 	@Override
 	public CharacterClass getCharacterClass()
@@ -61,6 +67,12 @@ public class SimpleEvolveCharacterRequest implements EvolveCharacterRequest
 		return threads;
 	}
 
+	@Override
+	public List<Alterer<SkillGene, Integer>> getAlterers2()
+	{
+		return alterers;
+	}
+
 	public SimpleEvolveCharacterRequest(final SimpleEvolveCharacterRequestBuilder simpleEvolveCharacterRequestBuilder)
 	{
 		this.characterClass = simpleEvolveCharacterRequestBuilder.characterClass;
@@ -68,6 +80,7 @@ public class SimpleEvolveCharacterRequest implements EvolveCharacterRequest
 		this.generations = simpleEvolveCharacterRequestBuilder.generations;
 		this.fitnessConfig = simpleEvolveCharacterRequestBuilder.fitnessConfig;
 		this.skills = simpleEvolveCharacterRequestBuilder.skillCount;
+		this.alterers = simpleEvolveCharacterRequestBuilder.alterers;
 	}
 
 	public static class SimpleEvolveCharacterRequestBuilder
@@ -81,6 +94,10 @@ public class SimpleEvolveCharacterRequest implements EvolveCharacterRequest
 		private FitnessConfig fitnessConfig;
 
 		private int skillCount;
+
+		private final List<Alterer<SkillGene, Integer>> alterers = new ArrayList<>();
+
+		// private String alterer;
 
 		public SimpleEvolveCharacterRequestBuilder withCharacterClass(final CharacterClass characterClass)
 		{
@@ -109,6 +126,18 @@ public class SimpleEvolveCharacterRequest implements EvolveCharacterRequest
 		public SimpleEvolveCharacterRequestBuilder withSkillCount(final int skillCount)
 		{
 			this.skillCount = skillCount;
+			return this;
+		}
+
+		public SimpleEvolveCharacterRequestBuilder withAlterers(final DeterministicMutator deterministicMutator)
+		{
+			alterers.add(deterministicMutator);
+			return this;
+		}
+
+		public SimpleEvolveCharacterRequestBuilder withAlterers(final String alterer)
+		{
+			// this.alterer = alterer;
 			return this;
 		}
 

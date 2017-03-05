@@ -1,10 +1,10 @@
 package poe.jenetics;
 
 import java.util.function.Consumer;
-import poe.entity.ImmutableCharacter;
+import poe.repository.EvolutionStatus;
 import poe.repository.Evolver.PoeEvolutionResult;
 
-public class CharacterUpdateCallback implements Consumer<ImmutableCharacter>
+public class CharacterUpdateCallback implements Consumer<EvolutionStatus>
 {
 	private final PoeEvolutionResult result;
 
@@ -14,8 +14,8 @@ public class CharacterUpdateCallback implements Consumer<ImmutableCharacter>
 	}
 
 	@Override
-	public void accept(final ImmutableCharacter character)
+	public void accept(final EvolutionStatus evolutionStatus)
 	{
-		result.newBest(character);
+		result.newBest(evolutionStatus);
 	}
 }

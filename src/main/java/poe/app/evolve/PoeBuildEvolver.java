@@ -1,7 +1,11 @@
 package poe.app.evolve;
 
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
+import org.jenetics.Alterer;
+import org.jenetics.Mutator;
+import org.jenetics.SinglePointCrossover;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -20,8 +24,12 @@ import poe.command.PoeComUrlBuilder;
 import poe.entity.CharacterClass;
 import poe.entity.ImmutableCharacter;
 import poe.entity.ImmutableCharacter.ImmutablePassiveSkill;
+import poe.jenetics.NeighboringSkillMutator;
+import poe.jenetics.SkillGene;
 import poe.repository.CharacterView;
+import poe.repository.EvolutionStatus;
 import poe.repository.PassiveSkillRepository;
+import poe.repository.PassiveSkillTree;
 
 @SpringBootApplication
 @ComponentScan(basePackages = { "poe.app.config" }, excludeFilters = {})
@@ -29,12 +37,83 @@ public class PoeBuildEvolver implements CommandLineRunner
 {
 	private static final String CONFIG = "necromancer.yaml";
 
-	private final class EvolveCharacterRequestImplementation implements EvolveCharacterRequest
+	@Autowired
+	private CommandFactory commandFactory;
+
+	@Autowired
+	PassiveSkillRepository passiveSkillRepository;
+
+	@Autowired
+	PassiveSkillTree passiveSkillTree;
+
+	@Autowired
+	CharacterView characterView;
+
+	@Override
+	public void run(final String... args) throws FileNotFoundException
+	{
+		characterView.start();
+
+		try
+		{
+			final EvolveCharacter command = commandFactory.evolveCharacter();
+			final EvolveCharacterRequestImplementation request = new EvolveCharacterRequestImplementation(CONFIG, passiveSkillTree);
+			command.setRequest(request);
+			command.setResult(new EvolveCharacterResult() {
+				@Override
+				public void setCharacter(final ImmutableCharacter character)
+				{
+					for (final ImmutablePassiveSkill passiveSkill : character.getPassiveSkills())
+					{
+						System.out.println(passiveSkill.getName());
+					}
+
+					System.out.println(new PoeComUrlBuilder()
+							.withCharacterClass(CharacterClass.MARAUDER)
+							.withPassiveSkillIds(character.getPassiveSkillIds())
+							.toUrl());
+				}
+
+				@Override
+				public void setGenerations(final long generations)
+				{
+				}
+
+				@Override
+				public void setFitness(final int fitness)
+				{
+				}
+
+				@Override
+				public void newBest(final EvolutionStatus evolutionStatus)
+				{
+					characterView.update(evolutionStatus);
+				}
+			});
+			command.execute();
+		}
+		finally
+		{
+			characterView.stop();
+		}
+	}
+
+	public static void main(final String[] args) throws Exception
+	{
+		SpringApplication.run(PoeBuildEvolver.class, args);
+	}
+
+	public static class EvolveCharacterRequestImplementation implements EvolveCharacterRequest
 	{
 		private final EvolveConfig evolveConfig;
 
-		public EvolveCharacterRequestImplementation(final String filename) throws FileNotFoundException
+		private final List<Alterer<SkillGene, Integer>> alterers = new ArrayList<>();
+
+		private final PassiveSkillTree passiveSkillTree;
+
+		public EvolveCharacterRequestImplementation(final String filename, final PassiveSkillTree passiveSkillTree) throws FileNotFoundException
 		{
+			this.passiveSkillTree = passiveSkillTree;
 			evolveConfig = ConfigParser.read(filename);
 		}
 
@@ -86,67 +165,15 @@ public class PoeBuildEvolver implements CommandLineRunner
 			return fitnessConfigBuilder.build();
 
 		}
-	}
 
-	@Autowired
-	private CommandFactory commandFactory;
-
-	@Autowired
-	PassiveSkillRepository passiveSkillRepository;
-
-	@Autowired
-	CharacterView seleniumView;
-
-	@Override
-	public void run(final String... args) throws FileNotFoundException
-	{
-		seleniumView.start();
-
-		try
+		@Override
+		public List<Alterer<SkillGene, Integer>> getAlterers2()
 		{
-			final EvolveCharacter command = commandFactory.evolveCharacter();
-			command.setRequest(new EvolveCharacterRequestImplementation(CONFIG));
-			command.setResult(new EvolveCharacterResult() {
-				@Override
-				public void setCharacter(final ImmutableCharacter character)
-				{
-					for (final ImmutablePassiveSkill passiveSkill : character.getPassiveSkills())
-					{
-						System.out.println(passiveSkill.getName());
-					}
+			alterers.add(new Mutator<>(.05));
+			alterers.add(new NeighboringSkillMutator(.05f, passiveSkillTree));
+			alterers.add(new SinglePointCrossover<>(.2));
 
-					System.out.println(new PoeComUrlBuilder()
-							.withCharacterClass(CharacterClass.MARAUDER)
-							.withPassiveSkillIds(character.getPassiveSkillIds())
-							.toUrl());
-				}
-
-				@Override
-				public void setGenerations(final long generations)
-				{
-				}
-
-				@Override
-				public void setFitness(final int fitness)
-				{
-				}
-
-				@Override
-				public void newBest(final ImmutableCharacter character)
-				{
-					seleniumView.update(character);
-				}
-			});
-			command.execute();
+			return alterers;
 		}
-		finally
-		{
-			seleniumView.stop();
-		}
-	}
-
-	public static void main(final String[] args) throws Exception
-	{
-		SpringApplication.run(PoeBuildEvolver.class, args);
 	}
 }

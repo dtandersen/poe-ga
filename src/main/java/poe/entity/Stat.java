@@ -483,7 +483,7 @@ public enum Stat
 
 	// aura
 	AURA_RAD(INT + "% increased Radius of Aura Skills"),
-	NON_CURSE_AURA(INT + "% increased effect of Non-Curse Auras you Cast"),
+	NON_CURSE_AURA_EFFECT(INT + "% increased effect of Non-Curse Auras you Cast"),
 	CURSE_EFFECT(INT + "% increased Effect of your Curses"),
 	CURSE_NUM("Enemies can have " + INT + " additional Curse"),
 	CURSE_DUR(INT + "% increased Curse Duration"),

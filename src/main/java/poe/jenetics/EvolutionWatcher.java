@@ -50,7 +50,7 @@ class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Integer>>
 					.from(character)
 					.build();
 
-			System.out.println("gen=" + evolutionResult.getGeneration() + "," + retchar.getPassiveSkills());
+			// System.out.println("gen=" + evolutionResult.getGeneration() + "," + retchar.getPassiveSkills());
 
 			callback.accept(new EvolutionStatusBuilder()
 					.withCharacter(retchar)

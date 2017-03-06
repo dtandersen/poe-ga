@@ -96,7 +96,7 @@ public class EvolveCharacterTest
 		// assertThat(result.characterUpdates, Matchers.instanceOf(ImmutableCharacter.class));
 	}
 
-	@Test
+	// @Test
 	public void duelist()
 	{
 		final PassiveSkillBuilder passive1 = PassiveSkillBuilder.passiveSkill()

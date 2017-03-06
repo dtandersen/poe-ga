@@ -1818,7 +1818,7 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
 		}
 
 		@Override
-		public float getMinionElemResist()
+		public float getMinionElementalResist()
 		{
 			return character.getStat(Stat.MINION_ELEM_RESIST);
 		}
@@ -1830,7 +1830,7 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
 		}
 
 		@Override
-		public float getMinionMaxLife()
+		public float getIncreasedMinionLife()
 		{
 			return character.getStat(Stat.MINION_MAXIMUM_LIFE);
 		}

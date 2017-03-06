@@ -588,11 +588,11 @@ public interface ExpressionContext
 
 	float getMinionLifeRegeneration();
 
-	float getMinionElemResist();
+	float getMinionElementalResist();
 
 	float getMinionChaosResist();
 
-	float getMinionMaxLife();
+	float getIncreasedMinionLife();
 
 	float getZombies();
 

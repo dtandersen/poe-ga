@@ -28,15 +28,15 @@
 	<subpackage name="repository">
 		<allow pkg="poe.entity" />
 
-		<subpackage name="jenetics">
-			<allow pkg="org.jenetics" />
-			<allow pkg="poe.repository" />
-		</subpackage>
-
 		<subpackage name="json">
 			<allow pkg="com.google.gson" />
 			<allow pkg="poe.entity" />
 			<allow pkg="poe.repository" />
 		</subpackage>
+	</subpackage>
+
+	<subpackage name="jenetics">
+		<allow pkg="org.jenetics" />
+		<allow pkg="poe.repository" />
 	</subpackage>
 </import-control>

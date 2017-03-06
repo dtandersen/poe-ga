@@ -96,7 +96,7 @@ public class EvolveCharacterTest
 		// assertThat(result.characterUpdates, Matchers.instanceOf(ImmutableCharacter.class));
 	}
 
-	// @Test
+	@Test
 	public void duelist()
 	{
 		final PassiveSkillBuilder passive1 = PassiveSkillBuilder.passiveSkill()
@@ -135,13 +135,13 @@ public class EvolveCharacterTest
 						.withElement(ElementConfigBuilder.element()
 								.withExpression("passiveSkillCount"))
 						.withElement(ElementConfigBuilder.element()
-								.withExpression("dexterity * 10"))));
+								.withExpression("dexterity * 11"))));
 
 		assertThat(result.finalCharacter, PoeMatchers.hasPassives(
 				ImmutablePassiveSkillBuilder.passiveSkill().from(passive2).build()));
 		assertThat(result.finalCharacter.getCharacterClass(), equalTo(CharacterClass.DUELIST));
 		assertThat(result.getGenerations(), equalTo(2L));
-		assertThat(result.getFitness(), equalTo(101));
+		assertThat(result.getFitness(), equalTo(111));
 		assertThat(genCharacter(1), PoeMatchers.hasPassives());
 		assertThat(genCharacter(2), PoeMatchers.hasPassives(
 				ImmutablePassiveSkillBuilder.passiveSkill().from(passive2).build()));

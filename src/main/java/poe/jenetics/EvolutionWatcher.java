@@ -17,7 +17,7 @@ import poe.repository.PassiveSkillTree;
 
 class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Integer>>
 {
-	Phenotype<SkillGene, Integer> best = null;
+	Phenotype<SkillGene, Integer> best;
 
 	private final CharacterUpdateCallback callback;
 
@@ -30,6 +30,7 @@ class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Integer>>
 			final PassiveSkillTree passiveSkillTree,
 			final CharacterClass characterClass)
 	{
+		best = null;
 		this.callback = callback;
 		this.passiveSkillTree = passiveSkillTree;
 		this.characterClass = characterClass;

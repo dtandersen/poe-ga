@@ -19,6 +19,8 @@ public class PoeCharacter
 
 	private final CharacterClass characterClass;
 
+	int maxSkills = 75;
+
 	public PoeCharacter(final CharacterClass characterClass)
 	{
 		this.characterClass = characterClass;
@@ -61,6 +63,7 @@ public class PoeCharacter
 
 	public boolean addPassiveSkill(final PassiveSkill passiveSkill)
 	{
+		if (passiveSkillCount() > maxSkills) { return false; }
 		if (passiveSkill == null) { return false; }
 		if (hasPassiveSkill(passiveSkill.getId())) { return false; }
 		if (character.size() > 0 && passiveSkill.isClassStartingNode()) { return false; }

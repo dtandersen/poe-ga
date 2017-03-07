@@ -1,8 +1,12 @@
 package poe.entity;
 
+import poe.ehp.EhpCalculator;
+
 public interface ExpressionContext
 {
 	int getPassiveSkillCount();
+
+	EhpCalculator getEhp();
 
 	float getIncreasedMaximumLife();
 

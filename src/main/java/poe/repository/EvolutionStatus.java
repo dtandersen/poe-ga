@@ -1,12 +1,17 @@
 package poe.repository;
 
+import java.util.function.Consumer;
 import poe.entity.ImmutableCharacter;
+import poe.entity.SpringCharacterEvaluator.EvaluationResult;
+import poe.entity.SpringCharacterEvaluator.EvaluationResult.EvaluationLineItem;
 
 public class EvolutionStatus
 {
 	private final ImmutableCharacter character;
 
 	private long generation;
+
+	private EvaluationResult evaluationResult;
 
 	public ImmutableCharacter getCharacter()
 	{
@@ -27,6 +32,12 @@ public class EvolutionStatus
 	{
 		this.character = evolutionStatusBuilder.character;
 		this.generation = evolutionStatusBuilder.generation;
+		this.evaluationResult = evolutionStatusBuilder.evaluationResult;
+	}
+
+	public void forEachLineItem(final Consumer<EvaluationLineItem> consumer)
+	{
+		evaluationResult.forEachLineItem(consumer);
 	}
 
 	public static class EvolutionStatusBuilder
@@ -34,6 +45,8 @@ public class EvolutionStatus
 		private ImmutableCharacter character;
 
 		private long generation;
+
+		private EvaluationResult evaluationResult;
 
 		public EvolutionStatusBuilder withCharacter(final ImmutableCharacter character)
 		{
@@ -50,6 +63,12 @@ public class EvolutionStatus
 		public EvolutionStatus build()
 		{
 			return new EvolutionStatus(this);
+		}
+
+		public EvolutionStatusBuilder withEvaluation(final EvaluationResult evaluationResult)
+		{
+			this.evaluationResult = evaluationResult;
+			return this;
 		}
 	}
 }

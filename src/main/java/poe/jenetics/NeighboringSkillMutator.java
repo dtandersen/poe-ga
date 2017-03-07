@@ -1,6 +1,7 @@
 package poe.jenetics;
 
 import static org.jenetics.internal.math.random.indexes;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.jenetics.Mutator;
@@ -21,15 +22,22 @@ public class NeighboringSkillMutator extends Mutator<SkillGene, Integer>
 	@Override
 	protected int mutate(final MSeq<SkillGene> genes, final double p)
 	{
-		final Set<Integer> neighbors = pst.neighbors(genes.asList().stream().map(SkillGene::getPassiveSkillId).collect(Collectors.toList()));
-		final int x = RandomRegistry.getRandom().nextInt(neighbors.size());
-		final int val = randElement(neighbors, x);
+		final List<Integer> original = genes.asList().stream().map(SkillGene::getPassiveSkillId).collect(Collectors.toList());
+		final Set<Integer> neighbors = pst.neighbors(original);
+		neighbors.removeAll(original);
 		return (int)indexes(RandomRegistry.getRandom(), genes.length(), p)
-				.peek(i -> genes.set(i, genes.get(i).newInstance(val)))
+				.peek(i -> genes.set(i, genes.get(i).newInstance(randomNeighbor(neighbors))))
 				.count();
 	}
 
-	private int randElement(final Set<Integer> neighbors, final int x)
+	private int randomNeighbor(final Set<Integer> neighbors)
+	{
+		final int randomIndex = RandomRegistry.getRandom().nextInt(neighbors.size());
+		final int val = randomSetElement(neighbors, randomIndex);
+		return val;
+	}
+
+	private int randomSetElement(final Set<Integer> neighbors, final int x)
 	{
 		int i = 0;
 		for (final int obj : neighbors)

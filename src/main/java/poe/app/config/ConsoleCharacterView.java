@@ -17,7 +17,7 @@ public class ConsoleCharacterView implements CharacterView
 	@Override
 	public void update(final EvolutionStatus evolutionStatus)
 	{
-		// character=evolutionStatus.getCharacter();
+		evolutionStatus.forEachLineItem(item -> System.out.print("[" + item.getFitness() + "] => " + item.getExpression() + "\n"));
 	}
 
 	@Override

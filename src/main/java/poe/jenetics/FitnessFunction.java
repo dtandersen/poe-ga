@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.function.Function;
 import org.jenetics.Genotype;
 import org.jenetics.util.ISeq;
+import poe.ehp.EhpCalculator;
+import poe.ehp.EhpCalculator.EhpCalculatorBuilder;
 import poe.entity.CharacterClass;
 import poe.entity.CharacterEvaluator;
 import poe.entity.ExpressionContext;
@@ -48,17 +50,26 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
 		character.sneakyAdd(passives);
 
 		final ExpressionContextAdapter context = new ExpressionContextAdapter(character);
-		final int fitness = characterEvaluator.evaluate(context);
+		final int fitness = characterEvaluator.evaluate(context).getFitness();
 		return fitness;
 	}
 
-	private final class ExpressionContextAdapter implements ExpressionContext
+	public static class ExpressionContextAdapter implements ExpressionContext
 	{
 		private final PoeCharacter character;
+
+		EhpCalculator ehpCalculator;
 
 		public ExpressionContextAdapter(final PoeCharacter character)
 		{
 			this.character = character;
+			ehpCalculator = new EhpCalculatorBuilder().from(character).build();
+		}
+
+		@Override
+		public EhpCalculator getEhp()
+		{
+			return ehpCalculator;
 		}
 
 		@Override

@@ -8,7 +8,7 @@ import poe.entity.AltererConfig;
 import poe.entity.CharacterClass;
 import poe.entity.CharacterEvaluator;
 import poe.entity.FitnessConfig;
-import poe.entity.CharacterEvaluator.CharacterEvaluatorBuilder;
+import poe.entity.SpringCharacterEvaluator.SpringCharacterEvaluatorBuilder;
 import poe.entity.ImmutableCharacter;
 import poe.entity.PoeCharacter;
 import poe.repository.EvolutionStatus;
@@ -85,7 +85,7 @@ public class EvolveCharacter extends BaseCommand<EvolveCharacterRequest, EvolveC
 		@Override
 		public CharacterEvaluator getCharacterEvaluator()
 		{
-			final CharacterEvaluatorBuilder builder = new CharacterEvaluatorBuilder().from(request.getFitnessConfig());
+			final SpringCharacterEvaluatorBuilder builder = new SpringCharacterEvaluatorBuilder().from(request.getFitnessConfig());
 			return builder.build();
 		}
 

@@ -3,6 +3,7 @@ package poe.jenetics;
 import org.jenetics.Alterer;
 import org.jenetics.Mutator;
 import org.jenetics.SinglePointCrossover;
+import org.jenetics.SwapMutator;
 import poe.repository.PassiveSkillTree;
 
 public class AltererFactory
@@ -26,6 +27,8 @@ public class AltererFactory
 			return new NeighboringSkillMutator(probability, passiveSkillTree);
 		case "mutator":
 			return new Mutator<>(probability);
+		case "swap":
+			return new SwapMutator<>(probability);
 		}
 
 		throw new RuntimeException();

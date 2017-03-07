@@ -1,5 +1,8 @@
 package poe.ehp;
 
+import poe.entity.PoeCharacter;
+import poe.entity.Stat;
+
 public class EhpCalculator
 {
 	private static final int MAX_RESIST = 75;
@@ -70,7 +73,7 @@ public class EhpCalculator
 
 		private float elementalResist;
 
-		public EhpCalculatorBuilder withLife(final int life)
+		public EhpCalculatorBuilder withLife(final float life)
 		{
 			this.life = life;
 			return this;
@@ -103,6 +106,21 @@ public class EhpCalculator
 		public EhpCalculatorBuilder withChaosResist(final float chaosResist)
 		{
 			this.chaosResist = chaosResist;
+			return this;
+		}
+
+		public EhpCalculatorBuilder from(final PoeCharacter character)
+		{
+			withChaosResist(character.getStat(Stat.CHAOS_RESIST));
+			withColdResist(character.getStat(Stat.COLD_RESIST));
+			withFireResist(character.getStat(Stat.FIRE_RESIST));
+			withLightningResist(character.getStat(Stat.LIGHTNING_RESIST));
+			withPhysicalResist(0);
+			withElementalResist(character.getStat(Stat.ELEMENTAL_RESIST));
+			withLife(0 +
+					character.getStat(Stat.MAXIMUM_LIFE) * (1 + character.getStat(Stat.INCRESED_MAXIMUM_LIFE) + character.getStat(Stat.STRENGTH) / 10 * 5) +
+					character.getStat(Stat.MAX_ENERGY_SHIELD) * (1 + character.getStat(Stat.INCREASED_ENERGY_SHIELD) + character.getStat(Stat.INTELLIGENCE) / 10 * 2));
+
 			return this;
 		}
 

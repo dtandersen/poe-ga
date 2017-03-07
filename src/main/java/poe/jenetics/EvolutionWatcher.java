@@ -9,9 +9,11 @@ import org.jenetics.engine.EvolutionResult;
 import org.jenetics.util.ISeq;
 import poe.command.PureImmutableCharacter.ImmutableCharacterBuilder;
 import poe.entity.CharacterClass;
+import poe.entity.CharacterEvaluator;
 import poe.entity.ImmutableCharacter;
 import poe.entity.PassiveSkill;
 import poe.entity.PoeCharacter;
+import poe.jenetics.FitnessFunction.ExpressionContextAdapter;
 import poe.repository.EvolutionStatus.EvolutionStatusBuilder;
 import poe.repository.PassiveSkillTree;
 
@@ -25,11 +27,15 @@ class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Integer>>
 
 	private final CharacterClass characterClass;
 
+	private final CharacterEvaluator characterEvaluator;
+
 	public EvolutionWatcher(
 			final CharacterUpdateCallback callback,
 			final PassiveSkillTree passiveSkillTree,
-			final CharacterClass characterClass)
+			final CharacterClass characterClass,
+			final CharacterEvaluator characterEvaluator)
 	{
+		this.characterEvaluator = characterEvaluator;
 		best = null;
 		this.callback = callback;
 		this.passiveSkillTree = passiveSkillTree;
@@ -56,6 +62,7 @@ class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Integer>>
 			callback.accept(new EvolutionStatusBuilder()
 					.withCharacter(retchar)
 					.withGeneration(evolutionResult.getTotalGenerations())
+					.withEvaluation(characterEvaluator.evaluate(new ExpressionContextAdapter(character)))
 					.build());
 		}
 	}

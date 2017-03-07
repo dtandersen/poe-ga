@@ -40,6 +40,6 @@ public class CommandFactory
 
 	public EvolveCharacter evolveCharacter()
 	{
-		return new EvolveCharacter(evolver, passiveSkillRepository, passiveSkillTree);
+		return new EvolveCharacter(evolver);
 	}
 }

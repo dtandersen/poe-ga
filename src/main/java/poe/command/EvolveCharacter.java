@@ -1,43 +1,35 @@
 package poe.command;
 
 import java.util.List;
-import org.jenetics.Alterer;
 import poe.command.EvolveCharacter.EvolveCharacterRequest;
 import poe.command.EvolveCharacter.EvolveCharacterResult;
 import poe.command.PureImmutableCharacter.ImmutableCharacterBuilder;
+import poe.entity.AltererConfig;
 import poe.entity.CharacterClass;
+import poe.entity.CharacterEvaluator;
+import poe.entity.FitnessConfig;
+import poe.entity.CharacterEvaluator.CharacterEvaluatorBuilder;
 import poe.entity.ImmutableCharacter;
 import poe.entity.PoeCharacter;
-import poe.jenetics.CharacterEvaluator;
-import poe.jenetics.CharacterEvaluator.CharacterEvaluatorBuilder;
-import poe.jenetics.SkillGene;
 import poe.repository.EvolutionStatus;
 import poe.repository.Evolver;
 import poe.repository.Evolver.PoeEvolutionContext;
 import poe.repository.Evolver.PoeEvolutionResult;
-import poe.repository.PassiveSkillRepository;
-import poe.repository.PassiveSkillTree;
 
 public class EvolveCharacter extends BaseCommand<EvolveCharacterRequest, EvolveCharacterResult>
 {
 	private final Evolver evolver;
 
-	private final PassiveSkillTree passiveSkillTree;
-
-	public EvolveCharacter(
-			final Evolver evolver,
-			final PassiveSkillRepository repox,
-			final PassiveSkillTree passiveSkillTree)
+	public EvolveCharacter(final Evolver evolver)
 	{
 		this.evolver = evolver;
-		this.passiveSkillTree = passiveSkillTree;
 	}
 
 	@Override
 	public void execute()
 	{
 		evolver.evolve(
-				new EvolutionContextAdapter(request, passiveSkillTree),
+				new EvolutionContextAdapter(request),
 				new EvolutionResultAdapter(result));
 	}
 
@@ -56,8 +48,6 @@ public class EvolveCharacter extends BaseCommand<EvolveCharacterRequest, EvolveC
 		int getSkills();
 
 		int getThreads();
-
-		List<Alterer<SkillGene, Integer>> getAlterers2();
 	}
 
 	public interface EvolveCharacterResult
@@ -75,14 +65,9 @@ public class EvolveCharacter extends BaseCommand<EvolveCharacterRequest, EvolveC
 	{
 		private final EvolveCharacterRequest request;
 
-		private final PassiveSkillTree passiveSkillTree;
-
-		private List<Alterer<SkillGene, Integer>> alterers;
-
-		public EvolutionContextAdapter(final EvolveCharacterRequest request, final PassiveSkillTree passiveSkillTree)
+		public EvolutionContextAdapter(final EvolveCharacterRequest request)
 		{
 			this.request = request;
-			this.passiveSkillTree = passiveSkillTree;
 		}
 
 		@Override
@@ -123,13 +108,9 @@ public class EvolveCharacter extends BaseCommand<EvolveCharacterRequest, EvolveC
 		}
 
 		@Override
-		public Alterer<SkillGene, Integer>[] getAlterers()
+		public List<AltererConfig> getAltererConfig()
 		{
-			// alterers.add(new Mutator<>(.05));
-			// alterers.add(new NeighboringSkillMutator(.05f, passiveSkillTree));
-			// alterers.add(new SinglePointCrossover<>(.2));
-
-			return request.getAlterers2().toArray(new Alterer[0]);
+			return request.getAlterers();
 		}
 	}
 

@@ -1,53 +1,41 @@
 package poe.app.evolve;
 
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
 import java.util.List;
-import org.jenetics.Alterer;
-import org.jenetics.Mutator;
-import org.jenetics.SinglePointCrossover;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
+import poe.app.evolve.EvolveConfig.MyAlterer;
 import poe.app.evolve.EvolveConfig.MyEvaluator;
-import poe.command.AltererConfig;
 import poe.command.CommandFactory;
 import poe.command.EvolveCharacter;
 import poe.command.EvolveCharacter.EvolveCharacterRequest;
 import poe.command.EvolveCharacter.EvolveCharacterResult;
-import poe.command.FitnessConfig;
-import poe.command.FitnessConfig.ElementConfig.ElementConfigBuilder;
-import poe.command.FitnessConfig.FitnessConfigBuilder;
 import poe.command.PoeComUrlBuilder;
+import poe.entity.AltererConfig;
 import poe.entity.CharacterClass;
+import poe.entity.FitnessConfig;
+import poe.entity.FitnessConfig.ElementConfig.ElementConfigBuilder;
+import poe.entity.FitnessConfig.FitnessConfigBuilder;
 import poe.entity.ImmutableCharacter;
 import poe.entity.ImmutableCharacter.ImmutablePassiveSkill;
-import poe.jenetics.NeighboringSkillMutator;
-import poe.jenetics.SkillGene;
 import poe.repository.CharacterView;
 import poe.repository.EvolutionStatus;
-import poe.repository.PassiveSkillRepository;
-import poe.repository.PassiveSkillTree;
+import poe.util.StreamUtils;
 
 @SpringBootApplication
 @ComponentScan(basePackages = { "poe.app.config" }, excludeFilters = {})
 public class PoeBuildEvolver implements CommandLineRunner
 {
-	private static final String CONFIG = "necromancer.yaml";
+	private static final String CONFIG = "config.yaml";
 
 	@Autowired
 	private CommandFactory commandFactory;
 
 	@Autowired
-	PassiveSkillRepository passiveSkillRepository;
-
-	@Autowired
-	PassiveSkillTree passiveSkillTree;
-
-	@Autowired
-	CharacterView characterView;
+	private CharacterView characterView;
 
 	@Override
 	public void run(final String... args) throws FileNotFoundException
@@ -57,7 +45,7 @@ public class PoeBuildEvolver implements CommandLineRunner
 		try
 		{
 			final EvolveCharacter command = commandFactory.evolveCharacter();
-			final EvolveCharacterRequestImplementation request = new EvolveCharacterRequestImplementation(CONFIG, passiveSkillTree);
+			final EvolveCharacterRequestImplementation request = new EvolveCharacterRequestImplementation(CONFIG);
 			command.setRequest(request);
 			command.setResult(new EvolveCharacterResult() {
 				@Override
@@ -69,7 +57,7 @@ public class PoeBuildEvolver implements CommandLineRunner
 					}
 
 					System.out.println(new PoeComUrlBuilder()
-							.withCharacterClass(CharacterClass.MARAUDER)
+							.withCharacterClass(character.getCharacterClass())
 							.withPassiveSkillIds(character.getPassiveSkillIds())
 							.toUrl());
 				}
@@ -107,13 +95,8 @@ public class PoeBuildEvolver implements CommandLineRunner
 	{
 		private final EvolveConfig evolveConfig;
 
-		private final List<Alterer<SkillGene, Integer>> alterers = new ArrayList<>();
-
-		private final PassiveSkillTree passiveSkillTree;
-
-		public EvolveCharacterRequestImplementation(final String filename, final PassiveSkillTree passiveSkillTree) throws FileNotFoundException
+		public EvolveCharacterRequestImplementation(final String filename) throws FileNotFoundException
 		{
-			this.passiveSkillTree = passiveSkillTree;
 			evolveConfig = ConfigParser.read(filename);
 		}
 
@@ -126,7 +109,7 @@ public class PoeBuildEvolver implements CommandLineRunner
 		@Override
 		public List<AltererConfig> getAlterers()
 		{
-			return null;
+			return StreamUtils.mapList(evolveConfig.getAlterers(), (final MyAlterer t) -> new AltererConfig(t.getType(), t.getProbability()));
 		}
 
 		@Override
@@ -163,17 +146,6 @@ public class PoeBuildEvolver implements CommandLineRunner
 			}
 
 			return fitnessConfigBuilder.build();
-
-		}
-
-		@Override
-		public List<Alterer<SkillGene, Integer>> getAlterers2()
-		{
-			alterers.add(new Mutator<>(.05));
-			alterers.add(new NeighboringSkillMutator(.05f, passiveSkillTree));
-			alterers.add(new SinglePointCrossover<>(.2));
-
-			return alterers;
 		}
 	}
 }

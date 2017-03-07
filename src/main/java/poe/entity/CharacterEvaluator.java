@@ -1,4 +1,4 @@
-package poe.jenetics;
+package poe.entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,18 +6,17 @@ import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
-import poe.command.FitnessConfig;
 
 public class CharacterEvaluator
 {
-	List<Evaluation> evaluations = new ArrayList<>();
+	private final List<Evaluation> evaluations = new ArrayList<>();
 
 	public CharacterEvaluator(final CharacterEvaluatorBuilder characterEvaluatorBuilder)
 	{
 		characterEvaluatorBuilder.fitnessConfig.getExpressions().stream().forEach(e -> evaluations.add(new Evaluation(e.getExpression())));
 	}
 
-	int evaluate(final ExpressionContext context)
+	public int evaluate(final ExpressionContext context)
 	{
 		try
 		{

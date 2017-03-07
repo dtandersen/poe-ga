@@ -14,17 +14,17 @@ public class SkillChromosome extends AbstractChromosome<SkillGene>
 	protected SkillChromosome(final ISeq<? extends SkillGene> genes)
 	{
 		super(genes);
-		allowedSkills = genes.get(0).skills;
+		allowedSkills = genes.get(0).getAllowedSkills();
 	}
 
-	public SkillChromosome(final List<Integer> passiveSkillIds, final int length)
+	public SkillChromosome(final List<Integer> allowedSkills, final int length)
 	{
-		this(SkillGene.seq(passiveSkillIds, length));
+		this(SkillGene.seq(allowedSkills, length));
 	}
 
-	public SkillChromosome(final List<Integer> ids, final int length, final List<Integer> passiveSkillIds)
+	public SkillChromosome(final List<Integer> allowedSkills, final int length, final List<Integer> actualSkills)
 	{
-		this(SkillGene.seq(ids, passiveSkillIds));
+		this(SkillGene.seq(allowedSkills, actualSkills));
 	}
 
 	@Override

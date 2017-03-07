@@ -2,28 +2,32 @@ package poe.command;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
-import static poe.command.FitnessConfig.FitnessConfigBuilder.config;
 import static poe.command.SimpleEvolveCharacterRequest.SimpleEvolveCharacterRequestBuilder.request;
+import static poe.entity.FitnessConfig.FitnessConfigBuilder.config;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.jenetics.Alterer;
 import org.junit.Before;
 import org.junit.Test;
 import poe.command.EvolveCharacter.EvolveCharacterResult;
-import poe.command.FitnessConfig.ElementConfig.ElementConfigBuilder;
 import poe.command.PureImmutablePassiveSkill.ImmutablePassiveSkillBuilder;
 import poe.command.SimpleEvolveCharacterRequest.SimpleEvolveCharacterRequestBuilder;
+import poe.entity.AltererConfig;
+import poe.entity.AltererType;
 import poe.entity.CharacterClass;
+import poe.entity.FitnessConfig.ElementConfig.ElementConfigBuilder;
 import poe.entity.ImmutableCharacter;
 import poe.entity.PassiveSkill.PassiveSkillBuilder;
 import poe.entity.PoeMatchers;
 import poe.entity.Stat;
 import poe.entity.StatValue.StatBuilder;
-import poe.jenetics.AltererType;
+import poe.jenetics.AltererFactory;
 import poe.jenetics.DeterministicMutator;
 import poe.jenetics.JeneticsEvolver;
+import poe.jenetics.SkillGene;
 import poe.repository.EvolutionStatus;
 import poe.repository.PassiveSkillRepository;
 import poe.repository.PassiveSkillTree;
@@ -31,11 +35,9 @@ import poe.repository.RepoBuilder;
 
 public class EvolveCharacterTest
 {
+	private static final int SLEEP_TIME = 1;
+
 	private EvolveCharacterResultImplementation result;
-
-	private List<AltererConfig> alterers;
-
-	// private final List<AltererType> mutators = new ArrayList<>();
 
 	private PassiveSkillTree passiveSkillTree;
 
@@ -43,13 +45,21 @@ public class EvolveCharacterTest
 
 	private JeneticsEvolver evolver;
 
+	private List<AltererConfig> altererConfig;
+
 	@Before
 	public void setUp()
 	{
+		result = null;
+		passiveSkillTree = null;
+		repo = null;
+		evolver = null;
+		altererConfig = new ArrayList<>();
+		altererConfig.add(new AltererConfig(AltererType.DETERMINISTIC.name().toLowerCase(), 1));
 	}
 
 	@Test
-	public void test()
+	public void test() throws InterruptedException
 	{
 		final PassiveSkillBuilder passive1 = PassiveSkillBuilder.passiveSkill()
 				.withName(CharacterClass.MARAUDER.getRootPassiveSkillName())
@@ -66,21 +76,15 @@ public class EvolveCharacterTest
 				.withPassiveSkills(passive1, passive2)
 				.build();
 		passiveSkillTree = new PassiveSkillTree(repo.all());
-		evolver = new JeneticsEvolver(passiveSkillTree);
 
-		final List<List<Integer>> testingGenes = new ArrayList<>();
-		final List<Integer> genes1 = Arrays.asList(new Integer[] { 1, 2 });
-		// final List<Integer> genes2 = Arrays.asList(new Integer[] { 1, 2 });
-		testingGenes.add(genes1);
-		// testingGenes.add(genes2);
-
-		givenAlterers(new AltererConfig(AltererType.NULL));
+		final AltererFactory altererFactory = givenAlterer(new Integer[][] { { 1, 2 } });
+		evolver = new JeneticsEvolver(passiveSkillTree, altererFactory);
 
 		whenBuildEvolved(request()
 				.withCharacterClass(CharacterClass.MARAUDER)
 				.withPopulation(1)
 				.withGenerations(1)
-				.withAlterers(new DeterministicMutator(testingGenes))
+				.withAlterers(altererConfig)
 				.withSkillCount(2)
 				.withFitnessConfig(config()
 						.withElement(ElementConfigBuilder.element()
@@ -93,11 +97,32 @@ public class EvolveCharacterTest
 		assertThat(result.getGenerations(), equalTo(1L));
 		assertThat(result.getFitness(), equalTo(101));
 		assertThat(result.finalCharacter.getCharacterClass(), equalTo(CharacterClass.MARAUDER));
-		// assertThat(result.characterUpdates, Matchers.instanceOf(ImmutableCharacter.class));
+
+		sleep();
+	}
+
+	private AltererFactory givenAlterer(final Integer[][] data1)
+	{
+		final List<List<Integer>> testingGenes = new ArrayList<>();
+
+		for (final Integer[] data : data1)
+		{
+			final List<Integer> genes1 = Arrays.asList(data);
+			testingGenes.add(genes1);
+		}
+
+		final DeterministicMutator alterer = new DeterministicMutator(testingGenes);
+		return new AltererFactory(passiveSkillTree) {
+			@Override
+			public Alterer<SkillGene, Integer> createMutator(final String altererName, final float probability)
+			{
+				return alterer;
+			}
+		};
 	}
 
 	@Test
-	public void duelist()
+	public void duelist() throws InterruptedException
 	{
 		final PassiveSkillBuilder passive1 = PassiveSkillBuilder.passiveSkill()
 				.withName(CharacterClass.DUELIST.getRootPassiveSkillName())
@@ -114,23 +139,19 @@ public class EvolveCharacterTest
 				.withPassiveSkills(passive1, passive2)
 				.build();
 		passiveSkillTree = new PassiveSkillTree(repo.all());
-		evolver = new JeneticsEvolver(passiveSkillTree);
 
-		// givenAlterers(new AltererConfig(AltererType.NULL));
-		final List<List<Integer>> testingGenes = new ArrayList<>();
-		final List<Integer> genes1 = Arrays.asList(new Integer[] { 3, 3 });
-		final List<Integer> genes2 = Arrays.asList(new Integer[] { 3, 4 });
-		testingGenes.add(genes1);
-		testingGenes.add(genes2);
-		// givenAlterers(new DeterministicMutator(testingGenes));
+		final AltererFactory altererFactory = givenAlterer(new Integer[][] {
+				{ 3, 3 },
+				{ 3, 4 } });
+
+		evolver = new JeneticsEvolver(passiveSkillTree, altererFactory);
 
 		whenBuildEvolved(request()
 				.withCharacterClass(CharacterClass.DUELIST)
 				.withPopulation(1)
 				.withGenerations(2)
 				.withSkillCount(2)
-				.withAlterers(new DeterministicMutator(testingGenes))
-				// .withAlterers("deterministic")
+				.withAlterers(altererConfig)
 				.withFitnessConfig(config()
 						.withElement(ElementConfigBuilder.element()
 								.withExpression("passiveSkillCount"))
@@ -145,6 +166,14 @@ public class EvolveCharacterTest
 		assertThat(genCharacter(1), PoeMatchers.hasPassives());
 		assertThat(genCharacter(2), PoeMatchers.hasPassives(
 				ImmutablePassiveSkillBuilder.passiveSkill().from(passive2).build()));
+
+		sleep();
+	}
+
+	private void sleep() throws InterruptedException
+	{
+		Thread.yield();
+		Thread.sleep(SLEEP_TIME);
 	}
 
 	private ImmutableCharacter genCharacter(final long generation)
@@ -152,15 +181,9 @@ public class EvolveCharacterTest
 		return result.characterUpdates.get(generation);
 	}
 
-	private void givenAlterers(final AltererConfig... mutatorTypes)
-	{
-		alterers = new ArrayList<>();
-		Arrays.asList(mutatorTypes).stream().forEach(altererConfig -> alterers.add(altererConfig));
-	}
-
 	private void whenBuildEvolved(final SimpleEvolveCharacterRequestBuilder evolutionContextBuilder)
 	{
-		final EvolveCharacter command = new EvolveCharacter(evolver, repo, passiveSkillTree);
+		final EvolveCharacter command = new EvolveCharacter(evolver);
 		command.setRequest(evolutionContextBuilder.build());
 		result = new EvolveCharacterResultImplementation();
 		command.setResult(result);

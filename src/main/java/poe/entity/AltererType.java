@@ -1,9 +1,10 @@
-package poe.jenetics;
+package poe.entity;
 
 public enum AltererType
 {
 	NULL,
 	NEIGHBOR,
 	MUTATOR,
-	CROSSOVER
+	CROSSOVER,
+	DETERMINISTIC
 }

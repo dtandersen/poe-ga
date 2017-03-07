@@ -13,6 +13,7 @@ import org.jenetics.PublicCompositeAlterer;
 import org.jenetics.engine.Engine;
 import org.jenetics.engine.EvolutionResult;
 import org.jenetics.util.Factory;
+import poe.entity.AltererConfig;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
 import poe.entity.PoeCharacter;
@@ -21,11 +22,16 @@ import poe.repository.PassiveSkillTree;
 
 public class JeneticsEvolver implements Evolver
 {
-	PassiveSkillTree passiveSkillTree;
+	private final PassiveSkillTree passiveSkillTree;
 
-	public JeneticsEvolver(final PassiveSkillTree passiveSkillTree)
+	private final AltererFactory altererFactory;
+
+	public JeneticsEvolver(
+			final PassiveSkillTree passiveSkillTree,
+			final AltererFactory altererFactory)
 	{
 		this.passiveSkillTree = passiveSkillTree;
+		this.altererFactory = altererFactory;
 	}
 
 	@Override
@@ -55,17 +61,18 @@ public class JeneticsEvolver implements Evolver
 
 		final FitnessFunction fitnessFunction = new FitnessFunction(passiveSkillTree, characterClass, evolutionContext.getCharacterEvaluator());
 
-		System.out.println("altereds=" + evolutionContext.getAlterers().toString());
-		final Alterer<SkillGene, Integer>[] alterers = evolutionContext.getAlterers();
+		final List<Alterer<SkillGene, Integer>> alterers2 = new ArrayList<>();
+		final List<AltererConfig> altererConfig2 = evolutionContext.getAltererConfig();
+		for (final AltererConfig altererConfig : altererConfig2)
+		{
+			alterers2.add(altererFactory.createMutator(altererConfig.getAltererTypeName().toLowerCase(), altererConfig.getProbability()));
+		}
+
+		final Alterer<SkillGene, Integer>[] altererArray = alterers2.toArray(new Alterer[0]);
 		final Engine<SkillGene, Integer> engine = Engine
 				.builder(fitnessFunction, gtf)
 				.populationSize(pop)
-				.alterers(
-						PublicCompositeAlterer.of(alterers))
-				// new Mutator<>(mutRate / 2),
-				// new NeighboringSkillMutator(mutRate * 2, passiveSkillTree),
-				// new SinglePointCrossover<>(.2)))
-				// .executor(exec)
+				.alterers(PublicCompositeAlterer.of(altererArray))
 				.build();
 
 		final EvolutionResult<SkillGene, Integer> result = engine.stream()

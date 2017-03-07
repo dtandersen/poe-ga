@@ -1,10 +1,10 @@
 package poe.repository;
 
-import org.jenetics.Alterer;
+import java.util.List;
+import poe.entity.AltererConfig;
 import poe.entity.CharacterClass;
+import poe.entity.CharacterEvaluator;
 import poe.entity.PoeCharacter;
-import poe.jenetics.CharacterEvaluator;
-import poe.jenetics.SkillGene;
 
 public interface Evolver
 {
@@ -24,7 +24,7 @@ public interface Evolver
 
 		int getThreads();
 
-		Alterer<SkillGene, Integer>[] getAlterers();
+		List<AltererConfig> getAltererConfig();
 	}
 
 	public interface PoeEvolutionResult

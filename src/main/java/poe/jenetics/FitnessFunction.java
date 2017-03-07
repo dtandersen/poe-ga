@@ -6,6 +6,8 @@ import java.util.function.Function;
 import org.jenetics.Genotype;
 import org.jenetics.util.ISeq;
 import poe.entity.CharacterClass;
+import poe.entity.CharacterEvaluator;
+import poe.entity.ExpressionContext;
 import poe.entity.PassiveSkill;
 import poe.entity.PoeCharacter;
 import poe.entity.Stat;

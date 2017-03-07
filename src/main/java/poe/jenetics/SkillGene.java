@@ -1,6 +1,5 @@
 package poe.jenetics;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -12,7 +11,7 @@ import org.jenetics.util.RandomRegistry;
 public class SkillGene implements Gene<Integer, SkillGene>,
 		Comparable<SkillGene>
 {
-	List<Integer> skills = new ArrayList<>();
+	private final List<Integer> allowedSkills;
 
 	private final int passiveSkillId;
 
@@ -23,16 +22,16 @@ public class SkillGene implements Gene<Integer, SkillGene>,
 				allowedSkills.get(RandomRegistry.getRandom().nextInt(allowedSkills.size())));
 	}
 
-	public SkillGene(final List<Integer> skills, final Integer value)
+	public SkillGene(final List<Integer> allowedSkills, final Integer passiveSkillId)
 	{
-		this.skills = skills;
-		this.passiveSkillId = value;
+		this.allowedSkills = allowedSkills;
+		this.passiveSkillId = passiveSkillId;
 	}
 
 	@Override
 	public boolean isValid()
 	{
-		return skills.contains(passiveSkillId);
+		return allowedSkills.contains(passiveSkillId);
 	}
 
 	@Override
@@ -50,13 +49,13 @@ public class SkillGene implements Gene<Integer, SkillGene>,
 	@Override
 	public SkillGene newInstance()
 	{
-		return new SkillGene(skills);
+		return new SkillGene(getAllowedSkills());
 	}
 
 	@Override
 	public SkillGene newInstance(final Integer value)
 	{
-		return new SkillGene(skills, value);
+		return new SkillGene(getAllowedSkills(), value);
 	}
 
 	public static ISeq<? extends SkillGene> seq(final List<Integer> passiveSkillIds, final int length)
@@ -66,16 +65,15 @@ public class SkillGene implements Gene<Integer, SkillGene>,
 				.toISeq();
 	}
 
-	public static ISeq<? extends SkillGene> seq(final List<Integer> ids, final List<Integer> passiveSkillIds)
+	public static ISeq<? extends SkillGene> seq(final List<Integer> allowedSkills, final List<Integer> actualSkills)
 	{
-		final MSeq<SkillGene> ofLength = MSeq.<SkillGene> ofLength(passiveSkillIds.size());
-		ofLength.setAll(passiveSkillIds.stream()
+		final MSeq<SkillGene> ofLength = MSeq.<SkillGene> ofLength(actualSkills.size());
+		ofLength.setAll(actualSkills.stream()
 				.map(new Function<Integer, SkillGene>() {
-
 					@Override
 					public SkillGene apply(final Integer t)
 					{
-						return new SkillGene(ids, t);
+						return new SkillGene(allowedSkills, t);
 					}
 				})
 				.collect(Collectors.toList()));
@@ -91,5 +89,10 @@ public class SkillGene implements Gene<Integer, SkillGene>,
 	public String toString()
 	{
 		return "" + getPassiveSkillId();
+	}
+
+	public List<Integer> getAllowedSkills()
+	{
+		return allowedSkills;
 	}
 }

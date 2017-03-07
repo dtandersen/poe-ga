@@ -3,7 +3,6 @@ package poe.app.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import poe.command.CommandFactory;
-import poe.jenetics.JeneticsEvolver;
 import poe.repository.CharacterView;
 import poe.repository.Evolver;
 import poe.repository.PassiveSkillRepository;
@@ -27,12 +26,6 @@ public class PoeConfig
 	PassiveSkillRepository passiveSkillRepository()
 	{
 		return new JsonPassiveSkillRepository();
-	}
-
-	@Bean
-	Evolver evolver(final PassiveSkillTree passiveSkillTree)
-	{
-		return new JeneticsEvolver(passiveSkillTree);
 	}
 
 	@Bean

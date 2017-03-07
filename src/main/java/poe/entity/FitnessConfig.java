@@ -1,8 +1,8 @@
-package poe.command;
+package poe.entity;
 
 import java.util.ArrayList;
 import java.util.List;
-import poe.command.FitnessConfig.ElementConfig.ElementConfigBuilder;
+import poe.entity.FitnessConfig.ElementConfig.ElementConfigBuilder;
 
 public class FitnessConfig
 {

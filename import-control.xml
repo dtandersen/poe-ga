@@ -5,6 +5,7 @@
 <import-control pkg="poe">
 	<allow pkg="java.util" />
 	<allow pkg="java.io" />
+	<allow pkg="poe.util" />
 
 	<subpackage name="app">
 		<allow pkg="org.springframework" />
@@ -12,6 +13,10 @@
 
 		<subpackage name="config">
 			<allow pkg="poe.repository" />
+		</subpackage>
+
+		<subpackage name="evolve">
+			<allow pkg="poe.app.evolve" />
 		</subpackage>
 	</subpackage>
 
@@ -38,5 +43,14 @@
 	<subpackage name="jenetics">
 		<allow pkg="org.jenetics" />
 		<allow pkg="poe.repository" />
+		<allow pkg="poe.entity" />
+	</subpackage>
+
+	<subpackage name="selenium">
+		<allow pkg="org.openqa.selenium" />
+	</subpackage>
+
+	<subpackage name="util">
+		<allow class="org.springframework.core.GenericTypeResolver" />
 	</subpackage>
 </import-control>

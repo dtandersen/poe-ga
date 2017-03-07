@@ -2,7 +2,7 @@
 characterClass: duelist
 population: 100
 skills: 75
-generations: 50000
+generations: 100
 alterers:
   - type: neighbor
     probability: .05

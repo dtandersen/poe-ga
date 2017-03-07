@@ -1,4 +1,4 @@
-package poe.jenetics;
+package poe.entity;
 
 public interface ExpressionContext
 {

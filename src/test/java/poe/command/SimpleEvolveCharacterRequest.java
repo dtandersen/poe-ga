@@ -1,13 +1,11 @@
 package poe.command;
 
-import java.util.ArrayList;
 import java.util.List;
-import org.jenetics.Alterer;
 import poe.command.EvolveCharacter.EvolveCharacterRequest;
-import poe.command.FitnessConfig.FitnessConfigBuilder;
+import poe.entity.AltererConfig;
 import poe.entity.CharacterClass;
-import poe.jenetics.DeterministicMutator;
-import poe.jenetics.SkillGene;
+import poe.entity.FitnessConfig;
+import poe.entity.FitnessConfig.FitnessConfigBuilder;
 
 public class SimpleEvolveCharacterRequest implements EvolveCharacterRequest
 {
@@ -23,7 +21,7 @@ public class SimpleEvolveCharacterRequest implements EvolveCharacterRequest
 
 	private final int skills;
 
-	private final List<Alterer<SkillGene, Integer>> alterers;
+	private final List<AltererConfig> alterers;
 
 	@Override
 	public CharacterClass getCharacterClass()
@@ -34,7 +32,7 @@ public class SimpleEvolveCharacterRequest implements EvolveCharacterRequest
 	@Override
 	public List<AltererConfig> getAlterers()
 	{
-		return null;
+		return alterers;
 	}
 
 	@Override
@@ -67,12 +65,6 @@ public class SimpleEvolveCharacterRequest implements EvolveCharacterRequest
 		return threads;
 	}
 
-	@Override
-	public List<Alterer<SkillGene, Integer>> getAlterers2()
-	{
-		return alterers;
-	}
-
 	public SimpleEvolveCharacterRequest(final SimpleEvolveCharacterRequestBuilder simpleEvolveCharacterRequestBuilder)
 	{
 		this.characterClass = simpleEvolveCharacterRequestBuilder.characterClass;
@@ -95,9 +87,7 @@ public class SimpleEvolveCharacterRequest implements EvolveCharacterRequest
 
 		private int skillCount;
 
-		private final List<Alterer<SkillGene, Integer>> alterers = new ArrayList<>();
-
-		// private String alterer;
+		private List<AltererConfig> alterers;
 
 		public SimpleEvolveCharacterRequestBuilder withCharacterClass(final CharacterClass characterClass)
 		{
@@ -129,15 +119,9 @@ public class SimpleEvolveCharacterRequest implements EvolveCharacterRequest
 			return this;
 		}
 
-		public SimpleEvolveCharacterRequestBuilder withAlterers(final DeterministicMutator deterministicMutator)
+		public SimpleEvolveCharacterRequestBuilder withAlterers(final List<AltererConfig> alterers)
 		{
-			alterers.add(deterministicMutator);
-			return this;
-		}
-
-		public SimpleEvolveCharacterRequestBuilder withAlterers(final String alterer)
-		{
-			// this.alterer = alterer;
+			this.alterers = alterers;
 			return this;
 		}
 

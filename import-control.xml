@@ -48,6 +48,7 @@
 
 	<subpackage name="selenium">
 		<allow pkg="org.openqa.selenium" />
+		<allow pkg="poe.repository" />
 	</subpackage>
 
 	<subpackage name="util">

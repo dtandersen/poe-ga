@@ -19,7 +19,7 @@ public class PoeConfig
 			final Evolver evolver,
 			final PassiveSkillTree passiveSkillTree)
 	{
-		return new CommandFactory(repo, evolver, passiveSkillTree);
+		return new CommandFactory(repo, evolver);
 	}
 
 	@Bean

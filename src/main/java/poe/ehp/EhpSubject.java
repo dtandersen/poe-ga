@@ -17,4 +17,6 @@ public interface EhpSubject
 	float getChaosResist();
 
 	float getElementalResist();
+
+	float getEnergyShield();
 }

@@ -2,6 +2,7 @@ package poe.ehp;
 
 import poe.entity.PoeCharacter;
 import poe.entity.Stat;
+import poe.solver.BiSectionSolver;
 
 public class EhpCalculator
 {
@@ -9,7 +10,7 @@ public class EhpCalculator
 
 	private static final int MAX_PHYSICAL_RESIST = 90;
 
-	private final SimpleEhpSubject subject;
+	private final EhpSubject subject;
 
 	public EhpCalculator(final EhpCalculatorBuilder ehpCalculatorBuilder)
 	{
@@ -18,10 +19,35 @@ public class EhpCalculator
 
 	public float getLargestPhysicalHit()
 	{
-		return getLifeAndShield() /
-				(1 - Math.min(
-						subject.getPhysicalDamageReduction(),
-						MAX_PHYSICAL_RESIST) / 100);
+		// return getLifeAndShield() /
+		// (1 - Math.min(
+		// subject.getPhysicalDamageReduction(),
+		// MAX_PHYSICAL_RESIST) / 100);
+
+		final double effLife = getLifeAndShield();
+		final BiSectionSolver solver = new BiSectionSolver();
+
+		final double rawDmg = solver.solve((final Double maxDmg) -> {
+			return effLife - physicalDamage(maxDmg);
+		}, 0d, (double)getLifeAndShield() * 100, 1d);
+
+		return (float)rawDmg;
+	}
+
+	private double physicalDamage(final Double maxDmg)
+	{
+		final float physRed = subject.getPhysicalDamageReduction() / 100;
+		final double armourRed = armorRed(maxDmg);
+		final double totalRed = Math.min(physRed + armourRed, .9);
+
+		return maxDmg * (1 - totalRed);
+	}
+
+	private double armorRed(final Double maxDmg)
+	{
+		if (subject.getArmour() == 0) { return 0; }
+
+		return subject.getArmour() / (subject.getArmour() + 10 * maxDmg);
 	}
 
 	public float getLargestLightningHit()
@@ -59,9 +85,9 @@ public class EhpCalculator
 			return this;
 		}
 
-		public EhpCalculatorBuilder withPhysicalResist(final float physicalResist)
+		public EhpCalculatorBuilder withPhysicalDamageReduction(final float physicalDamageReduction)
 		{
-			subject.setPhysicalResist(physicalResist);
+			subject.setPhysicalDamageReduction(physicalDamageReduction);
 			return this;
 		}
 
@@ -101,9 +127,9 @@ public class EhpCalculator
 			return this;
 		}
 
-		public EhpCalculatorBuilder withArmor(final float armor)
+		public EhpCalculatorBuilder withArmour(final float armour)
 		{
-			subject.setArmor(armor);
+			subject.setArmour(armour);
 			return this;
 		}
 
@@ -113,7 +139,7 @@ public class EhpCalculator
 			withColdResist(character.getStat(Stat.COLD_RESIST));
 			withFireResist(character.getStat(Stat.FIRE_RESIST));
 			withLightningResist(character.getStat(Stat.LIGHTNING_RESIST));
-			withPhysicalResist(0);
+			withPhysicalDamageReduction(0);
 			withElementalResist(character.getStat(Stat.ELEMENTAL_RESIST));
 			withLife(0 +
 					character.getStat(Stat.MAXIMUM_LIFE) * (1 + character.getStat(Stat.INCRESED_MAXIMUM_LIFE) + character.getStat(Stat.STRENGTH) / 10 * 5) +

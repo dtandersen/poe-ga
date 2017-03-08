@@ -59,10 +59,51 @@ public class EhpCalculatorTest
 				.withElementalResist(100)
 				.build();
 
-		assertThat(ehp.getLargestPhysicalHit(), equalTo(4000f));
+		assertThat(ehp.getLargestPhysicalHit(), equalTo(9999.998f));
 		assertThat(ehp.getLargestLightningHit(), equalTo(4000f));
 		assertThat(ehp.getLargestFireHit(), equalTo(4000f));
 		assertThat(ehp.getLargestColdHit(), equalTo(4000f));
 		assertThat(ehp.getLargestChaosHit(), equalTo(4000f));
+	}
+
+	@Test
+	public void negativeResists()
+	{
+		final EhpCalculator ehp = new EhpCalculatorBuilder()
+				.withLife(1000)
+				.withPhysicalResist(-10)
+				.withLightningResist(-10)
+				.withFireResist(-10)
+				.withColdResist(-10)
+				.withChaosResist(-10)
+				.withElementalResist(-10)
+				.build();
+
+		assertThat(ehp.getLargestPhysicalHit(), equalTo(909.0909f));
+		assertThat(ehp.getLargestLightningHit(), equalTo(833.3333f));
+		assertThat(ehp.getLargestFireHit(), equalTo(833.3333f));
+		assertThat(ehp.getLargestColdHit(), equalTo(833.3333f));
+		assertThat(ehp.getLargestChaosHit(), equalTo(909.0909f));
+	}
+
+	@Test
+	public void energyShield()
+	{
+		final EhpCalculator ehp = new EhpCalculatorBuilder()
+				.withLife(500)
+				.withEnergyShield(500)
+				.withPhysicalResist(25)
+				.withLightningResist(25)
+				.withFireResist(25)
+				.withColdResist(25)
+				.withChaosResist(25)
+				.withElementalResist(25)
+				.build();
+
+		assertThat(ehp.getLargestPhysicalHit(), equalTo(1333.3334f));
+		assertThat(ehp.getLargestLightningHit(), equalTo(2000f));
+		assertThat(ehp.getLargestFireHit(), equalTo(2000f));
+		assertThat(ehp.getLargestColdHit(), equalTo(2000f));
+		assertThat(ehp.getLargestChaosHit(), equalTo(666.6667f));
 	}
 }

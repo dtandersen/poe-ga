@@ -20,11 +20,11 @@ public class EhpCalculatorTest
 				.withChaosResist(25)
 				.build();
 
-		assertThat((double)ehp.getLargestPhysicalHit(), closeTo(1333.3334, .5));
-		assertThat(ehp.getLargestLightningHit(), equalTo(1333.3334f));
-		assertThat(ehp.getLargestFireHit(), equalTo(1333.3334f));
-		assertThat(ehp.getLargestColdHit(), equalTo(1333.3334f));
-		assertThat(ehp.getLargestChaosHit(), equalTo(1333.3334f));
+		assertThat((double)ehp.getMaxPhysicalHit(), closeTo(1333.3334, .5));
+		assertThat(ehp.getMaxLightningHit(), equalTo(1333.3334f));
+		assertThat(ehp.getMaxFireHit(), equalTo(1333.3334f));
+		assertThat(ehp.getMaxColdHit(), equalTo(1333.3334f));
+		assertThat(ehp.getMaxChaosHit(), equalTo(1333.3334f));
 	}
 
 	@Test
@@ -40,11 +40,11 @@ public class EhpCalculatorTest
 				.withElementalResist(30)
 				.build();
 
-		assertThat((double)ehp.getLargestPhysicalHit(), closeTo(2500, .5));
-		assertThat(ehp.getLargestLightningHit(), equalTo(4000f));
-		assertThat(ehp.getLargestFireHit(), equalTo(4000f));
-		assertThat(ehp.getLargestColdHit(), equalTo(4000f));
-		assertThat(ehp.getLargestChaosHit(), equalTo(2500f));
+		assertThat((double)ehp.getMaxPhysicalHit(), closeTo(2500, .5));
+		assertThat(ehp.getMaxLightningHit(), equalTo(4000f));
+		assertThat(ehp.getMaxFireHit(), equalTo(4000f));
+		assertThat(ehp.getMaxColdHit(), equalTo(4000f));
+		assertThat(ehp.getMaxChaosHit(), equalTo(2500f));
 	}
 
 	@Test
@@ -60,11 +60,11 @@ public class EhpCalculatorTest
 				.withElementalResist(100)
 				.build();
 
-		assertThat((double)ehp.getLargestPhysicalHit(), closeTo(9999.998, .5));
-		assertThat(ehp.getLargestLightningHit(), equalTo(4000f));
-		assertThat(ehp.getLargestFireHit(), equalTo(4000f));
-		assertThat(ehp.getLargestColdHit(), equalTo(4000f));
-		assertThat(ehp.getLargestChaosHit(), equalTo(4000f));
+		assertThat((double)ehp.getMaxPhysicalHit(), closeTo(9999.998, .5));
+		assertThat(ehp.getMaxLightningHit(), equalTo(4000f));
+		assertThat(ehp.getMaxFireHit(), equalTo(4000f));
+		assertThat(ehp.getMaxColdHit(), equalTo(4000f));
+		assertThat(ehp.getMaxChaosHit(), equalTo(4000f));
 	}
 
 	@Test
@@ -80,11 +80,11 @@ public class EhpCalculatorTest
 				.withElementalResist(-10)
 				.build();
 
-		assertThat((double)ehp.getLargestPhysicalHit(), closeTo(909.0909, .5));
-		assertThat(ehp.getLargestLightningHit(), equalTo(833.3333f));
-		assertThat(ehp.getLargestFireHit(), equalTo(833.3333f));
-		assertThat(ehp.getLargestColdHit(), equalTo(833.3333f));
-		assertThat(ehp.getLargestChaosHit(), equalTo(909.0909f));
+		assertThat((double)ehp.getMaxPhysicalHit(), closeTo(909.0909, .5));
+		assertThat(ehp.getMaxLightningHit(), equalTo(833.3333f));
+		assertThat(ehp.getMaxFireHit(), equalTo(833.3333f));
+		assertThat(ehp.getMaxColdHit(), equalTo(833.3333f));
+		assertThat(ehp.getMaxChaosHit(), equalTo(909.0909f));
 	}
 
 	@Test
@@ -101,11 +101,11 @@ public class EhpCalculatorTest
 				.withElementalResist(25)
 				.build();
 
-		assertThat((double)ehp.getLargestPhysicalHit(), closeTo(1333.3334, .5));
-		assertThat(ehp.getLargestLightningHit(), equalTo(2000f));
-		assertThat(ehp.getLargestFireHit(), equalTo(2000f));
-		assertThat(ehp.getLargestColdHit(), equalTo(2000f));
-		assertThat(ehp.getLargestChaosHit(), equalTo(666.6667f));
+		assertThat((double)ehp.getMaxPhysicalHit(), closeTo(1333.3334, .5));
+		assertThat(ehp.getMaxLightningHit(), equalTo(2000f));
+		assertThat(ehp.getMaxFireHit(), equalTo(2000f));
+		assertThat(ehp.getMaxColdHit(), equalTo(2000f));
+		assertThat(ehp.getMaxChaosHit(), equalTo(666.6667f));
 	}
 
 	@Test
@@ -116,6 +116,6 @@ public class EhpCalculatorTest
 				.withArmour(500)
 				.build();
 
-		assertThat((double)ehp.getLargestPhysicalHit(), closeTo(545, 1));
+		assertThat((double)ehp.getMaxPhysicalHit(), closeTo(545, 1));
 	}
 }

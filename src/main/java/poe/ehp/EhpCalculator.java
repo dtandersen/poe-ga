@@ -8,7 +8,7 @@ public class EhpCalculator
 {
 	private static final int MAX_ELEMENTAL_RESIST = 75;
 
-	private static final int MAX_PHYSICAL_RESIST = 90;
+	private static final double MAX_PHYSICAL_DAMAGE_REDUCTION = .9;
 
 	private final EhpSubject subject;
 
@@ -17,62 +17,58 @@ public class EhpCalculator
 		this.subject = ehpCalculatorBuilder.subject;
 	}
 
-	public float getLargestPhysicalHit()
+	public float getMaxPhysicalHit()
 	{
-		// return getLifeAndShield() /
-		// (1 - Math.min(
-		// subject.getPhysicalDamageReduction(),
-		// MAX_PHYSICAL_RESIST) / 100);
-
-		final double effLife = getLifeAndShield();
 		final BiSectionSolver solver = new BiSectionSolver();
 
 		final double rawDmg = solver.solve((final Double maxDmg) -> {
-			return effLife - physicalDamage(maxDmg);
-		}, 0d, (double)getLifeAndShield() * 100, 1d);
+			return (double)getEffectiveHitPoints() - physicalDamageTaken(maxDmg.floatValue());
+		}, 0d, (double)getEffectiveHitPoints() * 100, 1d);
 
 		return (float)rawDmg;
 	}
 
-	private double physicalDamage(final Double maxDmg)
+	public float getMaxLightningHit()
 	{
-		final float physRed = subject.getPhysicalDamageReduction() / 100;
-		final double armourRed = armorRed(maxDmg);
-		final double totalRed = Math.min(physRed + armourRed, .9);
-
-		return maxDmg * (1 - totalRed);
+		return getEffectiveHitPoints() / (1 - Math.min(subject.getLightningResist() + subject.getElementalResist(), 75) / 100);
 	}
 
-	private double armorRed(final Double maxDmg)
+	public float getMaxFireHit()
 	{
-		if (subject.getArmour() == 0) { return 0; }
-
-		return subject.getArmour() / (subject.getArmour() + 10 * maxDmg);
+		return getEffectiveHitPoints() / (1 - Math.min(subject.getFireResist() + subject.getElementalResist(), MAX_ELEMENTAL_RESIST) / 100);
 	}
 
-	public float getLargestLightningHit()
+	public float getMaxColdHit()
 	{
-		return getLifeAndShield() / (1 - Math.min(subject.getLightningResist() + subject.getElementalResist(), 75) / 100);
+		return getEffectiveHitPoints() / (1 - Math.min(subject.getColdResist() + subject.getElementalResist(), MAX_ELEMENTAL_RESIST) / 100);
 	}
 
-	public float getLargestFireHit()
-	{
-		return getLifeAndShield() / (1 - Math.min(subject.getFireResist() + subject.getElementalResist(), MAX_ELEMENTAL_RESIST) / 100);
-	}
-
-	public float getLargestColdHit()
-	{
-		return getLifeAndShield() / (1 - Math.min(subject.getColdResist() + subject.getElementalResist(), MAX_ELEMENTAL_RESIST) / 100);
-	}
-
-	public float getLargestChaosHit()
+	public float getMaxChaosHit()
 	{
 		return subject.getLife() / (1 - Math.min(subject.getChaosResist(), MAX_ELEMENTAL_RESIST) / 100);
 	}
 
-	public float getLifeAndShield()
+	private float getEffectiveHitPoints()
 	{
 		return subject.getLife() + subject.getEnergyShield();
+	}
+
+	private float physicalDamageTaken(final float rawDamage)
+	{
+		final float physRed = subject.getPhysicalDamageReduction() / 100;
+		final float armourRed = armourDamageReduction(rawDamage);
+		final float totalRed = (float)Math.min(physRed + armourRed, MAX_PHYSICAL_DAMAGE_REDUCTION);
+
+		return EhpUtils.damageTaken(rawDamage, totalRed);
+	}
+
+	private float armourDamageReduction(final float rawDamage)
+	{
+		final float armour = subject.getArmour();
+
+		if (armour == 0) { return 0; }
+
+		return EhpUtils.armourDamageReduction(rawDamage, armour);
 	}
 
 	public static class EhpCalculatorBuilder

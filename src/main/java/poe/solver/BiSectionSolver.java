@@ -30,7 +30,7 @@ public class BiSectionSolver implements Solver<Double, Double>
 
 			final double y_m = function.apply(m);
 
-			System.out.println("try " + i + " f(" + m + ")=" + y_m);
+			// System.out.println("try " + i + " f(" + m + ")=" + y_m);
 
 			if (y_m == 0)
 			{

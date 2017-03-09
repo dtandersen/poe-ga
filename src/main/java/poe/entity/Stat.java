@@ -14,7 +14,7 @@ public enum Stat
 	// life
 	INCRESED_MAXIMUM_LIFE(INT + "% increased maximum Life"),
 	MAXIMUM_LIFE(PLUS + INT + " to maximum Life"),
-	LIFE_1("Maximum Life becomes 1, Immune to Chaos Damage"),
+	CHAOS_INNOCULATION("Maximum Life becomes " + INT + ", Immune to Chaos Damage"),
 	LIFE_ON_KILL(PLUS_INT + " Life gained on Kill"),
 	LIFE_ON_HIT(PLUS_INT + " Life gained for each Enemy hit by your Attacks"),
 
@@ -289,7 +289,7 @@ public enum Stat
 
 	// armor
 	ARMOUR(INT + "% increased Armour"),
-	ARMOR_FLAT(PLUS_INT + " to Armour"),
+	ARMOUR_FLAT(PLUS_INT + " to Armour"),
 	ARMOR_EVADE("Converts all Evasion Rating to Armour. Dexterity provides no bonus to Evasion Rating"),
 
 	// movement
@@ -536,7 +536,7 @@ public enum Stat
 	NEVER_EVADED("Your hits can't be Evaded"),
 	NEVER_CRIT("Never deal Critical Strikes"),
 	ENEMY_NEVER_LEECH("Enemies Cannot Leech Life From You"),
-	MANA_BEFORE_LIFE("When Hit, " + INT + "% of Damage is taken from Mana before Life"),
+	MIND_OVER_MATTER("When Hit, " + INT + "% of Damage is taken from Mana before Life"),
 	ENEMY_ELEM_RESIST("Enemies you hit with Elemental Damage temporarily get +25% Resistance to those Elements and -50% Resistance to other Elements");
 
 	private Pattern pattern;

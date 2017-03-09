@@ -19,4 +19,8 @@ public interface EhpSubject
 	float getElementalResist();
 
 	float getEnergyShield();
+
+	float getMana();
+
+	boolean hasMindOverMatter();
 }

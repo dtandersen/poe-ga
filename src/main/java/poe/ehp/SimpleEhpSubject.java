@@ -20,6 +20,10 @@ public class SimpleEhpSubject implements EhpSubject
 
 	private float energyShield;
 
+	private boolean mindOverMatter;
+
+	private float mana;
+
 	@Override
 	public float getLife()
 	{
@@ -108,13 +112,36 @@ public class SimpleEhpSubject implements EhpSubject
 		this.chaosResist = chaosResist;
 	}
 
+	@Override
 	public float getEnergyShield()
 	{
 		return energyShield;
 	}
 
-	public void setEnergyShield(float energyShield)
+	public void setEnergyShield(final float energyShield)
 	{
 		this.energyShield = energyShield;
+	}
+
+	@Override
+	public boolean hasMindOverMatter()
+	{
+		return mindOverMatter;
+	}
+
+	public void setMindOverMatter(final boolean mindOverMatter)
+	{
+		this.mindOverMatter = mindOverMatter;
+	}
+
+	@Override
+	public float getMana()
+	{
+		return mana;
+	}
+
+	public void setMana(final float mana)
+	{
+		this.mana = mana;
 	}
 }

@@ -1,7 +1,5 @@
 package poe.ehp;
 
-import poe.entity.PoeCharacter;
-import poe.entity.Stat;
 import poe.solver.BiSectionSolver;
 
 public class EhpCalculator
@@ -17,6 +15,11 @@ public class EhpCalculator
 		this.subject = ehpCalculatorBuilder.subject;
 	}
 
+	public EhpCalculator(final EhpSubject subject)
+	{
+		this.subject = subject;
+	}
+
 	public float getMaxPhysicalHit()
 	{
 		final BiSectionSolver solver = new BiSectionSolver();
@@ -30,22 +33,45 @@ public class EhpCalculator
 
 	public float getMaxLightningHit()
 	{
-		return getEffectiveHitPoints() / (1 - Math.min(subject.getLightningResist() + subject.getElementalResist(), 75) / 100);
+		return calcDmg(
+				getEffectiveHitPoints(),
+				(subject.getLightningResist() + subject.getElementalResist()) / 100f,
+				MAX_ELEMENTAL_RESIST / 100f);
+	}
+
+	private float calcDmg(final double life, final float totalresist, final float capresist)
+	{
+		final BiSectionSolver solver = new BiSectionSolver();
+		final double rawDmg = solver.solve((final Double maxDmg) -> {
+			return life -
+					maxDmg.floatValue() *
+							(1 - Math.min(totalresist, capresist));
+		}, 0d, (double)getEffectiveHitPoints() * 100, 1d);
+		return (float)rawDmg;
 	}
 
 	public float getMaxFireHit()
 	{
-		return getEffectiveHitPoints() / (1 - Math.min(subject.getFireResist() + subject.getElementalResist(), MAX_ELEMENTAL_RESIST) / 100);
+		return calcDmg(
+				getEffectiveHitPoints(),
+				(subject.getFireResist() + subject.getElementalResist()) / 100f,
+				MAX_ELEMENTAL_RESIST / 100f);
 	}
 
 	public float getMaxColdHit()
 	{
-		return getEffectiveHitPoints() / (1 - Math.min(subject.getColdResist() + subject.getElementalResist(), MAX_ELEMENTAL_RESIST) / 100);
+		return calcDmg(
+				getEffectiveHitPoints(),
+				(subject.getColdResist() + subject.getElementalResist()) / 100f,
+				MAX_ELEMENTAL_RESIST / 100f);
 	}
 
 	public float getMaxChaosHit()
 	{
-		return subject.getLife() / (1 - Math.min(subject.getChaosResist(), MAX_ELEMENTAL_RESIST) / 100);
+		return calcDmg(
+				subject.getLife(),
+				subject.getChaosResist() / 100f,
+				MAX_ELEMENTAL_RESIST / 100f);
 	}
 
 	private float getEffectiveHitPoints()
@@ -53,8 +79,12 @@ public class EhpCalculator
 		return subject.getLife() + subject.getEnergyShield();
 	}
 
-	private float physicalDamageTaken(final float rawDamage)
+	private float physicalDamageTaken(float rawDamage)
 	{
+		if (subject.hasMindOverMatter())
+		{
+			rawDamage = rawDamage - (float)Math.min(rawDamage * .3, subject.getMana());
+		}
 		final float physRed = subject.getPhysicalDamageReduction() / 100;
 		final float armourRed = armourDamageReduction(rawDamage);
 		final float totalRed = (float)Math.min(physRed + armourRed, MAX_PHYSICAL_DAMAGE_REDUCTION);
@@ -66,7 +96,10 @@ public class EhpCalculator
 	{
 		final float armour = subject.getArmour();
 
-		if (armour == 0) { return 0; }
+		if (armour == 0)
+		{
+			return 0;
+		}
 
 		return EhpUtils.armourDamageReduction(rawDamage, armour);
 	}
@@ -129,24 +162,21 @@ public class EhpCalculator
 			return this;
 		}
 
-		public EhpCalculatorBuilder from(final PoeCharacter character)
-		{
-			withChaosResist(character.getStat(Stat.CHAOS_RESIST));
-			withColdResist(character.getStat(Stat.COLD_RESIST));
-			withFireResist(character.getStat(Stat.FIRE_RESIST));
-			withLightningResist(character.getStat(Stat.LIGHTNING_RESIST));
-			withPhysicalDamageReduction(0);
-			withElementalResist(character.getStat(Stat.ELEMENTAL_RESIST));
-			withLife(0 +
-					character.getStat(Stat.MAXIMUM_LIFE) * (1 + character.getStat(Stat.INCRESED_MAXIMUM_LIFE) + character.getStat(Stat.STRENGTH) / 10 * 5) +
-					character.getStat(Stat.MAX_ENERGY_SHIELD) * (1 + character.getStat(Stat.INCREASED_ENERGY_SHIELD) + character.getStat(Stat.INTELLIGENCE) / 10 * 2));
-
-			return this;
-		}
-
 		public EhpCalculator build()
 		{
 			return new EhpCalculator(this);
+		}
+
+		public EhpCalculatorBuilder withMindOverMatter()
+		{
+			subject.setMindOverMatter(true);
+			return this;
+		}
+
+		public EhpCalculatorBuilder withMana(final float mana)
+		{
+			subject.setMana(mana);
+			return this;
 		}
 	}
 }

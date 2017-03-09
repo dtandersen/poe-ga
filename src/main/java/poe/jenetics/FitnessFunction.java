@@ -6,7 +6,6 @@ import java.util.function.Function;
 import org.jenetics.Genotype;
 import org.jenetics.util.ISeq;
 import poe.ehp.EhpCalculator;
-import poe.ehp.EhpCalculator.EhpCalculatorBuilder;
 import poe.entity.CharacterClass;
 import poe.entity.CharacterEvaluator;
 import poe.entity.ExpressionContext;
@@ -63,7 +62,7 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
 		public ExpressionContextAdapter(final PoeCharacter character)
 		{
 			this.character = character;
-			ehpCalculator = new EhpCalculatorBuilder().from(character).build();
+			ehpCalculator = new EhpCalculator(new CharacterEhpCalculatorSubjectAdapter(character));
 		}
 
 		@Override
@@ -93,7 +92,7 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
 		@Override
 		public float getLife1()
 		{
-			return character.getStat(Stat.LIFE_1);
+			return character.getStat(Stat.CHAOS_INNOCULATION);
 		}
 
 		@Override
@@ -1281,7 +1280,7 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
 		@Override
 		public float getArmorFlat()
 		{
-			return character.getStat(Stat.ARMOR_FLAT);
+			return character.getStat(Stat.ARMOUR_FLAT);
 		}
 
 		@Override
@@ -2343,7 +2342,7 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
 		@Override
 		public float getManaBeforeLife()
 		{
-			return character.getStat(Stat.MANA_BEFORE_LIFE);
+			return character.getStat(Stat.MIND_OVER_MATTER);
 		}
 
 		@Override

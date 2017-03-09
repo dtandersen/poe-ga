@@ -4,22 +4,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import org.jgrapht.Graphs;
-import org.jgrapht.UndirectedGraph;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.SimpleGraph;
 import poe.entity.PassiveSkill;
+import poe.util.graph.IntGraph;
 
 public class PassiveSkillTree
 {
 	private final List<PassiveSkill> passiveSkills;
 
-	private final UndirectedGraph<Integer, DefaultEdge> graph;
+	private final IntGraph graph;
 
 	public PassiveSkillTree(final List<PassiveSkill> passiveSkills)
 	{
 		this.passiveSkills = passiveSkills;
-		graph = new SimpleGraph<>(DefaultEdge.class);
+		graph = new IntGraph();
 
 		for (final PassiveSkill passiveSkill : passiveSkills)
 		{
@@ -67,7 +64,7 @@ public class PassiveSkillTree
 
 	public List<Integer> neighbors(final int passiveSkillId)
 	{
-		return Graphs.neighborListOf(graph, passiveSkillId);
+		return graph.neighbors(passiveSkillId);
 	}
 
 	public int count()

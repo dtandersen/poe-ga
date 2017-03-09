@@ -53,5 +53,8 @@
 
 	<subpackage name="util">
 		<allow class="org.springframework.core.GenericTypeResolver" />
+		<subpackage name="graph">
+			<allow pkg="org.jgrapht" />
+		</subpackage>
 	</subpackage>
 </import-control>

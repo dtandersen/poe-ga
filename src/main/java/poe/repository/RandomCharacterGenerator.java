@@ -1,8 +1,9 @@
-package poe.entity;
+package poe.repository;
 
 import java.util.List;
-import poe.repository.PassiveSkillTree;
-import poe.repository.Randomizer;
+import poe.entity.CharacterClass;
+import poe.entity.PassiveSkill;
+import poe.entity.PoeCharacter;
 
 public class RandomCharacterGenerator
 {

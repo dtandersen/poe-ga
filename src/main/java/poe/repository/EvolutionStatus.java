@@ -2,8 +2,8 @@ package poe.repository;
 
 import java.util.function.Consumer;
 import poe.entity.ImmutableCharacter;
-import poe.entity.SpringCharacterEvaluator.EvaluationResult;
-import poe.entity.SpringCharacterEvaluator.EvaluationResult.EvaluationLineItem;
+import poe.evaluator.EvaluationResult;
+import poe.evaluator.EvaluationResult.EvaluationLineItem;
 
 public class EvolutionStatus
 {

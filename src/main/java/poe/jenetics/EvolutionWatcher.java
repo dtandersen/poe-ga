@@ -9,11 +9,11 @@ import org.jenetics.engine.EvolutionResult;
 import org.jenetics.util.ISeq;
 import poe.command.PureImmutableCharacter.ImmutableCharacterBuilder;
 import poe.entity.CharacterClass;
-import poe.entity.CharacterEvaluator;
 import poe.entity.ImmutableCharacter;
 import poe.entity.PassiveSkill;
 import poe.entity.PoeCharacter;
-import poe.jenetics.FitnessFunction.ExpressionContextAdapter;
+import poe.evaluator.CharacterEvaluator;
+import poe.evaluator.ExpressionContextAdapter;
 import poe.repository.EvolutionStatus.EvolutionStatusBuilder;
 import poe.repository.PassiveSkillTree;
 
@@ -56,8 +56,6 @@ class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Integer>>
 			final ImmutableCharacter retchar = ImmutableCharacterBuilder.character()
 					.from(character)
 					.build();
-
-			// System.out.println("gen=" + evolutionResult.getGeneration() + "," + retchar.getPassiveSkills());
 
 			callback.accept(new EvolutionStatusBuilder()
 					.withCharacter(retchar)

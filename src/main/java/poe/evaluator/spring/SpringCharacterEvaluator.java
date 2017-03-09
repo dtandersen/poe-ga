@@ -1,4 +1,4 @@
-package poe.entity;
+package poe.evaluator.spring;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,8 +9,12 @@ import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
+import poe.entity.FitnessConfig;
 import poe.entity.FitnessConfig.ElementConfig;
-import poe.entity.SpringCharacterEvaluator.EvaluationResult.EvaluationLineItem;
+import poe.evaluator.CharacterEvaluator;
+import poe.evaluator.EvaluationResult;
+import poe.evaluator.ExpressionContext;
+import poe.evaluator.EvaluationResult.EvaluationLineItem;
 
 public class SpringCharacterEvaluator implements CharacterEvaluator
 {
@@ -37,7 +41,7 @@ public class SpringCharacterEvaluator implements CharacterEvaluator
 				final Expression parseExpression = parser.parseExpression(expression);
 				final int value = parseExpression.getValue(context, Integer.class);
 				fitness.getAndAccumulate(value, (a, b) -> a + b);
-				items.add(new EvaluationLineItem(value, parseExpression));
+				items.add(new EvaluationLineItem(value, expression));
 			});
 
 			return new EvaluationResult(fitness.get(), items);
@@ -51,52 +55,6 @@ public class SpringCharacterEvaluator implements CharacterEvaluator
 	private void forEachExpression(final Consumer<EvaluationCriteria> consumer)
 	{
 		evaluations.stream().forEach(consumer);
-	}
-
-	public static class EvaluationResult
-	{
-		private final int fitness;
-
-		private final List<EvaluationLineItem> items;
-
-		public int getFitness()
-		{
-			return fitness;
-		}
-
-		public EvaluationResult(final int fitness, final List<EvaluationLineItem> items)
-		{
-			this.fitness = fitness;
-			this.items = items;
-		}
-
-		public void forEachLineItem(final Consumer<EvaluationLineItem> consumer)
-		{
-			items.stream().forEach(consumer);
-		}
-
-		public static class EvaluationLineItem
-		{
-			private final int value;
-
-			private final Expression parseExpression;
-
-			public EvaluationLineItem(final int value, final Expression parseExpression)
-			{
-				this.value = value;
-				this.parseExpression = parseExpression;
-			}
-
-			public String getExpression()
-			{
-				return parseExpression.getExpressionString();
-			}
-
-			public int getFitness()
-			{
-				return value;
-			}
-		}
 	}
 
 	public static class SpringCharacterEvaluatorBuilder
@@ -120,7 +78,7 @@ public class SpringCharacterEvaluator implements CharacterEvaluator
 		}
 	}
 
-	static class EvaluationCriteria
+	private static class EvaluationCriteria
 	{
 		private final String expression;
 

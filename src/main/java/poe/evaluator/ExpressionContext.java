@@ -1,4 +1,4 @@
-package poe.entity;
+package poe.evaluator;
 
 import poe.ehp.EhpCalculator;
 

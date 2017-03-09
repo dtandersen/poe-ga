@@ -2,7 +2,7 @@
 characterClass: duelist
 population: 100
 skills: 75
-generations: 100
+generations: 50000
 alterers:
   - type: neighbor
     probability: .05
@@ -11,6 +11,7 @@ alterers:
   - type: crossover
     probability: .05
 evaluators:
-  - expression: passiveSkillCount
-  - expression: strength * 10
-  - expression: maximumLife * (1 + increasedMaximumLife) * 10
+#  - expression: passiveSkillCount
+#  - expression: strength * 10
+#  - expression: maximumLife * (1 + increasedMaximumLife) * 10
+  - expression: ehp.maxPhysicalHit

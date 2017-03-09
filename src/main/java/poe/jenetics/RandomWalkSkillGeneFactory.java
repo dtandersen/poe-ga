@@ -5,9 +5,9 @@ import org.jenetics.Genotype;
 import org.jenetics.util.Factory;
 import poe.entity.CharacterClass;
 import poe.entity.PoeCharacter;
-import poe.entity.RandomCharacterGenerator;
 import poe.repository.JavaRandomizer;
 import poe.repository.PassiveSkillTree;
+import poe.repository.RandomCharacterGenerator;
 
 public class RandomWalkSkillGeneFactory implements Factory<Genotype<SkillGene>>
 {

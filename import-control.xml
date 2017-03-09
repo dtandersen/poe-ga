@@ -24,6 +24,7 @@
 		<allow pkg="poe.command" />
 		<allow pkg="poe.entity" />
 		<allow pkg="poe.repository" />
+		<allow pkg="poe.evaluator" />
 	</subpackage>
 
 	<subpackage name="entity">
@@ -40,10 +41,25 @@
 		</subpackage>
 	</subpackage>
 
+	<subpackage name="evaluator">
+		<allow pkg="poe.entity" />
+		<allow pkg="poe.ehp" />
+
+		<subpackage name="spring">
+			<allow pkg="poe.evaluator" />
+			<allow pkg="org.springframework.expression" />
+		</subpackage>
+	</subpackage>
+
+	<subpackage name="ehp">
+		<allow pkg="poe.solver" />
+	</subpackage>
+
 	<subpackage name="jenetics">
 		<allow pkg="org.jenetics" />
 		<allow pkg="poe.repository" />
 		<allow pkg="poe.entity" />
+		<allow pkg="poe.evaluator" />
 	</subpackage>
 
 	<subpackage name="selenium">

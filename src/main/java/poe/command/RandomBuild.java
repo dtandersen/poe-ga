@@ -10,9 +10,9 @@ import poe.entity.CharacterClass;
 import poe.entity.ImmutableCharacter;
 import poe.entity.PassiveSkill;
 import poe.entity.PoeCharacter;
-import poe.entity.RandomCharacterGenerator;
 import poe.repository.PassiveSkillRepository;
 import poe.repository.PassiveSkillTree;
+import poe.repository.RandomCharacterGenerator;
 import poe.repository.Randomizer;
 
 public class RandomBuild extends BaseCommand<RandomBuildRequest, RandomBuildResult>

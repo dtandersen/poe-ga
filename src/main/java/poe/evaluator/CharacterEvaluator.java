@@ -1,6 +1,4 @@
-package poe.entity;
-
-import poe.entity.SpringCharacterEvaluator.EvaluationResult;
+package poe.evaluator;
 
 public interface CharacterEvaluator
 {

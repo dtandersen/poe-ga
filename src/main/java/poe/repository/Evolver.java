@@ -3,8 +3,8 @@ package poe.repository;
 import java.util.List;
 import poe.entity.AltererConfig;
 import poe.entity.CharacterClass;
-import poe.entity.CharacterEvaluator;
 import poe.entity.PoeCharacter;
+import poe.evaluator.CharacterEvaluator;
 
 public interface Evolver
 {

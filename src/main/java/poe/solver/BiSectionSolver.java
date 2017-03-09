@@ -30,8 +30,6 @@ public class BiSectionSolver implements Solver<Double, Double>
 
 			final double y_m = function.apply(m);
 
-			// System.out.println("try " + i + " f(" + m + ")=" + y_m);
-
 			if (y_m == 0)
 			{
 				a = m;
@@ -45,8 +43,6 @@ public class BiSectionSolver implements Solver<Double, Double>
 			{
 				a = m;
 			}
-
-			// System.out.println("New interval: [" + a + " .. " + b + "]");
 
 			if (i++ > maxTries) { throw new RuntimeException("too many try"); }
 		}

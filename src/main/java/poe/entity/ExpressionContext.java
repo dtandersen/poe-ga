@@ -92,7 +92,7 @@ public interface ExpressionContext
 
 	float getChaosDamageOnPhysical();
 
-	float getElemDamage();
+	float getElementalDamage();
 
 	float getElementalStatusAilments();
 

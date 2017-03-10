@@ -7,6 +7,7 @@ import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.jenetics.Alterer;
+import org.jenetics.BoltzmannSelector;
 import org.jenetics.Chromosome;
 import org.jenetics.Genotype;
 import org.jenetics.PublicCompositeAlterer;
@@ -73,6 +74,7 @@ public class JeneticsEvolver implements Evolver
 				.builder(fitnessFunction, gtf)
 				.populationSize(pop)
 				.alterers(PublicCompositeAlterer.of(altererArray))
+				.selector(new BoltzmannSelector<SkillGene, Integer>(4))
 				.build();
 
 		final EvolutionResult<SkillGene, Integer> result = engine.stream()

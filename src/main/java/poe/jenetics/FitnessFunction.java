@@ -330,7 +330,7 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
 		}
 
 		@Override
-		public float getElemDamage()
+		public float getElementalDamage()
 		{
 			return character.getStat(Stat.ELEM_DAMAGE);
 		}

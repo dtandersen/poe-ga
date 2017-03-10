@@ -29,7 +29,7 @@ import poe.util.StreamUtils;
 @ComponentScan(basePackages = { "poe.app.config" }, excludeFilters = {})
 public class PoeBuildEvolver implements CommandLineRunner
 {
-	private static final String CONFIG = "config.yaml";
+	private static final String CONFIG = "lightning.yaml";
 
 	@Autowired
 	private CommandFactory commandFactory;

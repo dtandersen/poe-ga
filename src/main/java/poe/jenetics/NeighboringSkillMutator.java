@@ -9,7 +9,7 @@ import org.jenetics.util.MSeq;
 import org.jenetics.util.RandomRegistry;
 import poe.repository.PassiveSkillTree;
 
-public class NeighboringSkillMutator extends Mutator<SkillGene, Integer>
+public class NeighboringSkillMutator extends Mutator<SkillGene, Float>
 {
 	private final PassiveSkillTree pst;
 

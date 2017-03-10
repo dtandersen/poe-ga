@@ -8,9 +8,9 @@ import poe.entity.AltererConfig;
 import poe.entity.CharacterClass;
 import poe.entity.CharacterEvaluator;
 import poe.entity.FitnessConfig;
-import poe.entity.SpringCharacterEvaluator.SpringCharacterEvaluatorBuilder;
 import poe.entity.ImmutableCharacter;
 import poe.entity.PoeCharacter;
+import poe.entity.SpringCharacterEvaluator.SpringCharacterEvaluatorBuilder;
 import poe.repository.EvolutionStatus;
 import poe.repository.Evolver;
 import poe.repository.Evolver.PoeEvolutionContext;
@@ -56,7 +56,7 @@ public class EvolveCharacter extends BaseCommand<EvolveCharacterRequest, EvolveC
 
 		void setGenerations(long generations);
 
-		void setFitness(int fitness);
+		void setFitness(float fitness);
 
 		void newBest(EvolutionStatus evolutionStatus);
 	}
@@ -139,7 +139,7 @@ public class EvolveCharacter extends BaseCommand<EvolveCharacterRequest, EvolveC
 		}
 
 		@Override
-		public void setFitness(final int fitness)
+		public void setFitness(final float fitness)
 		{
 			result.setFitness(fitness);
 		}

@@ -17,9 +17,9 @@ import poe.jenetics.FitnessFunction.ExpressionContextAdapter;
 import poe.repository.EvolutionStatus.EvolutionStatusBuilder;
 import poe.repository.PassiveSkillTree;
 
-class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Integer>>
+class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Float>>
 {
-	Phenotype<SkillGene, Integer> best;
+	Phenotype<SkillGene, Float> best;
 
 	private final CharacterUpdateCallback callback;
 
@@ -43,7 +43,7 @@ class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Integer>>
 	}
 
 	@Override
-	public void accept(final EvolutionResult<SkillGene, Integer> evolutionResult)
+	public void accept(final EvolutionResult<SkillGene, Float> evolutionResult)
 	{
 		if (best == null || best.compareTo(evolutionResult.getBestPhenotype()) < 0)
 		{

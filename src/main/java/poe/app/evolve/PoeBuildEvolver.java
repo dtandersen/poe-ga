@@ -68,7 +68,7 @@ public class PoeBuildEvolver implements CommandLineRunner
 				}
 
 				@Override
-				public void setFitness(final int fitness)
+				public void setFitness(final float fitness)
 				{
 				}
 

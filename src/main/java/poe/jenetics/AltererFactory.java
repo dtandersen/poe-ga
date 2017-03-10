@@ -15,7 +15,7 @@ public class AltererFactory
 		this.passiveSkillTree = passiveSkillTree;
 	}
 
-	public Alterer<SkillGene, Integer> createMutator(final String altererName, final float probability)
+	public Alterer<SkillGene, Float> createMutator(final String altererName, final float probability)
 	{
 		switch (altererName.toLowerCase())
 		{

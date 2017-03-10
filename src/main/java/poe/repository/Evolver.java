@@ -33,7 +33,7 @@ public interface Evolver
 
 		void setGenerations(long totalGenerations);
 
-		void setFitness(int bestFitness);
+		void setFitness(float bestFitness);
 
 		void newBest(EvolutionStatus evolutionStatus);
 	}

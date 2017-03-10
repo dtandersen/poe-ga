@@ -14,7 +14,7 @@ import poe.entity.PoeCharacter;
 import poe.entity.Stat;
 import poe.repository.PassiveSkillTree;
 
-public class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
+public class FitnessFunction implements Function<Genotype<SkillGene>, Float>
 {
 	private final PassiveSkillTree passiveSkillTree;
 
@@ -33,7 +33,7 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
 	}
 
 	@Override
-	public Integer apply(final Genotype<SkillGene> genotype)
+	public Float apply(final Genotype<SkillGene> genotype)
 	{
 		final PassiveSkill root = passiveSkillTree.findByName(characterClass.getRootPassiveSkillName());
 		final PoeCharacter character = new PoeCharacter(characterClass);
@@ -49,7 +49,7 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Integer>
 		character.sneakyAdd(passives);
 
 		final ExpressionContextAdapter context = new ExpressionContextAdapter(character);
-		final int fitness = characterEvaluator.evaluate(context).getFitness();
+		final float fitness = characterEvaluator.evaluate(context).getFitness();
 		return fitness;
 	}
 

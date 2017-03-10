@@ -62,22 +62,22 @@ public class JeneticsEvolver implements Evolver
 
 		final FitnessFunction fitnessFunction = new FitnessFunction(passiveSkillTree, characterClass, evolutionContext.getCharacterEvaluator());
 
-		final List<Alterer<SkillGene, Integer>> alterers2 = new ArrayList<>();
+		final List<Alterer<SkillGene, Float>> alterers2 = new ArrayList<>();
 		final List<AltererConfig> altererConfig2 = evolutionContext.getAltererConfig();
 		for (final AltererConfig altererConfig : altererConfig2)
 		{
 			alterers2.add(altererFactory.createMutator(altererConfig.getAltererTypeName().toLowerCase(), altererConfig.getProbability()));
 		}
 
-		final Alterer<SkillGene, Integer>[] altererArray = alterers2.toArray(new Alterer[0]);
-		final Engine<SkillGene, Integer> engine = Engine
+		final Alterer<SkillGene, Float>[] altererArray = alterers2.toArray(new Alterer[0]);
+		final Engine<SkillGene, Float> engine = Engine
 				.builder(fitnessFunction, gtf)
 				.populationSize(pop)
 				.alterers(PublicCompositeAlterer.of(altererArray))
-				.selector(new BoltzmannSelector<SkillGene, Integer>(4))
+				.selector(new BoltzmannSelector<SkillGene, Float>(4))
 				.build();
 
-		final EvolutionResult<SkillGene, Integer> result = engine.stream()
+		final EvolutionResult<SkillGene, Float> result = engine.stream()
 				.limit(evolutionContext.getGenerationLimit())
 				.peek(new EvolutionWatcher(new CharacterUpdateCallback(poeEvolutionResult), passiveSkillTree, evolutionContext.getCharacterClass(), evolutionContext.getCharacterEvaluator()))
 				.collect(EvolutionResult.toBestEvolutionResult());

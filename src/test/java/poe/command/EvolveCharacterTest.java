@@ -114,7 +114,7 @@ public class EvolveCharacterTest
 		final DeterministicMutator alterer = new DeterministicMutator(testingGenes);
 		return new AltererFactory(passiveSkillTree) {
 			@Override
-			public Alterer<SkillGene, Integer> createMutator(final String altererName, final float probability)
+			public Alterer<SkillGene, Float> createMutator(final String altererName, final float probability)
 			{
 				return alterer;
 			}
@@ -198,7 +198,7 @@ public class EvolveCharacterTest
 
 		private long generations;
 
-		private int fitness;
+		private float fitness;
 
 		@Override
 		public void setCharacter(final ImmutableCharacter character)
@@ -206,7 +206,7 @@ public class EvolveCharacterTest
 			this.finalCharacter = character;
 		}
 
-		public int getFitness()
+		public float getFitness()
 		{
 			return fitness;
 		}
@@ -223,7 +223,7 @@ public class EvolveCharacterTest
 		}
 
 		@Override
-		public void setFitness(final int fitness)
+		public void setFitness(final float fitness)
 		{
 			this.fitness = fitness;
 		}

@@ -22,7 +22,7 @@ public class SkillChromosome extends AbstractChromosome<SkillGene>
 		this(SkillGene.seq(allowedSkills, length));
 	}
 
-	public SkillChromosome(final List<Integer> allowedSkills, final int length, final List<Integer> actualSkills)
+	public SkillChromosome(final List<Integer> allowedSkills, final List<Integer> actualSkills)
 	{
 		this(SkillGene.seq(allowedSkills, actualSkills));
 	}
@@ -46,13 +46,10 @@ public class SkillChromosome extends AbstractChromosome<SkillGene>
 				.toISeq();
 	}
 
-	public static Iterable<SkillChromosome> seq(final List<Integer> ids, final int length, final List<Integer> passiveSkillIds)
+	public static Iterable<SkillChromosome> seq(final List<Integer> allowedSkills, final List<Integer> actualSkills)
 	{
 		return MSeq.<SkillChromosome> ofLength(1)
-				.fill(() -> new SkillChromosome(ids, length, passiveSkillIds))
+				.fill(() -> new SkillChromosome(allowedSkills, actualSkills))
 				.toISeq();
-		// final MSeq<SkillChromosome> seq = MSeq.<SkillChromosome> ofLength(length);
-		//
-		// return seq;
 	}
 }

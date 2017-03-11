@@ -7,10 +7,10 @@ import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.jenetics.Alterer;
-import org.jenetics.BoltzmannSelector;
 import org.jenetics.Chromosome;
 import org.jenetics.Genotype;
 import org.jenetics.PublicCompositeAlterer;
+import org.jenetics.TournamentSelector;
 import org.jenetics.engine.Engine;
 import org.jenetics.engine.EvolutionResult;
 import org.jenetics.util.Factory;
@@ -56,7 +56,6 @@ public class JeneticsEvolver implements Evolver
 		}).collect(Collectors.toList());
 		final Factory<Genotype<SkillGene>> gtf = new FactoryImplementation(ids, length);
 		// final Factory<Genotype<SkillGene>> gtf = new RandomWalkSkillGeneFactory(passiveSkillTree, characterClass, length, ids);
-		System.out.println("global length=" + length);
 
 		final ExecutorService exec = Executors.newFixedThreadPool(threads);
 
@@ -74,7 +73,11 @@ public class JeneticsEvolver implements Evolver
 				.builder(fitnessFunction, gtf)
 				.populationSize(pop)
 				.alterers(PublicCompositeAlterer.of(altererArray))
-				.selector(new BoltzmannSelector<SkillGene, Float>(4))
+				.selector(new TournamentSelector<SkillGene, Float>())
+				// .selector(new StochasticUniversalSelector<SkillGene, Float>())
+				// .selector(new BoltzmannSelector<SkillGene, Float>(4))
+				.maximalPhenotypeAge(50)
+				// .fitnessScaler(f -> f * .5f + 10000f)
 				.build();
 
 		final EvolutionResult<SkillGene, Float> result = engine.stream()
@@ -89,7 +92,7 @@ public class JeneticsEvolver implements Evolver
 		final List<PassiveSkill> myPassives = new ArrayList<>();
 		for (final SkillGene g : chromosome)
 		{
-			final PassiveSkill passiveSkill = passiveSkillTree.find(g.getPassiveSkillId());
+			final PassiveSkill passiveSkill = passiveSkillTree.find(g.getAllele());
 			myPassives.add(passiveSkill);
 		}
 		character.sneakyAdd(myPassives);

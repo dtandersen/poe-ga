@@ -17,6 +17,11 @@
 
 		<subpackage name="evolve">
 			<allow pkg="poe.app.evolve" />
+
+			<subpackage name="selenium">
+				<allow pkg="org.openqa.selenium" />
+				<allow pkg="poe.repository" />
+			</subpackage>
 		</subpackage>
 	</subpackage>
 
@@ -60,11 +65,6 @@
 		<allow pkg="poe.repository" />
 		<allow pkg="poe.entity" />
 		<allow pkg="poe.evaluator" />
-	</subpackage>
-
-	<subpackage name="selenium">
-		<allow pkg="org.openqa.selenium" />
-		<allow pkg="poe.repository" />
 	</subpackage>
 
 	<subpackage name="util">

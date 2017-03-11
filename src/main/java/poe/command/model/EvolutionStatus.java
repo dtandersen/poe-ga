@@ -1,7 +1,6 @@
-package poe.repository;
+package poe.command.model;
 
 import java.util.function.Consumer;
-import poe.entity.ImmutableCharacter;
 import poe.evaluator.EvaluationResult;
 import poe.evaluator.EvaluationResult.EvaluationLineItem;
 

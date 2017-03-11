@@ -2,15 +2,14 @@ package poe.evaluator.spring;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import org.springframework.expression.EvaluationException;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
-import poe.entity.FitnessConfig;
-import poe.entity.FitnessConfig.ElementConfig;
+import poe.command.model.FitnessConfig;
+import poe.command.model.FitnessConfig.ElementConfig;
 import poe.evaluator.CharacterEvaluator;
 import poe.evaluator.EvaluationResult;
 import poe.evaluator.ExpressionContext;
@@ -35,16 +34,20 @@ public class SpringCharacterEvaluator implements CharacterEvaluator
 		{
 			final List<EvaluationLineItem> items = new ArrayList<>();
 			final StandardEvaluationContext context = new StandardEvaluationContext(rootObject);
-			final AtomicInteger fitness = new AtomicInteger();
-			forEachExpression(ev -> {
+			// final AtomicFloat fitness = new AtomicInteger();
+			float fitness = 0;
+			// forEachExpression(ev -> {
+			for (final EvaluationCriteria ev : evaluations)
+			{
 				final String expression = ev.getExpression();
 				final Expression parseExpression = parser.parseExpression(expression);
-				final int value = parseExpression.getValue(context, Integer.class);
-				fitness.getAndAccumulate(value, (a, b) -> a + b);
+				final float value = parseExpression.getValue(context, Float.class);
+				// fitness.getAndAccumulate(value, (a, b) -> a + b);
+				fitness += value;
 				items.add(new EvaluationLineItem(value, expression));
-			});
+			}
 
-			return new EvaluationResult(fitness.get(), items);
+			return new EvaluationResult(fitness, items);
 		}
 		catch (final EvaluationException ex)
 		{
@@ -52,10 +55,10 @@ public class SpringCharacterEvaluator implements CharacterEvaluator
 		}
 	}
 
-	private void forEachExpression(final Consumer<EvaluationCriteria> consumer)
-	{
-		evaluations.stream().forEach(consumer);
-	}
+	// private void forEachExpression(final Consumer<EvaluationCriteria> consumer)
+	// {
+	// evaluations.stream().forEach(consumer);
+	// }
 
 	public static class SpringCharacterEvaluatorBuilder
 	{

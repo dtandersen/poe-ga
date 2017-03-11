@@ -1,7 +1,10 @@
-package poe.entity;
+package poe.command.model;
 
 import java.util.Collection;
 import java.util.List;
+import poe.entity.AttributeValue;
+import poe.entity.CharacterClass;
+import poe.entity.StatValue;
 
 public interface ImmutableCharacter
 {

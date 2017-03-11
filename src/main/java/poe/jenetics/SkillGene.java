@@ -49,13 +49,13 @@ public class SkillGene implements Gene<Integer, SkillGene>,
 	@Override
 	public SkillGene newInstance()
 	{
-		return new SkillGene(getAllowedSkills());
+		return new SkillGene(allowedSkills);
 	}
 
 	@Override
 	public SkillGene newInstance(final Integer value)
 	{
-		return new SkillGene(getAllowedSkills(), value);
+		return new SkillGene(allowedSkills, value);
 	}
 
 	public static ISeq<? extends SkillGene> seq(final List<Integer> passiveSkillIds, final int length)
@@ -80,15 +80,10 @@ public class SkillGene implements Gene<Integer, SkillGene>,
 		return ofLength.toISeq();
 	}
 
-	public int getPassiveSkillId()
-	{
-		return passiveSkillId;
-	}
-
 	@Override
 	public String toString()
 	{
-		return "" + getPassiveSkillId();
+		return "" + getAllele();
 	}
 
 	public List<Integer> getAllowedSkills()

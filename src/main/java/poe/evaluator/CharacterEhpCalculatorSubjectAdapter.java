@@ -16,18 +16,15 @@ public class CharacterEhpCalculatorSubjectAdapter implements EhpSubject
 	@Override
 	public float getLife()
 	{
-		if (character.getStat(Stat.CHAOS_INNOCULATION) > 0)
-		{
-			return 1;
-		}
+		if (character.getStat(Stat.CHAOS_INNOCULATION) > 0) { return 1; }
 
-		return character.getStat(Stat.MAXIMUM_LIFE) * (1 + character.getStat(Stat.INCRESED_MAXIMUM_LIFE) + character.getStat(Stat.STRENGTH) / 10 * 5);
+		return character.getStat(Stat.MAXIMUM_LIFE) * (1 + character.getStat(Stat.INCRESED_MAXIMUM_LIFE) + (character.getStat(Stat.STRENGTH) / 10 * 5));
 	}
 
 	@Override
 	public float getArmour()
 	{
-		return character.getStat(Stat.ARMOUR_FLAT) + (1 + character.getStat(Stat.ARMOUR));
+		return character.getStat(Stat.ARMOUR_FLAT) * (1 + character.getStat(Stat.ARMOUR));
 	}
 
 	@Override
@@ -69,13 +66,14 @@ public class CharacterEhpCalculatorSubjectAdapter implements EhpSubject
 	@Override
 	public float getEnergyShield()
 	{
-		return character.getStat(Stat.MAX_ENERGY_SHIELD) + (1 * character.getStat(Stat.INCREASED_ENERGY_SHIELD));
+		return (character.getStat(Stat.MAX_ENERGY_SHIELD)) *
+				(1 * (character.getStat(Stat.INCREASED_ENERGY_SHIELD) + (character.getStat(Stat.INTELLIGENCE) / 10 * 2)));
 	}
 
 	@Override
 	public float getMana()
 	{
-		return character.getStat(Stat.MANA_BONUS) + (1 * character.getStat(Stat.MANA));
+		return character.getStat(Stat.MANA_BONUS) * (1 + character.getStat(Stat.MANA));
 	}
 
 	@Override

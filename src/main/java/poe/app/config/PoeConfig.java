@@ -2,13 +2,15 @@ package poe.app.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import poe.app.evolve.CharacterView;
+import poe.app.evolve.ConsoleCharacterView;
+import poe.app.evolve.MultiCharacterView;
+import poe.app.evolve.selenium.SeleniumCharacterView;
 import poe.command.CommandFactory;
-import poe.repository.CharacterView;
 import poe.repository.Evolver;
 import poe.repository.PassiveSkillRepository;
 import poe.repository.PassiveSkillTree;
 import poe.repository.json.JsonPassiveSkillRepository;
-import poe.selenium.SeleniumCharacterView;
 
 @Configuration
 public class PoeConfig

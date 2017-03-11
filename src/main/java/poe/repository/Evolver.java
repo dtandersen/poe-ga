@@ -1,7 +1,8 @@
 package poe.repository;
 
 import java.util.List;
-import poe.entity.AltererConfig;
+import poe.command.model.AltererConfig;
+import poe.command.model.EvolutionStatus;
 import poe.entity.CharacterClass;
 import poe.entity.PoeCharacter;
 import poe.evaluator.CharacterEvaluator;
@@ -33,7 +34,7 @@ public interface Evolver
 
 		void setGenerations(long totalGenerations);
 
-		void setFitness(int bestFitness);
+		void setFitness(float bestFitness);
 
 		void newBest(EvolutionStatus evolutionStatus);
 	}

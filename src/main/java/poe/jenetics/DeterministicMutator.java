@@ -5,7 +5,7 @@ import java.util.stream.IntStream;
 import org.jenetics.Mutator;
 import org.jenetics.util.MSeq;
 
-public class DeterministicMutator extends Mutator<SkillGene, Integer>
+public class DeterministicMutator extends Mutator<SkillGene, Float>
 {
 	private final List<List<Integer>> testingGenes;
 

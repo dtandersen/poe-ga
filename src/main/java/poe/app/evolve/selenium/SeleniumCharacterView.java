@@ -1,11 +1,11 @@
-package poe.selenium;
+package poe.app.evolve.selenium;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import poe.repository.CharacterView;
-import poe.repository.EvolutionStatus;
+import poe.app.evolve.CharacterView;
+import poe.command.model.EvolutionStatus;
 
 public class SeleniumCharacterView implements CharacterView
 {

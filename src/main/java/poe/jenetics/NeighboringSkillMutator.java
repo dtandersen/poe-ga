@@ -9,7 +9,7 @@ import org.jenetics.util.MSeq;
 import org.jenetics.util.RandomRegistry;
 import poe.repository.PassiveSkillTree;
 
-public class NeighboringSkillMutator extends Mutator<SkillGene, Integer>
+public class NeighboringSkillMutator extends Mutator<SkillGene, Float>
 {
 	private final PassiveSkillTree pst;
 
@@ -22,7 +22,7 @@ public class NeighboringSkillMutator extends Mutator<SkillGene, Integer>
 	@Override
 	protected int mutate(final MSeq<SkillGene> genes, final double p)
 	{
-		final List<Integer> original = genes.asList().stream().map(SkillGene::getPassiveSkillId).collect(Collectors.toList());
+		final List<Integer> original = genes.asList().stream().map(SkillGene::getAllele).collect(Collectors.toList());
 		final Set<Integer> neighbors = pst.neighbors(original);
 		neighbors.removeAll(original);
 		return (int)indexes(RandomRegistry.getRandom(), genes.length(), p)

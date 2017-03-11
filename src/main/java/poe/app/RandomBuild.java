@@ -9,8 +9,8 @@ import org.springframework.context.annotation.ComponentScan;
 import poe.command.CommandFactory;
 import poe.command.RandomBuild.RandomBuildRequest;
 import poe.command.RandomBuild.RandomBuildResult;
+import poe.command.model.ImmutableCharacter;
 import poe.entity.CharacterClass;
-import poe.entity.ImmutableCharacter;
 import poe.repository.PassiveSkillRepository;
 
 @SpringBootApplication

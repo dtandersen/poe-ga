@@ -12,7 +12,8 @@ import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 import poe.command.CreateCharacterTest;
 import poe.command.CreateCharacterTest.CreateCharacterResultImplementation;
-import poe.entity.ImmutableCharacter.ImmutablePassiveSkill;
+import poe.command.model.ImmutableCharacter;
+import poe.command.model.ImmutableCharacter.ImmutablePassiveSkill;
 import poe.entity.PassiveSkill.PassiveSkillBuilder;
 import poe.matcher.ComposableMatcher;
 

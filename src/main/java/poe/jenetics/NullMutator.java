@@ -3,7 +3,7 @@ package poe.jenetics;
 import org.jenetics.Mutator;
 import org.jenetics.util.MSeq;
 
-public class NullMutator extends Mutator<SkillGene, Integer>
+public class NullMutator extends Mutator<SkillGene, Float>
 {
 	public NullMutator()
 	{

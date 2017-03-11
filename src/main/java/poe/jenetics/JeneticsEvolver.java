@@ -10,10 +10,11 @@ import org.jenetics.Alterer;
 import org.jenetics.Chromosome;
 import org.jenetics.Genotype;
 import org.jenetics.PublicCompositeAlterer;
+import org.jenetics.TournamentSelector;
 import org.jenetics.engine.Engine;
 import org.jenetics.engine.EvolutionResult;
 import org.jenetics.util.Factory;
-import poe.entity.AltererConfig;
+import poe.command.model.AltererConfig;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
 import poe.entity.PoeCharacter;
@@ -55,27 +56,31 @@ public class JeneticsEvolver implements Evolver
 		}).collect(Collectors.toList());
 		final Factory<Genotype<SkillGene>> gtf = new FactoryImplementation(ids, length);
 		// final Factory<Genotype<SkillGene>> gtf = new RandomWalkSkillGeneFactory(passiveSkillTree, characterClass, length, ids);
-		System.out.println("global length=" + length);
 
 		final ExecutorService exec = Executors.newFixedThreadPool(threads);
 
 		final FitnessFunction fitnessFunction = new FitnessFunction(passiveSkillTree, characterClass, evolutionContext.getCharacterEvaluator());
 
-		final List<Alterer<SkillGene, Integer>> alterers2 = new ArrayList<>();
+		final List<Alterer<SkillGene, Float>> alterers2 = new ArrayList<>();
 		final List<AltererConfig> altererConfig2 = evolutionContext.getAltererConfig();
 		for (final AltererConfig altererConfig : altererConfig2)
 		{
 			alterers2.add(altererFactory.createMutator(altererConfig.getAltererTypeName().toLowerCase(), altererConfig.getProbability()));
 		}
 
-		final Alterer<SkillGene, Integer>[] altererArray = alterers2.toArray(new Alterer[0]);
-		final Engine<SkillGene, Integer> engine = Engine
+		final Alterer<SkillGene, Float>[] altererArray = alterers2.toArray(new Alterer[0]);
+		final Engine<SkillGene, Float> engine = Engine
 				.builder(fitnessFunction, gtf)
 				.populationSize(pop)
 				.alterers(PublicCompositeAlterer.of(altererArray))
+				.selector(new TournamentSelector<SkillGene, Float>())
+				// .selector(new StochasticUniversalSelector<SkillGene, Float>())
+				// .selector(new BoltzmannSelector<SkillGene, Float>(4))
+				.maximalPhenotypeAge(50)
+				// .fitnessScaler(f -> f * .5f + 10000f)
 				.build();
 
-		final EvolutionResult<SkillGene, Integer> result = engine.stream()
+		final EvolutionResult<SkillGene, Float> result = engine.stream()
 				.limit(evolutionContext.getGenerationLimit())
 				.peek(new EvolutionWatcher(new CharacterUpdateCallback(poeEvolutionResult), passiveSkillTree, evolutionContext.getCharacterClass(), evolutionContext.getCharacterEvaluator()))
 				.collect(EvolutionResult.toBestEvolutionResult());
@@ -87,7 +92,7 @@ public class JeneticsEvolver implements Evolver
 		final List<PassiveSkill> myPassives = new ArrayList<>();
 		for (final SkillGene g : chromosome)
 		{
-			final PassiveSkill passiveSkill = passiveSkillTree.find(g.getPassiveSkillId());
+			final PassiveSkill passiveSkill = passiveSkillTree.find(g.getAllele());
 			myPassives.add(passiveSkill);
 		}
 		character.sneakyAdd(myPassives);

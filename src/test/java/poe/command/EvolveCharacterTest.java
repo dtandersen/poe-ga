@@ -3,23 +3,25 @@ package poe.command;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static poe.command.SimpleEvolveCharacterRequest.SimpleEvolveCharacterRequestBuilder.request;
-import static poe.entity.FitnessConfig.FitnessConfigBuilder.config;
+import static poe.command.model.FitnessConfig.FitnessConfigBuilder.config;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.hamcrest.Matchers;
 import org.jenetics.Alterer;
 import org.junit.Before;
 import org.junit.Test;
 import poe.command.EvolveCharacter.EvolveCharacterResult;
 import poe.command.PureImmutablePassiveSkill.ImmutablePassiveSkillBuilder;
 import poe.command.SimpleEvolveCharacterRequest.SimpleEvolveCharacterRequestBuilder;
-import poe.entity.AltererConfig;
+import poe.command.model.AltererConfig;
+import poe.command.model.EvolutionStatus;
+import poe.command.model.ImmutableCharacter;
+import poe.command.model.FitnessConfig.ElementConfig.ElementConfigBuilder;
 import poe.entity.AltererType;
 import poe.entity.CharacterClass;
-import poe.entity.FitnessConfig.ElementConfig.ElementConfigBuilder;
-import poe.entity.ImmutableCharacter;
 import poe.entity.PassiveSkill.PassiveSkillBuilder;
 import poe.entity.PoeMatchers;
 import poe.entity.Stat;
@@ -28,7 +30,6 @@ import poe.jenetics.AltererFactory;
 import poe.jenetics.DeterministicMutator;
 import poe.jenetics.JeneticsEvolver;
 import poe.jenetics.SkillGene;
-import poe.repository.EvolutionStatus;
 import poe.repository.PassiveSkillRepository;
 import poe.repository.PassiveSkillTree;
 import poe.repository.RepoBuilder;
@@ -95,7 +96,7 @@ public class EvolveCharacterTest
 		assertThat(result.finalCharacter, PoeMatchers.hasPassives(
 				ImmutablePassiveSkillBuilder.passiveSkill().from(passive2).build()));
 		assertThat(result.getGenerations(), equalTo(1L));
-		assertThat(result.getFitness(), equalTo(101));
+		assertThat((double)result.getFitness(), Matchers.closeTo(101, 1));
 		assertThat(result.finalCharacter.getCharacterClass(), equalTo(CharacterClass.MARAUDER));
 
 		sleep();
@@ -114,7 +115,7 @@ public class EvolveCharacterTest
 		final DeterministicMutator alterer = new DeterministicMutator(testingGenes);
 		return new AltererFactory(passiveSkillTree) {
 			@Override
-			public Alterer<SkillGene, Integer> createMutator(final String altererName, final float probability)
+			public Alterer<SkillGene, Float> createMutator(final String altererName, final float probability)
 			{
 				return alterer;
 			}
@@ -162,7 +163,7 @@ public class EvolveCharacterTest
 				ImmutablePassiveSkillBuilder.passiveSkill().from(passive2).build()));
 		assertThat(result.finalCharacter.getCharacterClass(), equalTo(CharacterClass.DUELIST));
 		assertThat(result.getGenerations(), equalTo(2L));
-		assertThat(result.getFitness(), equalTo(111));
+		assertThat((double)result.getFitness(), Matchers.closeTo(111, 1));
 		assertThat(genCharacter(1), PoeMatchers.hasPassives());
 		assertThat(genCharacter(2), PoeMatchers.hasPassives(
 				ImmutablePassiveSkillBuilder.passiveSkill().from(passive2).build()));
@@ -198,7 +199,7 @@ public class EvolveCharacterTest
 
 		private long generations;
 
-		private int fitness;
+		private float fitness;
 
 		@Override
 		public void setCharacter(final ImmutableCharacter character)
@@ -206,7 +207,7 @@ public class EvolveCharacterTest
 			this.finalCharacter = character;
 		}
 
-		public int getFitness()
+		public float getFitness()
 		{
 			return fitness;
 		}
@@ -223,7 +224,7 @@ public class EvolveCharacterTest
 		}
 
 		@Override
-		public void setFitness(final int fitness)
+		public void setFitness(final float fitness)
 		{
 			this.fitness = fitness;
 		}

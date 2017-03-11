@@ -1,7 +1,6 @@
-package poe.app.config;
+package poe.app.evolve;
 
-import poe.repository.CharacterView;
-import poe.repository.EvolutionStatus;
+import poe.command.model.EvolutionStatus;
 
 public class ConsoleCharacterView implements CharacterView
 {

@@ -8,18 +8,18 @@ import org.jenetics.Phenotype;
 import org.jenetics.engine.EvolutionResult;
 import org.jenetics.util.ISeq;
 import poe.command.PureImmutableCharacter.ImmutableCharacterBuilder;
+import poe.command.model.ImmutableCharacter;
+import poe.command.model.EvolutionStatus.EvolutionStatusBuilder;
 import poe.entity.CharacterClass;
-import poe.entity.ImmutableCharacter;
 import poe.entity.PassiveSkill;
 import poe.entity.PoeCharacter;
 import poe.evaluator.CharacterEvaluator;
 import poe.evaluator.ExpressionContextAdapter;
-import poe.repository.EvolutionStatus.EvolutionStatusBuilder;
 import poe.repository.PassiveSkillTree;
 
-class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Integer>>
+class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Float>>
 {
-	Phenotype<SkillGene, Integer> best;
+	Phenotype<SkillGene, Float> best;
 
 	private final CharacterUpdateCallback callback;
 
@@ -43,7 +43,7 @@ class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Integer>>
 	}
 
 	@Override
-	public void accept(final EvolutionResult<SkillGene, Integer> evolutionResult)
+	public void accept(final EvolutionResult<SkillGene, Float> evolutionResult)
 	{
 		if (best == null || best.compareTo(evolutionResult.getBestPhenotype()) < 0)
 		{
@@ -75,7 +75,7 @@ class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Integer>>
 		final List<PassiveSkill> passives = new ArrayList<>();
 		for (final SkillGene gene : seq)
 		{
-			final PassiveSkill find = passiveSkillTree.find(gene.getPassiveSkillId());
+			final PassiveSkill find = passiveSkillTree.find(gene.getAllele());
 			passives.add(find);
 		}
 		character.sneakyAdd(passives);

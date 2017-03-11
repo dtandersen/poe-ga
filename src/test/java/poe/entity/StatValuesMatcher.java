@@ -6,6 +6,7 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
+import poe.command.model.ImmutableCharacter;
 
 public class StatValuesMatcher extends TypeSafeDiagnosingMatcher<ImmutableCharacter>
 {

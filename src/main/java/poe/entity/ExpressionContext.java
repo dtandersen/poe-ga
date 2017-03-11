@@ -6,6 +6,14 @@ public interface ExpressionContext
 {
 	int getPassiveSkillCount();
 
+	double ln(double x);
+
+	float min(float... values);
+
+	float max(float... values);
+
+	int hasPassive(String passiveSkillName);
+
 	EhpCalculator getEhp();
 
 	float getIncreasedMaximumLife();

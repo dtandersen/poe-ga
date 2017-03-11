@@ -12,8 +12,8 @@ import poe.command.model.FitnessConfig;
 import poe.command.model.FitnessConfig.ElementConfig;
 import poe.evaluator.CharacterEvaluator;
 import poe.evaluator.EvaluationResult;
-import poe.evaluator.ExpressionContext;
 import poe.evaluator.EvaluationResult.EvaluationLineItem;
+import poe.evaluator.ExpressionContext;
 
 public class SpringCharacterEvaluator implements CharacterEvaluator
 {

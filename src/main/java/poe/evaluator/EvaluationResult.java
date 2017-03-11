@@ -5,16 +5,16 @@ import java.util.function.Consumer;
 
 public class EvaluationResult
 {
-	private final int fitness;
+	private final float fitness;
 
 	private final List<EvaluationResult.EvaluationLineItem> items;
 
-	public int getFitness()
+	public float getFitness()
 	{
 		return fitness;
 	}
 
-	public EvaluationResult(final int fitness, final List<EvaluationResult.EvaluationLineItem> items)
+	public EvaluationResult(final float fitness, final List<EvaluationResult.EvaluationLineItem> items)
 	{
 		this.fitness = fitness;
 		this.items = items;
@@ -27,17 +27,17 @@ public class EvaluationResult
 
 	public static class EvaluationLineItem
 	{
-		private final int value;
+		private final float value;
 
 		private final String expression;
 
-		public EvaluationLineItem(final int value, final String expression)
+		public EvaluationLineItem(final float value, final String expression)
 		{
 			this.value = value;
 			this.expression = expression;
 		}
 
-		public int getValue()
+		public float getValue()
 		{
 			return value;
 		}

@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.hamcrest.Matchers;
 import org.jenetics.Alterer;
 import org.junit.Before;
 import org.junit.Test;
@@ -95,7 +96,7 @@ public class EvolveCharacterTest
 		assertThat(result.finalCharacter, PoeMatchers.hasPassives(
 				ImmutablePassiveSkillBuilder.passiveSkill().from(passive2).build()));
 		assertThat(result.getGenerations(), equalTo(1L));
-		assertThat(result.getFitness(), equalTo(101));
+		assertThat((double)result.getFitness(), Matchers.closeTo(101, 1));
 		assertThat(result.finalCharacter.getCharacterClass(), equalTo(CharacterClass.MARAUDER));
 
 		sleep();
@@ -162,7 +163,7 @@ public class EvolveCharacterTest
 				ImmutablePassiveSkillBuilder.passiveSkill().from(passive2).build()));
 		assertThat(result.finalCharacter.getCharacterClass(), equalTo(CharacterClass.DUELIST));
 		assertThat(result.getGenerations(), equalTo(2L));
-		assertThat(result.getFitness(), equalTo(111));
+		assertThat((double)result.getFitness(), Matchers.closeTo(111, 1));
 		assertThat(genCharacter(1), PoeMatchers.hasPassives());
 		assertThat(genCharacter(2), PoeMatchers.hasPassives(
 				ImmutablePassiveSkillBuilder.passiveSkill().from(passive2).build()));

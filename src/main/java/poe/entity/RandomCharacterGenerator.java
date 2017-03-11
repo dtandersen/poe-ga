@@ -42,7 +42,7 @@ public class RandomCharacterGenerator
 
 			if (!(character.hasPassiveSkill(curSkill) || curSkill.isRootSkill()))
 			{
-				System.out.println("added " + curSkill.getName());
+				// System.out.println("added " + curSkill.getName());
 				if (prevSkill == curSkill)
 				{
 					final PassiveSkill passiveSkill = curSkill;
@@ -56,14 +56,14 @@ public class RandomCharacterGenerator
 			}
 			else
 			{
-				System.out.println("already have " + curSkill.getName());
+				// System.out.println("already have " + curSkill.getName());
 			}
 			prevSkill = curSkill;
 			final List<Integer> neighbors = skillTree.neighbors(curSkill.getId());
-			System.out.println("neighbors of " + curSkill.getName() + " are " + neighbors);
+			// System.out.println("neighbors of " + curSkill.getName() + " are " + neighbors);
 			final int nextIndex = randomizer.nextInt(neighbors.size());
 			curSkill = skillTree.find(neighbors.get(nextIndex));
-			System.out.println("rolled " + nextIndex + " and got " + curSkill.getName());
+			// System.out.println("rolled " + nextIndex + " and got " + curSkill.getName());
 		}
 		while ((character.passiveSkillCount()) - 1 < skillCount);
 		return character;

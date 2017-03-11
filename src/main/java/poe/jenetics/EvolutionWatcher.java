@@ -77,7 +77,7 @@ class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Float>>
 		final List<PassiveSkill> passives = new ArrayList<>();
 		for (final SkillGene gene : seq)
 		{
-			final PassiveSkill find = passiveSkillTree.find(gene.getPassiveSkillId());
+			final PassiveSkill find = passiveSkillTree.find(gene.getAllele());
 			passives.add(find);
 		}
 		character.sneakyAdd(passives);

@@ -43,7 +43,7 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Float>
 		final List<PassiveSkill> passives = new ArrayList<>();
 		for (final SkillGene gene : seq)
 		{
-			final PassiveSkill find = passiveSkillTree.find(gene.getPassiveSkillId());
+			final PassiveSkill find = passiveSkillTree.find(gene.getAllele());
 			passives.add(find);
 		}
 		character.sneakyAdd(passives);
@@ -2349,6 +2349,46 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Float>
 		public float getEnemyElemResist()
 		{
 			return character.getStat(Stat.ENEMY_ELEM_RESIST);
+		}
+
+		@Override
+		public double ln(final double x)
+		{
+			return Math.log(x + 1);
+		}
+
+		@Override
+		public int hasPassive(final String passiveSkillName)
+		{
+			return character.hasPassiveNamed(passiveSkillName) ? 1 : 0;
+		}
+
+		@Override
+		public float min(final float... values)
+		{
+			float smallest = Float.MAX_VALUE;
+			for (final float value : values)
+			{
+				if (value < smallest)
+				{
+					smallest = value;
+				}
+			}
+			return smallest;
+		}
+
+		@Override
+		public float max(final float... values)
+		{
+			float largest = Float.MIN_VALUE;
+			for (final float value : values)
+			{
+				if (value > largest)
+				{
+					largest = value;
+				}
+			}
+			return largest;
 		}
 	}
 }

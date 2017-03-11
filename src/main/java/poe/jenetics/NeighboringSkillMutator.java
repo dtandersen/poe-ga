@@ -22,7 +22,7 @@ public class NeighboringSkillMutator extends Mutator<SkillGene, Float>
 	@Override
 	protected int mutate(final MSeq<SkillGene> genes, final double p)
 	{
-		final List<Integer> original = genes.asList().stream().map(SkillGene::getPassiveSkillId).collect(Collectors.toList());
+		final List<Integer> original = genes.asList().stream().map(SkillGene::getAllele).collect(Collectors.toList());
 		final Set<Integer> neighbors = pst.neighbors(original);
 		neighbors.removeAll(original);
 		return (int)indexes(RandomRegistry.getRandom(), genes.length(), p)

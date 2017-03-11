@@ -2,7 +2,7 @@ package poe.app.evolve;
 
 import java.util.List;
 
-public class EvolveConfig
+class YamlConfig
 {
 	private String characterClass;
 
@@ -12,11 +12,11 @@ public class EvolveConfig
 
 	private Integer population;
 
-	private List<MyAlterer> alterers;
+	private List<YamlAlterer> alterers;
 
-	private List<MyEvaluator> evaluators;
+	private List<YamlEvaluator> evaluators;
 
-	public EvolveConfig()
+	public YamlConfig()
 	{
 	}
 
@@ -60,27 +60,27 @@ public class EvolveConfig
 		this.population = population;
 	}
 
-	public List<MyAlterer> getAlterers()
+	public List<YamlAlterer> getAlterers()
 	{
 		return alterers;
 	}
 
-	public void setAlterers(final List<MyAlterer> alterers)
+	public void setAlterers(final List<YamlAlterer> alterers)
 	{
 		this.alterers = alterers;
 	}
 
-	public List<MyEvaluator> getEvaluators()
+	public List<YamlEvaluator> getEvaluators()
 	{
 		return evaluators;
 	}
 
-	public void setEvaluators(final List<MyEvaluator> evaluators)
+	public void setEvaluators(final List<YamlEvaluator> evaluators)
 	{
 		this.evaluators = evaluators;
 	}
 
-	public static class MyAlterer
+	static class YamlAlterer
 	{
 		private String type;
 
@@ -107,9 +107,11 @@ public class EvolveConfig
 		}
 	}
 
-	public static class MyEvaluator
+	static class YamlEvaluator
 	{
 		private String expression;
+
+		private String scale;
 
 		public String getExpression()
 		{
@@ -119,6 +121,16 @@ public class EvolveConfig
 		public void setExpression(final String expression)
 		{
 			this.expression = expression;
+		}
+
+		public String getScale()
+		{
+			return scale;
+		}
+
+		public void setScale(final String scale)
+		{
+			this.scale = scale;
 		}
 	}
 }

@@ -1,7 +1,7 @@
 package poe.jenetics;
 
 import java.util.function.Consumer;
-import poe.repository.EvolutionStatus;
+import poe.command.model.EvolutionStatus;
 import poe.repository.Evolver.PoeEvolutionResult;
 
 public class CharacterUpdateCallback implements Consumer<EvolutionStatus>

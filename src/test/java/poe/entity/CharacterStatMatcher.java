@@ -7,6 +7,7 @@ import java.util.List;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
+import poe.command.model.ImmutableCharacter;
 
 public class CharacterStatMatcher extends TypeSafeDiagnosingMatcher<ImmutableCharacter>
 {

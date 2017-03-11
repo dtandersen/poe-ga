@@ -4,14 +4,14 @@ import java.util.List;
 import poe.command.EvolveCharacter.EvolveCharacterRequest;
 import poe.command.EvolveCharacter.EvolveCharacterResult;
 import poe.command.PureImmutableCharacter.ImmutableCharacterBuilder;
-import poe.entity.AltererConfig;
+import poe.command.model.AltererConfig;
+import poe.command.model.EvolutionStatus;
+import poe.command.model.FitnessConfig;
+import poe.command.model.ImmutableCharacter;
 import poe.entity.CharacterClass;
 import poe.entity.CharacterEvaluator;
-import poe.entity.FitnessConfig;
-import poe.entity.ImmutableCharacter;
 import poe.entity.PoeCharacter;
 import poe.entity.SpringCharacterEvaluator.SpringCharacterEvaluatorBuilder;
-import poe.repository.EvolutionStatus;
 import poe.repository.Evolver;
 import poe.repository.Evolver.PoeEvolutionContext;
 import poe.repository.Evolver.PoeEvolutionResult;
@@ -35,7 +35,7 @@ public class EvolveCharacter extends BaseCommand<EvolveCharacterRequest, EvolveC
 
 	public interface EvolveCharacterRequest
 	{
-		CharacterClass getCharacterClass();
+		String getCharacterClass();
 
 		List<AltererConfig> getAlterers();
 
@@ -79,7 +79,7 @@ public class EvolveCharacter extends BaseCommand<EvolveCharacterRequest, EvolveC
 		@Override
 		public CharacterClass getCharacterClass()
 		{
-			return request.getCharacterClass();
+			return CharacterClass.find(request.getCharacterClass());
 		}
 
 		@Override

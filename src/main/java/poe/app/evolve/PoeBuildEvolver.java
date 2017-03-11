@@ -7,22 +7,19 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
-import poe.app.evolve.EvolveConfig.MyAlterer;
-import poe.app.evolve.EvolveConfig.MyEvaluator;
+import poe.app.evolve.YamlConfig.YamlAlterer;
+import poe.app.evolve.YamlConfig.YamlEvaluator;
 import poe.command.CommandFactory;
 import poe.command.EvolveCharacter;
 import poe.command.EvolveCharacter.EvolveCharacterRequest;
 import poe.command.EvolveCharacter.EvolveCharacterResult;
-import poe.command.PoeComUrlBuilder;
-import poe.entity.AltererConfig;
-import poe.entity.CharacterClass;
-import poe.entity.FitnessConfig;
-import poe.entity.FitnessConfig.ElementConfig.ElementConfigBuilder;
-import poe.entity.FitnessConfig.FitnessConfigBuilder;
-import poe.entity.ImmutableCharacter;
-import poe.entity.ImmutableCharacter.ImmutablePassiveSkill;
-import poe.repository.CharacterView;
-import poe.repository.EvolutionStatus;
+import poe.command.model.AltererConfig;
+import poe.command.model.EvolutionStatus;
+import poe.command.model.FitnessConfig;
+import poe.command.model.FitnessConfig.ElementConfig.ElementConfigBuilder;
+import poe.command.model.FitnessConfig.FitnessConfigBuilder;
+import poe.command.model.ImmutableCharacter;
+import poe.command.model.ImmutableCharacter.ImmutablePassiveSkill;
 import poe.util.StreamUtils;
 
 @SpringBootApplication
@@ -45,7 +42,7 @@ public class PoeBuildEvolver implements CommandLineRunner
 		try
 		{
 			final EvolveCharacter command = commandFactory.evolveCharacter();
-			final EvolveCharacterRequestImplementation request = new EvolveCharacterRequestImplementation(CONFIG);
+			final YamlEvolveCharacterRequest request = new YamlEvolveCharacterRequest(CONFIG);
 			command.setRequest(request);
 			command.setResult(new EvolveCharacterResult() {
 				@Override
@@ -56,10 +53,7 @@ public class PoeBuildEvolver implements CommandLineRunner
 						System.out.println(passiveSkill.getName());
 					}
 
-					System.out.println(new PoeComUrlBuilder()
-							.withCharacterClass(character.getCharacterClass())
-							.withPassiveSkillIds(character.getPassiveSkillIds())
-							.toUrl());
+					System.out.println(character.getUrl());
 				}
 
 				@Override
@@ -91,25 +85,25 @@ public class PoeBuildEvolver implements CommandLineRunner
 		SpringApplication.run(PoeBuildEvolver.class, args);
 	}
 
-	public static class EvolveCharacterRequestImplementation implements EvolveCharacterRequest
+	public static class YamlEvolveCharacterRequest implements EvolveCharacterRequest
 	{
-		private final EvolveConfig evolveConfig;
+		private final YamlConfig evolveConfig;
 
-		public EvolveCharacterRequestImplementation(final String filename) throws FileNotFoundException
+		public YamlEvolveCharacterRequest(final String filename) throws FileNotFoundException
 		{
 			evolveConfig = ConfigParser.read(filename);
 		}
 
 		@Override
-		public CharacterClass getCharacterClass()
+		public String getCharacterClass()
 		{
-			return CharacterClass.find(evolveConfig.getCharacterClass());
+			return evolveConfig.getCharacterClass();
 		}
 
 		@Override
 		public List<AltererConfig> getAlterers()
 		{
-			return StreamUtils.mapList(evolveConfig.getAlterers(), (final MyAlterer t) -> new AltererConfig(t.getType(), t.getProbability()));
+			return StreamUtils.mapList(evolveConfig.getAlterers(), (final YamlAlterer t) -> new AltererConfig(t.getType(), t.getProbability()));
 		}
 
 		@Override
@@ -140,7 +134,8 @@ public class PoeBuildEvolver implements CommandLineRunner
 		public FitnessConfig getFitnessConfig()
 		{
 			final FitnessConfigBuilder fitnessConfigBuilder = new FitnessConfigBuilder();
-			for (final MyEvaluator expr : evolveConfig.getEvaluators())
+
+			for (final YamlEvaluator expr : evolveConfig.getEvaluators())
 			{
 				fitnessConfigBuilder.withElement(new ElementConfigBuilder().withExpression(expr.getExpression()));
 			}

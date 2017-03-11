@@ -8,7 +8,8 @@ import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
-import poe.entity.FitnessConfig.ElementConfig;
+import poe.command.model.FitnessConfig;
+import poe.command.model.FitnessConfig.ElementConfig;
 import poe.entity.SpringCharacterEvaluator.EvaluationResult.EvaluationLineItem;
 
 public class SpringCharacterEvaluator implements CharacterEvaluator

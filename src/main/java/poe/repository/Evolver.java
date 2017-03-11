@@ -1,7 +1,8 @@
 package poe.repository;
 
 import java.util.List;
-import poe.entity.AltererConfig;
+import poe.command.model.AltererConfig;
+import poe.command.model.EvolutionStatus;
 import poe.entity.CharacterClass;
 import poe.entity.CharacterEvaluator;
 import poe.entity.PoeCharacter;

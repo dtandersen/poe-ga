@@ -2,14 +2,14 @@ package poe.command;
 
 import java.util.List;
 import poe.command.EvolveCharacter.EvolveCharacterRequest;
-import poe.entity.AltererConfig;
+import poe.command.model.AltererConfig;
+import poe.command.model.FitnessConfig;
+import poe.command.model.FitnessConfig.FitnessConfigBuilder;
 import poe.entity.CharacterClass;
-import poe.entity.FitnessConfig;
-import poe.entity.FitnessConfig.FitnessConfigBuilder;
 
 public class SimpleEvolveCharacterRequest implements EvolveCharacterRequest
 {
-	private final CharacterClass characterClass;
+	private final String characterClass;
 
 	private final int population;
 
@@ -24,7 +24,7 @@ public class SimpleEvolveCharacterRequest implements EvolveCharacterRequest
 	private final List<AltererConfig> alterers;
 
 	@Override
-	public CharacterClass getCharacterClass()
+	public String getCharacterClass()
 	{
 		return characterClass;
 	}
@@ -77,7 +77,7 @@ public class SimpleEvolveCharacterRequest implements EvolveCharacterRequest
 
 	public static class SimpleEvolveCharacterRequestBuilder
 	{
-		private CharacterClass characterClass;
+		private String characterClass;
 
 		private int population;
 
@@ -91,7 +91,7 @@ public class SimpleEvolveCharacterRequest implements EvolveCharacterRequest
 
 		public SimpleEvolveCharacterRequestBuilder withCharacterClass(final CharacterClass characterClass)
 		{
-			this.characterClass = characterClass;
+			this.characterClass = characterClass.name();
 			return this;
 		}
 

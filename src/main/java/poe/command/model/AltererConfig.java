@@ -1,4 +1,4 @@
-package poe.entity;
+package poe.command.model;
 
 public class AltererConfig
 {

@@ -1,4 +1,6 @@
-package poe.repository;
+package poe.app.evolve;
+
+import poe.command.model.EvolutionStatus;
 
 public interface CharacterView
 {

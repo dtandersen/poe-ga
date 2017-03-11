@@ -1,11 +1,10 @@
-package poe.app.config;
+package poe.app.evolve;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
-import poe.repository.CharacterView;
-import poe.repository.EvolutionStatus;
+import poe.command.model.EvolutionStatus;
 
 public class MultiCharacterView implements CharacterView
 {

@@ -2,7 +2,7 @@ package poe.app.evolve;
 
 import java.util.List;
 
-class YamlConfig
+public class YamlConfig
 {
 	private String characterClass;
 
@@ -80,7 +80,7 @@ class YamlConfig
 		this.evaluators = evaluators;
 	}
 
-	static class YamlAlterer
+	public static class YamlAlterer
 	{
 		private String type;
 
@@ -107,7 +107,7 @@ class YamlConfig
 		}
 	}
 
-	static class YamlEvaluator
+	public static class YamlEvaluator
 	{
 		private String expression;
 

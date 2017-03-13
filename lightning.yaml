@@ -1,0 +1,32 @@
+---
+characterClass: witch
+population: 500
+skills: 200
+generations: 1000000
+alterers:
+  - type: crossover
+    probability: .2
+  - type: swap
+    probability: .01
+  - type: mutator
+    probability: .01
+  - type: neighbor
+    probability: .15
+evaluators:
+  - expression:  ehp.maxLightningHit
+  - expression:  ehp.maxFireHit
+  - expression:  ehp.maxColdHit
+  - expression:  ehp.maxPhysicalHit
+  - expression:  50 * (466.5 * (1 + lightningDamage/100.0 + elementalDamage/100.0 + spellDamage/100.0) * (1.25 + castSpeed/100.0) * (1 + 5/100.0 * (1 + csc/100.0 + spellCsc/100.0) * (0.5 + csm/100.0 + spellCsm/100.0))) 
+#  - expression: hasPassive('Trickery') * -10000
+#  - expression: hasPassive('Coldhearted Calculation') * -10000
+#  - expression: hasPassive('Foresight') * 10
+#  - expression: hasPassive('Retribution') * 10
+#  - expression: hasPassive('Instability') * 10
+#  - expression: hasPassive('Crackling Speed') * 10
+#  - expression: hasPassive('Melding') * 10
+#  - expression: hasPassive('Unnatural Calm') * 10
+#  - expression: hasPassive('Heart of Thunder') * 10
+#  - expression: hasPassive('Breath of Lightning') * 10
+#  - expression: hasPassive('Mind Over Matter') * 10
+#  - expression: hasPassive('Annihilation') * 10

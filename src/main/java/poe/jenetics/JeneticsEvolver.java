@@ -10,7 +10,7 @@ import org.jenetics.Alterer;
 import org.jenetics.Chromosome;
 import org.jenetics.Genotype;
 import org.jenetics.PublicCompositeAlterer;
-import org.jenetics.TournamentSelector;
+import org.jenetics.StochasticUniversalSelector;
 import org.jenetics.engine.Engine;
 import org.jenetics.engine.EvolutionResult;
 import org.jenetics.util.Factory;
@@ -73,10 +73,10 @@ public class JeneticsEvolver implements Evolver
 				.builder(fitnessFunction, gtf)
 				.populationSize(pop)
 				.alterers(PublicCompositeAlterer.of(altererArray))
-				.selector(new TournamentSelector<SkillGene, Float>())
-				// .selector(new StochasticUniversalSelector<SkillGene, Float>())
+				// .selector(new TournamentSelector<SkillGene, Float>())
+				.selector(new StochasticUniversalSelector<SkillGene, Float>())
 				// .selector(new BoltzmannSelector<SkillGene, Float>(4))
-				.maximalPhenotypeAge(50)
+				// .maximalPhenotypeAge(50)
 				// .fitnessScaler(f -> f * .5f + 10000f)
 				.build();
 

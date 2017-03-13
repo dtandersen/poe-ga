@@ -1,4 +1,4 @@
-package poe.ehp;
+package poe.evaluator;
 
 public class EhpUtils
 {

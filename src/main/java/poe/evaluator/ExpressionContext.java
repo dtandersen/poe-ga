@@ -1,7 +1,5 @@
 package poe.evaluator;
 
-import poe.ehp.EhpCalculator;
-
 public interface ExpressionContext
 {
 	int getPassiveSkillCount();

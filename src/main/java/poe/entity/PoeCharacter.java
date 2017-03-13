@@ -19,7 +19,7 @@ public class PoeCharacter
 
 	private final CharacterClass characterClass;
 
-	int maxSkills = 123;
+	int maxSkills = 100;
 
 	public PoeCharacter(final CharacterClass characterClass)
 	{

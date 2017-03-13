@@ -3,6 +3,7 @@ package poe.repository;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.Set;
 import poe.entity.PassiveSkill;
 import poe.util.graph.IntGraph;
@@ -36,6 +37,23 @@ public class PassiveSkillTree
 					graph.addEdge(v1, v2);
 				}
 			}
+		}
+
+		final Set<Integer> duds = new HashSet<>();
+		for (final Integer v : graph.all())
+		{
+			if (neighbors(v).isEmpty())
+			{
+				duds.add(v);
+			}
+		}
+
+		for (final Integer dud : duds)
+		{
+			System.out.println("removed " + dud);
+			final PassiveSkill dudskill = find(dud);
+			passiveSkills.remove(dudskill);
+			graph.remove(dud);
 		}
 	}
 
@@ -78,5 +96,28 @@ public class PassiveSkillTree
 		passiveSkillIds.stream().forEach(passiveSkillId -> neighbors.addAll(neighbors(passiveSkillId)));
 
 		return neighbors;
+	}
+
+	public Set<Integer> randomWalk(final Integer startPoint, final int length, final Random random)
+	{
+		int id = startPoint;
+		final Set<Integer> walk = new HashSet<>();
+
+		for (int i = 0; i < length; i++)
+		{
+			final Integer newPoint = randomNeighbor(id, random);
+			walk.add(newPoint);
+			id = newPoint;
+		}
+
+		return walk;
+	}
+
+	public Integer randomNeighbor(final int passiveSkillId, final Random random)
+	{
+		final List<Integer> neighbors = neighbors(passiveSkillId);
+		final Integer neighbor = neighbors.get(random.nextInt(neighbors.size()));
+
+		return neighbor;
 	}
 }

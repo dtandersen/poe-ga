@@ -1,0 +1,41 @@
+---
+characterClass: witch
+population: 250
+skills: 150
+generations: 1000000
+alterers:
+  - type: crossover
+    probability: .01
+  - type: swap
+    probability: .01
+#  - type: mutator
+#    probability: .01
+  - type: neighbor
+    probability: .01
+evaluators:
+#  - expression: passiveSkillCount
+#  - expression: strength * 0.05
+#  - expression: dexterity * 0.05
+#  - expression: intelligence * 0.1
+# life
+#  - expression: (maximumLife * (1 + increasedMaximumLife + (strength / 10) * 5) + (maxEnergyShield) * (1 + increasedEnergyShield + (intelligence / 10) * 2))
+# minion damage
+  - expression: (1 + minionDamage/100) * (1 + minionAttackSpeed/100) * (3 + zombies) * 20000
+# minion life
+#  - expression: 4607 * (1 + increasedMinionLife) * 00000
+# ehp
+#  - expression: ( (1 - minionElementalResist/100) * 300 + (1 - minionChaosResist/100) * 100 + 100 ) * (1-minionBlock/100) / (  4607 * (1 + increasedMinionLife/100) * (1 + minionLifeRegeneration/100) ) * 800000
+  - expression: 4607 * (1 + increasedMinionLife/100.0) * (1 + minionLifeRegeneration/100.0) * (3 + zombies) * 5
+  - expression: (ehp.maxLightningHit + ehp.maxFireHit + ehp.maxColdHit + ehp.maxPhysicalHit)
+#  - expression: minionAttackSpeed * 100
+#  - expression: minionCastSpeed * 100
+#  - expression: minionShield * 100
+#  - expression: minionBlock * 100
+#  - expression: minionDamage * 100
+#  - expression: minionLifeLeech * 10000
+#  - expression: minionLifeRegeneration * 100
+#  - expression: curseEffect * 100
+#  - expression: additionalCurse * 100
+#  - expression: curseDuration * 100
+#  - expression: curseCastSpeed * 100
+#  - expression: maxMana * (1 + increasedMaxMana) * 0.1

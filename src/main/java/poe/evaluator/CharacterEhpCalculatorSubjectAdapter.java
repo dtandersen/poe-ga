@@ -1,6 +1,5 @@
 package poe.evaluator;
 
-import poe.ehp.EhpSubject;
 import poe.entity.PoeCharacter;
 import poe.entity.Stat;
 

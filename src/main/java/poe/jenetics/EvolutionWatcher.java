@@ -14,7 +14,7 @@ import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
 import poe.entity.PoeCharacter;
 import poe.evaluator.CharacterEvaluator;
-import poe.evaluator.ExpressionContextAdapter;
+import poe.evaluator.CharacterExpressionContextAdapter;
 import poe.repository.PassiveSkillTree;
 
 class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Float>>
@@ -60,7 +60,7 @@ class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Float>>
 			callback.accept(new EvolutionStatusBuilder()
 					.withCharacter(retchar)
 					.withGeneration(evolutionResult.getTotalGenerations())
-					.withEvaluation(characterEvaluator.evaluate(new ExpressionContextAdapter(character)))
+					.withEvaluation(characterEvaluator.evaluate(new CharacterExpressionContextAdapter(character)))
 					.build());
 		}
 	}

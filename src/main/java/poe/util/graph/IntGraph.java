@@ -1,6 +1,7 @@
 package poe.util.graph;
 
 import java.util.List;
+import java.util.Set;
 import org.jgrapht.Graphs;
 import org.jgrapht.UndirectedGraph;
 import org.jgrapht.graph.DefaultEdge;
@@ -38,5 +39,18 @@ public class IntGraph
 	public List<Integer> neighbors(final int vertex)
 	{
 		return Graphs.neighborListOf(graph, vertex);
+	}
+
+	public Set<Integer> all()
+	{
+		return graph.vertexSet();
+	}
+
+	public void remove(final Integer v)
+	{
+		if (graph.containsVertex(v))
+		{
+			graph.removeVertex(v);
+		}
 	}
 }

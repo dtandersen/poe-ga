@@ -13,10 +13,12 @@
 
 		<subpackage name="config">
 			<allow pkg="poe.repository" />
+			<allow pkg="poe.app.evolve" />
 		</subpackage>
 
 		<subpackage name="evolve">
 			<allow pkg="poe.app.evolve" />
+			<allow pkg="org.yaml.snakeyaml" />
 
 			<subpackage name="selenium">
 				<allow pkg="org.openqa.selenium" />
@@ -48,16 +50,12 @@
 
 	<subpackage name="evaluator">
 		<allow pkg="poe.entity" />
-		<allow pkg="poe.ehp" />
+		<allow pkg="poe.solver" />
 
 		<subpackage name="spring">
 			<allow pkg="poe.evaluator" />
 			<allow pkg="org.springframework.expression" />
 		</subpackage>
-	</subpackage>
-
-	<subpackage name="ehp">
-		<allow pkg="poe.solver" />
 	</subpackage>
 
 	<subpackage name="jenetics">

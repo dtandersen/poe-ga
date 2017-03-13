@@ -9,7 +9,7 @@ import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
 import poe.entity.PoeCharacter;
 import poe.evaluator.CharacterEvaluator;
-import poe.evaluator.ExpressionContextAdapter;
+import poe.evaluator.CharacterExpressionContextAdapter;
 import poe.repository.PassiveSkillTree;
 
 public class FitnessFunction implements Function<Genotype<SkillGene>, Float>
@@ -46,7 +46,7 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Float>
 		}
 		character.sneakyAdd(passives);
 
-		final ExpressionContextAdapter context = new ExpressionContextAdapter(character);
+		final CharacterExpressionContextAdapter context = new CharacterExpressionContextAdapter(character);
 		final float fitness = characterEvaluator.evaluate(context).getFitness();
 
 		return fitness;

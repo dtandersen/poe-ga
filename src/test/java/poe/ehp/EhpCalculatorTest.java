@@ -3,7 +3,8 @@ package poe.ehp;
 import static org.hamcrest.Matchers.closeTo;
 import static org.junit.Assert.assertThat;
 import org.junit.Test;
-import poe.ehp.EhpCalculator.EhpCalculatorBuilder;
+import poe.evaluator.EhpCalculator;
+import poe.evaluator.EhpCalculator.EhpCalculatorBuilder;
 
 public class EhpCalculatorTest
 {

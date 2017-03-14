@@ -34,7 +34,15 @@ public class NeighboringSkillMutator2 extends Mutator<SkillGene, Float>
 				.peek(i -> {
 					if (atom.get() == -1)
 					{
-						atom.set(genes.get(i).getAllele());
+						final Random random2 = RandomRegistry.getRandom();
+						if (random2.nextFloat() < .5)
+						{
+							atom.set(genes.get(random2.nextInt(genes.length())).getAllele());
+						}
+						else
+						{
+							atom.set(genes.get(i).getAllele());
+						}
 					}
 					final int randomNeighbor = atom.get();
 					final Integer newNeighbor = pst.randomNeighbor(randomNeighbor, random);

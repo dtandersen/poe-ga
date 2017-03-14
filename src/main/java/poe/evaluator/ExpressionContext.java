@@ -606,8 +606,6 @@ public interface ExpressionContext
 
 	float getZombies();
 
-	float getZombieMax();
-
 	float getSkel();
 
 	float getSkelMax();

@@ -145,6 +145,8 @@ public enum Stat
 	TOTEM_CSC(INT + "% increased Critical Strike Chance with Totem Skills"),
 	TOTEM_CSM(PLUS_INT + "% to Critical Strike Multiplier with Totem Skills"),
 	TOTAL_GLOBAL_CSC(INT + "% increased Global Critical Strike Chance if you've Summoned a Totem Recently"),
+	TOTEM_ADD("Can have up to " + INT + " additional Totem summoned at a time"),
+	TOTEM_RESIST_ELEMENTAL("Totems gain " + PLUS_INT + "% to all Elemental Resistances"),
 
 	// projectiles
 	PROJ_DAMAGE(INT + "% increased Projectile Damage"),
@@ -428,14 +430,12 @@ public enum Stat
 	MINION_ELEM_RESIST("Minions have +" + INT + "% to all Elemental Resistances"),
 	MINION_CHAOS_RESIST("Minions have " + PLUS_INT + "% to Chaos Resistance"),
 	MINION_MAXIMUM_LIFE("Minions have " + INT + "% increased maximum Life"),
-	ZOMBIES(PLUS + " to Maximum number of Zombies"),
-	ZOMBIE_MAX(PLUS_INT + " to Maximum number of Zombies"),
+	ZOMBIES(PLUS_INT + " to Maximum number of Zombies"),
+	// ZOMBIE_MAX(PLUS_INT + " to Maximum number of Zombies"),
 	SKEL(PLUS + " to Maximum number of Skeletons"),
 	SKEL_MAX(PLUS_INT + " to Maximum number of Skeletons"),
 	SPEC_MAX(PLUS_INT + " to Maximum number of Spectres"),
 	ANC_BOND("You can't deal Damage with Skills yourself"),
-	TOTEM_ADD("Can have up to " + INT + " additional Totem summoned at a time"),
-	TOTEM_RESIST_ELEMENTAL("Totems gain " + PLUS_INT + "% to all Elemental Resistances"),
 
 	// knockback
 	KNOCKBACK_ON_HIT(INT + "% chance to Knock Enemies Back on hit"),

@@ -1804,12 +1804,6 @@ public class CharacterExpressionContextAdapter implements ExpressionContext
 	}
 
 	@Override
-	public float getZombieMax()
-	{
-		return character.getStat(Stat.ZOMBIE_MAX);
-	}
-
-	@Override
 	public float getSkel()
 	{
 		return character.getStat(Stat.SKEL);

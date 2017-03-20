@@ -50,13 +50,17 @@ public class EvolveCharacter extends BaseCommand<EvolveCharacterRequest, EvolveC
 
 		FitnessConfig getFitnessConfig();
 
-		int getSkills();
+		int getSkillPoints();
 
 		int getThreads();
 
 		int getLevel();
 
 		List<ItemDescription> getItems();
+
+		int getGenes();
+
+		int getChromosomes();
 	}
 
 	public interface EvolveCharacterResult
@@ -106,9 +110,9 @@ public class EvolveCharacter extends BaseCommand<EvolveCharacterRequest, EvolveC
 		}
 
 		@Override
-		public int getSkills()
+		public int getSkillPoints()
 		{
-			return request.getSkills();
+			return request.getSkillPoints();
 		}
 
 		@Override
@@ -139,6 +143,18 @@ public class EvolveCharacter extends BaseCommand<EvolveCharacterRequest, EvolveC
 						return builder.build();
 					})
 					.collect(Collectors.toList());
+		}
+
+		@Override
+		public int getGenes()
+		{
+			return request.getGenes();
+		}
+
+		@Override
+		public int getChromosomes()
+		{
+			return request.getChromosomes();
 		}
 	}
 

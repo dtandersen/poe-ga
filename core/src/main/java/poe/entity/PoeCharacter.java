@@ -19,7 +19,7 @@ public class PoeCharacter
 
 	private final CharacterClass characterClass;
 
-	int maxSkills = 70;
+	private int skillPoints = 123;
 
 	public PoeCharacter(final CharacterClass characterClass)
 	{
@@ -63,7 +63,7 @@ public class PoeCharacter
 
 	public boolean addPassiveSkill(final PassiveSkill passiveSkill)
 	{
-		if (passiveSkillCount() > maxSkills) { return false; }
+		if (passiveSkillCount() > skillPoints) { return false; }
 		if (passiveSkill == null) { return false; }
 		if (hasPassiveSkill(passiveSkill.getId())) { return false; }
 		if (character.size() > 0 && passiveSkill.isClassStartingNode()) { return false; }
@@ -276,6 +276,16 @@ public class PoeCharacter
 		return adjustedStatsCache.getStatValues();
 	}
 
+	public void setItems(final List<CharacterItem> items)
+	{
+		character.setItems(items);
+	}
+
+	public void setSkillPoints(final int skillPoints)
+	{
+		this.skillPoints = skillPoints;
+	}
+
 	public static class CharacterBuilder
 	{
 		private CharacterClass characterClass;
@@ -290,10 +300,5 @@ public class PoeCharacter
 			characterClass = marauder;
 			return this;
 		}
-	}
-
-	public void setItems(final List<CharacterItem> items)
-	{
-		character.setItems(items);
 	}
 }

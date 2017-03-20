@@ -56,7 +56,7 @@ public class SimpleEvolveCharacterRequest implements EvolveCharacterRequest
 	}
 
 	@Override
-	public int getSkills()
+	public int getSkillPoints()
 	{
 		return skills;
 	}
@@ -148,5 +148,17 @@ public class SimpleEvolveCharacterRequest implements EvolveCharacterRequest
 	public List<ItemDescription> getItems()
 	{
 		return new ArrayList<>();
+	}
+
+	@Override
+	public int getGenes()
+	{
+		return 123;
+	}
+
+	@Override
+	public int getChromosomes()
+	{
+		return 1;
 	}
 }

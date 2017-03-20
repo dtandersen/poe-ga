@@ -43,7 +43,6 @@ public class JeneticsEvolver implements Evolver
 		final List<PassiveSkill> passives = passiveSkillTree.passiveSkills();
 		final CharacterClass characterClass = evolutionContext.getCharacterClass();
 		final int pop = evolutionContext.getPopulation();
-		final int length = evolutionContext.getSkills();
 		final int threads = evolutionContext.getThreads();// Runtime.getRuntime().availableProcessors();
 		// final float mutRate = (1f / length);
 
@@ -54,12 +53,21 @@ public class JeneticsEvolver implements Evolver
 				return t.getId();
 			}
 		}).collect(Collectors.toList());
-		final Factory<Genotype<SkillGene>> gtf = new FactoryImplementation(ids, length);
+		final Factory<Genotype<SkillGene>> gtf = new FactoryImplementation(
+				ids,
+				evolutionContext.getGenes(),
+				evolutionContext.getChromosomes());
 		// final Factory<Genotype<SkillGene>> gtf = new RandomWalkSkillGeneFactory(passiveSkillTree, characterClass, length, ids);
 
 		final ExecutorService exec = Executors.newFixedThreadPool(threads);
 
-		final FitnessFunction fitnessFunction = new FitnessFunction(passiveSkillTree, characterClass, evolutionContext.getCharacterEvaluator(), evolutionContext.getItems(), evolutionContext.getLevel());
+		final FitnessFunction fitnessFunction = new FitnessFunction(
+				passiveSkillTree,
+				characterClass,
+				evolutionContext.getCharacterEvaluator(),
+				evolutionContext.getItems(),
+				evolutionContext.getLevel(),
+				evolutionContext.getSkillPoints());
 
 		final List<Alterer<SkillGene, Float>> alterers2 = new ArrayList<>();
 		final List<AltererConfig> altererConfig2 = evolutionContext.getAltererConfig();
@@ -78,6 +86,7 @@ public class JeneticsEvolver implements Evolver
 				// .selector(new BoltzmannSelector<SkillGene, Float>(4))
 				// .maximalPhenotypeAge(50)
 				.fitnessScaler(f -> f * .9f + 10000f)
+				.executor(exec)
 				.build();
 
 		final EvolutionResult<SkillGene, Float> result = engine.stream()

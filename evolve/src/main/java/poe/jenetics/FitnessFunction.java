@@ -25,18 +25,22 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Float>
 
 	private final int level;
 
+	private final int skillPoints;
+
 	public FitnessFunction(
 			final PassiveSkillTree passiveSkillTree,
 			final CharacterClass characterClass,
 			final CharacterEvaluator characterEvaluator,
 			final List<CharacterItem> items,
-			final int level)
+			final int level,
+			final int skillPoints)
 	{
 		this.passiveSkillTree = passiveSkillTree;
 		this.characterClass = characterClass;
 		this.characterEvaluator = characterEvaluator;
 		this.items = items;
 		this.level = level;
+		this.skillPoints = skillPoints;
 	}
 
 	@Override
@@ -47,6 +51,7 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Float>
 		character.setLevel(level);
 		character.setItems(items);
 		character.addPassiveSkill(root);
+		character.setSkillPoints(skillPoints);
 		for (int i = 0; i < genotype.length(); i++)
 		{
 			final SkillChromosome c = genotype.getChromosome(i).as(SkillChromosome.class);

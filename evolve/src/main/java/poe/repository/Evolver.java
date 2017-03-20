@@ -22,7 +22,7 @@ public interface Evolver
 
 		int getPopulation();
 
-		int getSkills();
+		int getSkillPoints();
 
 		int getThreads();
 
@@ -31,6 +31,10 @@ public interface Evolver
 		int getLevel();
 
 		List<CharacterItem> getItems();
+
+		int getGenes();
+
+		int getChromosomes();
 	}
 
 	public interface PoeEvolutionResult

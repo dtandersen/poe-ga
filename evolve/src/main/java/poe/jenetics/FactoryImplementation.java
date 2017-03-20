@@ -8,17 +8,20 @@ final class FactoryImplementation implements Factory<Genotype<SkillGene>>
 {
 	private final List<Integer> allowedSkills;
 
-	private final int length;
+	private final int genes;
 
-	FactoryImplementation(final List<Integer> ids, final int length)
+	private final int chromosomes;
+
+	FactoryImplementation(final List<Integer> ids, final int genes, final int chromosomes)
 	{
 		this.allowedSkills = ids;
-		this.length = length;
+		this.genes = genes;
+		this.chromosomes = chromosomes;
 	}
 
 	@Override
 	public Genotype<SkillGene> newInstance()
 	{
-		return Genotype.of(SkillChromosome.seq(allowedSkills, 20, (int)Math.ceil(length / 20d)));
+		return Genotype.of(SkillChromosome.seq(allowedSkills, genes, chromosomes));
 	}
 }

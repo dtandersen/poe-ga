@@ -121,15 +121,10 @@ public class PoeBuildEvolver implements CommandLineRunner
 		}
 
 		@Override
-		public int getSkills()
-		{
-			return evolveConfig.getSkills();
-		}
-
-		@Override
 		public int getThreads()
 		{
-			return Runtime.getRuntime().availableProcessors();
+			// return Runtime.getRuntime().availableProcessors() * 2;
+			return 20;
 		}
 
 		@Override
@@ -161,6 +156,24 @@ public class PoeBuildEvolver implements CommandLineRunner
 						return i;
 					})
 					.collect(Collectors.toList());
+		}
+
+		@Override
+		public int getSkillPoints()
+		{
+			return evolveConfig.getSkillPoints();
+		}
+
+		@Override
+		public int getGenes()
+		{
+			return evolveConfig.getGenes();
+		}
+
+		@Override
+		public int getChromosomes()
+		{
+			return evolveConfig.getChromosomes();
 		}
 	}
 }

@@ -8,8 +8,6 @@ public class YamlConfig
 
 	private Integer generations;
 
-	private Integer skills;
-
 	private Integer population;
 
 	private List<YamlAlterer> alterers;
@@ -19,6 +17,12 @@ public class YamlConfig
 	private List<YamlItem> items;
 
 	private int level;
+
+	private int genes;
+
+	private int chromosomes;
+
+	private int skillpoints;
 
 	public YamlConfig()
 	{
@@ -42,16 +46,6 @@ public class YamlConfig
 	public void setGenerations(final int generations)
 	{
 		this.generations = generations;
-	}
-
-	public int getSkills()
-	{
-		return skills;
-	}
-
-	public void setSkills(final int skills)
-	{
-		this.skills = skills;
 	}
 
 	public int getPopulation()
@@ -102,6 +96,36 @@ public class YamlConfig
 	public void setItems(final List<YamlItem> items)
 	{
 		this.items = items;
+	}
+
+	public int getGenes()
+	{
+		return genes;
+	}
+
+	public void setGenes(final int genes)
+	{
+		this.genes = genes;
+	}
+
+	public int getChromosomes()
+	{
+		return chromosomes;
+	}
+
+	public void setChromosomes(final int chromosomes)
+	{
+		this.chromosomes = chromosomes;
+	}
+
+	public int getSkillPoints()
+	{
+		return skillpoints;
+	}
+
+	public void setSkillPoints(final int skillpoints)
+	{
+		this.skillpoints = skillpoints;
 	}
 
 	public static class YamlAlterer

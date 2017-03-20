@@ -35,10 +35,17 @@ public class JsonPassiveSkillRepository implements PassiveSkillRepository
 			final PassiveSkill e = new PassiveSkill(n.dn);
 			e.setId(n.id);
 			e.setOutputs(n.out);
+
+			if (n.isJewelSocket)
+			{
+				e.setJewels(1);
+			}
+
 			if (n.spc.size() > 0)
 			{
 				e.setClassStartingPoint(CharacterClass.byId(n.spc.get(0)));
 			}
+
 			for (final String s : n.sd)
 			{
 				boolean matched = false;
@@ -99,6 +106,8 @@ public class JsonPassiveSkillRepository implements PassiveSkillRepository
 			 * name
 			 */
 			String dn;
+
+			boolean isJewelSocket;
 
 			/**
 			 * output nodes

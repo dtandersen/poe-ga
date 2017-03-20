@@ -21,6 +21,18 @@ public class PassiveSkill
 
 	private CharacterClass classStartingPoint;
 
+	private int jewels;
+
+	public PassiveSkill(final PassiveSkillBuilder passiveSkillBuilder)
+	{
+		this.id = passiveSkillBuilder.id;
+		this.name = passiveSkillBuilder.name;
+		this.outputs = passiveSkillBuilder.outputs;
+		this.attributes = passiveSkillBuilder.stats;
+		this.classStartingPoint = passiveSkillBuilder.classStartingPoint;
+		this.jewels = passiveSkillBuilder.jewels;
+	}
+
 	public List<StatValue> getStats()
 	{
 		return attributes;
@@ -44,15 +56,6 @@ public class PassiveSkill
 	public PassiveSkill(final String name)
 	{
 		this.name = name;
-	}
-
-	public PassiveSkill(final PassiveSkillBuilder passiveSkillBuilder)
-	{
-		this.id = passiveSkillBuilder.id;
-		this.name = passiveSkillBuilder.name;
-		this.outputs = passiveSkillBuilder.outputs;
-		this.attributes = passiveSkillBuilder.stats;
-		this.classStartingPoint = passiveSkillBuilder.classStartingPoint;
 	}
 
 	public String getName()
@@ -131,6 +134,16 @@ public class PassiveSkill
 		return CharacterClass.isRootSkill(name);
 	}
 
+	public int getJewels()
+	{
+		return jewels;
+	}
+
+	public void setJewels(final int jewels)
+	{
+		this.jewels = jewels;
+	}
+
 	public static class PassiveSkillBuilder
 	{
 		private int id;
@@ -142,6 +155,8 @@ public class PassiveSkill
 		private List<StatValue> stats = new ArrayList<>();
 
 		private CharacterClass classStartingPoint;
+
+		private int jewels;
 
 		public PassiveSkillBuilder withId(final int id)
 		{
@@ -198,6 +213,12 @@ public class PassiveSkill
 		public PassiveSkillBuilder withClassStartingPoint(final CharacterClass characterClass)
 		{
 			this.classStartingPoint = characterClass;
+			return this;
+		}
+
+		public PassiveSkillBuilder withJewels(final int jewels)
+		{
+			this.jewels = jewels;
 			return this;
 		}
 	}

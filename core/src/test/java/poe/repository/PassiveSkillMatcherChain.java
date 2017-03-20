@@ -6,7 +6,7 @@ import org.hamcrest.Matcher;
 import poe.entity.PassiveSkill;
 import poe.matcher.MatcherChain;
 
-final class PassiveSkillMatcherChain extends MatcherChain<PassiveSkill>
+public class PassiveSkillMatcherChain extends MatcherChain<PassiveSkill>
 {
 	public PassiveSkillMatcherChain withName(final String name)
 	{

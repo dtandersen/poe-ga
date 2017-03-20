@@ -32,7 +32,8 @@ public class PoeMatchers
 						.and(hasFeature("id", PassiveSkill::getId, equalTo(passiveSkill.getId())))
 						.and(hasFeature("outputs", PassiveSkill::getOutputs, equalTo(passiveSkill.getOutputs())))
 						.and(hasFeature("stats", PassiveSkill::getStats, containsInAnyOrder(passiveSkill.getStats())))
-						.and(hasFeature("classStartingPoint", PassiveSkill::getClassStartingPoint, equalTo(passiveSkill.getClassStartingPoint())));
+						.and(hasFeature("classStartingPoint", PassiveSkill::getClassStartingPoint, equalTo(passiveSkill.getClassStartingPoint())))
+						.and(hasFeature("jewels", PassiveSkill::getJewels, equalTo(passiveSkill.getJewels())));
 	}
 
 	public static CharacterStatMatcher hasStats2()

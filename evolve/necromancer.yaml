@@ -1,6 +1,30 @@
 ---
 characterClass: witch
-level: 60
+level: 100
+genes: 20
+chromosomes: 15
+skillPoints: 122
+population: 250
+generations: 1000000
+alterers:
+  - type: crossover
+    probability: .05
+#  - type: swap
+#    probability: .01
+  #- type: mutator
+  #  probability: .001
+  - type: neighbor
+    probability: .10
+evaluators:
+  - expression: 12500 * (1 + minionDamage/100) * (0.85 + minionAttackSpeed/100) * (3 + zombies) * (1 + hasPassive("Minion Instability") * 0 * increasedMinionLife/100.0)
+  - expression: 10000 * (1 + increasedMinionLife/100.0) * (3 + zombies)
+  - expression: (ehp.maxLightningHit + ehp.maxFireHit + ehp.maxColdHit + ehp.maxPhysicalHit)
+  - expression: 2 * min(dexterity, 150) * min(dexterity, 150)
+#  - expression: 2 * min(strength, 150) * min(strength, 150)
+  - expression: 250 * min(dexterity, 150)
+  - expression: 250 * min(strength, 150)
+  - expression: 25000 * min(jewels, 5)
+  - expression: 10000 * manaReserved
 items:
   - stats:
     - stat: +73 to maximum Energy Shield
@@ -41,25 +65,4 @@ items:
     - stat: +28 to maximum Energy Shield
     - stat: +8 to maximum Life
     - stat: +22% to Cold Resistance
-population: 250
-skills: 250
-generations: 1000000
-alterers:
-  - type: crossover
-    probability: .05
-#  - type: swap
-#    probability: .01
-  #- type: mutator
-  #  probability: .001
-  - type: neighbor
-    probability: .10
-evaluators:
-  - expression: 12500 * (1 + minionDamage/100) * (0.85 + minionAttackSpeed/100) * (3 + zombies) * (1 + hasPassive("Minion Instability") * 0 * increasedMinionLife/100.0)
-  - expression: 5000 * (1 + increasedMinionLife/100.0) * (3 + zombies)
-  - expression: (ehp.maxLightningHit + ehp.maxFireHit + ehp.maxColdHit + ehp.maxPhysicalHit)
-  - expression: 2 * min(dexterity, 150) * min(dexterity, 150)
-#  - expression: 2 * min(strength, 150) * min(strength, 150)
-  - expression: 50000 * ln(dexterity/150.0)
-  - expression: 50000 * ln(strength/150.0)
-  - expression: 25000 * ln(jewels/5.0)
-  - expression: 4000 * manaReserved
+  

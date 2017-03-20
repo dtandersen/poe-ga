@@ -3,7 +3,6 @@ package poe.app.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import poe.command.CommandFactory;
-import poe.repository.Evolver;
 import poe.repository.PassiveSkillRepository;
 import poe.repository.PassiveSkillTree;
 import poe.repository.json.JsonPassiveSkillRepository;
@@ -13,11 +12,10 @@ public class PoeConfig
 {
 	@Bean
 	CommandFactory commandFactory(
-			final PassiveSkillRepository repo,
-			final Evolver evolver,
+			final PassiveSkillRepository passiveSkillRepository,
 			final PassiveSkillTree passiveSkillTree)
 	{
-		return new CommandFactory(repo, evolver);
+		return new CommandFactory(passiveSkillRepository);
 	}
 
 	@Bean
@@ -31,12 +29,4 @@ public class PoeConfig
 	{
 		return new PassiveSkillTree(passiveSkillRepository.all());
 	}
-
-//	@Bean
-//	CharacterView viewer()
-//	{
-//		return new MultiCharacterView(
-//				new SeleniumCharacterView(),
-//				new ConsoleCharacterView());
-//	}
 }

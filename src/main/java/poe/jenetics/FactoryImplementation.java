@@ -19,6 +19,6 @@ final class FactoryImplementation implements Factory<Genotype<SkillGene>>
 	@Override
 	public Genotype<SkillGene> newInstance()
 	{
-		return Genotype.of(SkillChromosome.seq(allowedSkills, length));
+		return Genotype.of(SkillChromosome.seq(allowedSkills, 20, (int)Math.ceil(length / 20d)));
 	}
 }

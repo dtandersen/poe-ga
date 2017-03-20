@@ -2,6 +2,7 @@ package poe.app.evolve;
 
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -20,6 +21,7 @@ import poe.command.model.FitnessConfig.ElementConfig.ElementConfigBuilder;
 import poe.command.model.FitnessConfig.FitnessConfigBuilder;
 import poe.command.model.ImmutableCharacter;
 import poe.command.model.ImmutableCharacter.ImmutablePassiveSkill;
+import poe.command.model.ItemDescription;
 import poe.util.StreamUtils;
 
 @SpringBootApplication
@@ -141,6 +143,24 @@ public class PoeBuildEvolver implements CommandLineRunner
 			}
 
 			return fitnessConfigBuilder.build();
+		}
+
+		@Override
+		public int getLevel()
+		{
+			return evolveConfig.getLevel();
+		}
+
+		@Override
+		public List<ItemDescription> getItems()
+		{
+			return evolveConfig.getItems().stream()
+					.map(item -> {
+						final ItemDescription i = new ItemDescription();
+						item.getStats().forEach(stat -> i.addSkillDescription(stat.stat));
+						return i;
+					})
+					.collect(Collectors.toList());
 		}
 	}
 }

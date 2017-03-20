@@ -70,15 +70,19 @@ class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Float>>
 		final PassiveSkill root = passiveSkillTree.findByName(characterClass.getRootPassiveSkillName());
 		final PoeCharacter character = new PoeCharacter(characterClass);
 		character.addPassiveSkill(root);
-		final SkillChromosome c = genotype.getChromosome().as(SkillChromosome.class);
-		final ISeq<SkillGene> seq = c.toSeq();
-		final List<PassiveSkill> passives = new ArrayList<>();
-		for (final SkillGene gene : seq)
+		for (int i = 0; i < genotype.length(); i++)
 		{
-			final PassiveSkill find = passiveSkillTree.find(gene.getAllele());
-			passives.add(find);
+			final SkillChromosome c = genotype.getChromosome(i).as(SkillChromosome.class);
+			// final SkillChromosome c = genotype.getChromosome().as(SkillChromosome.class);
+			final ISeq<SkillGene> seq = c.toSeq();
+			final List<PassiveSkill> passives = new ArrayList<>();
+			for (final SkillGene gene : seq)
+			{
+				final PassiveSkill find = passiveSkillTree.find(gene.getAllele());
+				passives.add(find);
+			}
+			character.sneakyAdd(passives);
 		}
-		character.sneakyAdd(passives);
 
 		return character;
 	}

@@ -6,6 +6,7 @@ import java.util.function.Function;
 import org.jenetics.Genotype;
 import org.jenetics.util.ISeq;
 import poe.entity.CharacterClass;
+import poe.entity.CharacterItem;
 import poe.entity.PassiveSkill;
 import poe.entity.PoeCharacter;
 import poe.evaluator.CharacterEvaluator;
@@ -20,14 +21,22 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Float>
 
 	private final CharacterEvaluator characterEvaluator;
 
+	private final List<CharacterItem> items;
+
+	private final int level;
+
 	public FitnessFunction(
 			final PassiveSkillTree passiveSkillTree,
 			final CharacterClass characterClass,
-			final CharacterEvaluator characterEvaluator)
+			final CharacterEvaluator characterEvaluator,
+			final List<CharacterItem> items,
+			final int level)
 	{
 		this.passiveSkillTree = passiveSkillTree;
 		this.characterClass = characterClass;
 		this.characterEvaluator = characterEvaluator;
+		this.items = items;
+		this.level = level;
 	}
 
 	@Override
@@ -35,17 +44,22 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Float>
 	{
 		final PassiveSkill root = passiveSkillTree.findByName(characterClass.getRootPassiveSkillName());
 		final PoeCharacter character = new PoeCharacter(characterClass);
+		character.setLevel(level);
+		character.setItems(items);
 		character.addPassiveSkill(root);
-		final SkillChromosome c = genotype.getChromosome().as(SkillChromosome.class);
-		final ISeq<SkillGene> seq = c.toSeq();
-		final List<PassiveSkill> passives = new ArrayList<>();
-		for (final SkillGene gene : seq)
+		for (int i = 0; i < genotype.length(); i++)
 		{
-			final PassiveSkill find = passiveSkillTree.find(gene.getAllele());
-			passives.add(find);
+			final SkillChromosome c = genotype.getChromosome(i).as(SkillChromosome.class);
+			// final SkillChromosome c = genotype.getChromosome().as(SkillChromosome.class);
+			final ISeq<SkillGene> seq = c.toSeq();
+			final List<PassiveSkill> passives = new ArrayList<>();
+			for (final SkillGene gene : seq)
+			{
+				final PassiveSkill find = passiveSkillTree.find(gene.getAllele());
+				passives.add(find);
+			}
+			character.sneakyAdd(passives);
 		}
-		character.sneakyAdd(passives);
-
 		final CharacterExpressionContextAdapter context = new CharacterExpressionContextAdapter(character);
 		final float fitness = characterEvaluator.evaluate(context).getFitness();
 

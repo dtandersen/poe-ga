@@ -282,6 +282,7 @@ public enum Stat
 	ACC_PLUS(PLUS_INT + " to Accuracy Rating"),
 
 	// evasion
+	EVASION_RATING(PLUS_INT + " to Evasion Rating"),
 	EVASION(INT + "% increased Evasion Rating"),
 	EVASION_ARMOR(INT + "% increased Evasion Rating and Armour"),
 	EVA_RAT(PLUS_INT + " to Evasion Rating"),

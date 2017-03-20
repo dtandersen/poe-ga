@@ -19,7 +19,7 @@ public class PoeCharacter
 
 	private final CharacterClass characterClass;
 
-	int maxSkills = 100;
+	int maxSkills = 70;
 
 	public PoeCharacter(final CharacterClass characterClass)
 	{
@@ -197,22 +197,6 @@ public class PoeCharacter
 		return f;
 	}
 
-	public static class CharacterBuilder
-	{
-		private CharacterClass characterClass;
-
-		public PoeCharacter build()
-		{
-			return new PoeCharacter(this);
-		}
-
-		public CharacterBuilder withCharacterClass(final CharacterClass marauder)
-		{
-			characterClass = marauder;
-			return this;
-		}
-	}
-
 	public StatValue getStatValue(final Stat stat)
 	{
 		return stats.find(stat);
@@ -249,7 +233,6 @@ public class PoeCharacter
 			tryToAdd = notAdded;
 			notAdded = new ArrayList<>();
 		}
-
 	}
 
 	public boolean hasPassiveNamed(final String string)
@@ -265,5 +248,52 @@ public class PoeCharacter
 	public CharacterClass getCharacterClass()
 	{
 		return characterClass;
+	}
+
+	public int getLevel()
+	{
+		return character.getLevel();
+	}
+
+	public void setLevel(final int level)
+	{
+		character.setLevel(level);
+	}
+
+	public void addItem(final CharacterItem item)
+	{
+		character.addItem(item);
+	}
+
+	public List<StatValue> getAdjustedStats()
+	{
+		final StatBucket adjustedStatsCache = new StatBucket();
+
+		attributes.values().forEach(attr -> adjustedStatsCache.add(StatValue.of(attr.getStat(), attr.getValue())));
+		character.getPassiveSkills().forEach(skill -> skill.getStatValues().forEach(stat -> adjustedStatsCache.add(stat)));
+		character.getItems().forEach(item -> item.forEachStatValue(stat -> adjustedStatsCache.add(stat)));
+
+		return adjustedStatsCache.getStatValues();
+	}
+
+	public static class CharacterBuilder
+	{
+		private CharacterClass characterClass;
+
+		public PoeCharacter build()
+		{
+			return new PoeCharacter(this);
+		}
+
+		public CharacterBuilder withCharacterClass(final CharacterClass marauder)
+		{
+			characterClass = marauder;
+			return this;
+		}
+	}
+
+	public void setItems(final List<CharacterItem> items)
+	{
+		character.setItems(items);
 	}
 }

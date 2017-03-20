@@ -1,9 +1,9 @@
 package poe.jenetics;
 
 import org.jenetics.Alterer;
-import org.jenetics.MultiPointCrossover;
 import org.jenetics.Mutator;
 import org.jenetics.SwapMutator;
+import org.jenetics.UniformCrossover;
 import poe.repository.PassiveSkillTree;
 
 public class AltererFactory
@@ -22,10 +22,10 @@ public class AltererFactory
 		case "null":
 			return new NullMutator();
 		case "crossover":
-			return new MultiPointCrossover<>(probability);
-		// return new UniformCrossover<>(probability);
+			// return new MultiPointCrossover<>(probability);
+			return new UniformCrossover<>(probability);
 		case "neighbor":
-			return new NeighboringSkillMutator2(probability, passiveSkillTree);
+			return new NeighboringSkillMutator3(probability, passiveSkillTree);
 		case "mutator":
 			return new Mutator<>(probability);
 		case "swap":

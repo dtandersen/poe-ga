@@ -55,11 +55,6 @@ public class SpringCharacterEvaluator implements CharacterEvaluator
 		}
 	}
 
-	// private void forEachExpression(final Consumer<EvaluationCriteria> consumer)
-	// {
-	// evaluations.stream().forEach(consumer);
-	// }
-
 	public static class SpringCharacterEvaluatorBuilder
 	{
 		private FitnessConfig fitnessConfig;

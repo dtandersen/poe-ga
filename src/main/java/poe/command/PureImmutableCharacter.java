@@ -2,7 +2,9 @@ package poe.command;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import poe.command.PureImmutablePassiveSkill.ImmutablePassiveSkillBuilder;
@@ -11,11 +13,14 @@ import poe.entity.AttributeValue;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
 import poe.entity.PoeCharacter;
+import poe.entity.Stat;
 import poe.entity.StatValue;
 
 public class PureImmutableCharacter implements ImmutableCharacter
 {
 	private final Collection<StatValue> statValues;
+
+	private final Map<Stat, StatValue> adjustedStats;
 
 	private final Collection<AttributeValue> stats;
 
@@ -25,6 +30,8 @@ public class PureImmutableCharacter implements ImmutableCharacter
 
 	private final String url;
 
+	private final int level;
+
 	public PureImmutableCharacter(final ImmutableCharacterBuilder pureImmutableCharacterBuilder)
 	{
 		this.statValues = pureImmutableCharacterBuilder.statValues;
@@ -32,12 +39,23 @@ public class PureImmutableCharacter implements ImmutableCharacter
 		this.passiveSkills = pureImmutableCharacterBuilder.passiveSkills;
 		this.characterClass = pureImmutableCharacterBuilder.characterClass;
 		this.url = pureImmutableCharacterBuilder.url;
+		this.level = pureImmutableCharacterBuilder.level;
+		this.adjustedStats = pureImmutableCharacterBuilder.adjustedStats;
 	}
 
 	@Override
 	public Collection<AttributeValue> getStats()
 	{
 		return stats;
+	}
+
+	@Override
+	public float getAdjustedStat(final Stat stat)
+	{
+		final StatValue value = adjustedStats.get(stat);
+		if (value == null) { return 0; }
+
+		return value.getValue();
 	}
 
 	@Override
@@ -67,6 +85,12 @@ public class PureImmutableCharacter implements ImmutableCharacter
 	}
 
 	@Override
+	public int getLevel()
+	{
+		return level;
+	}
+
+	@Override
 	public List<ImmutablePassiveSkill> getPassiveSkills()
 	{
 		return passiveSkills;
@@ -80,6 +104,8 @@ public class PureImmutableCharacter implements ImmutableCharacter
 
 	public static class ImmutableCharacterBuilder
 	{
+		public Map<Stat, StatValue> adjustedStats = new HashMap<>();
+
 		public CharacterClass characterClass;
 
 		private Collection<StatValue> statValues;
@@ -89,6 +115,8 @@ public class PureImmutableCharacter implements ImmutableCharacter
 		private final List<ImmutablePassiveSkill> passiveSkills;
 
 		private String url;
+
+		private int level;
 
 		public ImmutableCharacterBuilder()
 		{
@@ -154,5 +182,23 @@ public class PureImmutableCharacter implements ImmutableCharacter
 		{
 			return new ImmutableCharacterBuilder();
 		}
+
+		public ImmutableCharacterBuilder withLevel(final int level)
+		{
+			this.level = level;
+			return this;
+		}
+
+		public ImmutableCharacterBuilder withAdjustedStats(final List<StatValue> adjustedStats)
+		{
+			adjustedStats.forEach(stat -> this.adjustedStats.put(stat.getStat(), stat));
+			return this;
+		}
+	}
+
+	@Override
+	public List<StatValue> getAdjustedStats()
+	{
+		return new ArrayList<>(adjustedStats.values());
 	}
 }

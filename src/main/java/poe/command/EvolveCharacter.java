@@ -1,6 +1,7 @@
 package poe.command;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import poe.command.EvolveCharacter.EvolveCharacterRequest;
 import poe.command.EvolveCharacter.EvolveCharacterResult;
 import poe.command.PureImmutableCharacter.ImmutableCharacterBuilder;
@@ -8,8 +9,12 @@ import poe.command.model.AltererConfig;
 import poe.command.model.EvolutionStatus;
 import poe.command.model.FitnessConfig;
 import poe.command.model.ImmutableCharacter;
+import poe.command.model.ItemDescription;
 import poe.entity.CharacterClass;
+import poe.entity.CharacterItem;
+import poe.entity.CharacterItem.CharacterItemBuilder;
 import poe.entity.PoeCharacter;
+import poe.entity.StatParser;
 import poe.evaluator.CharacterEvaluator;
 import poe.evaluator.spring.SpringCharacterEvaluator.SpringCharacterEvaluatorBuilder;
 import poe.repository.Evolver;
@@ -48,6 +53,10 @@ public class EvolveCharacter extends BaseCommand<EvolveCharacterRequest, EvolveC
 		int getSkills();
 
 		int getThreads();
+
+		int getLevel();
+
+		List<ItemDescription> getItems();
 	}
 
 	public interface EvolveCharacterResult
@@ -85,7 +94,8 @@ public class EvolveCharacter extends BaseCommand<EvolveCharacterRequest, EvolveC
 		@Override
 		public CharacterEvaluator getCharacterEvaluator()
 		{
-			final SpringCharacterEvaluatorBuilder builder = new SpringCharacterEvaluatorBuilder().from(request.getFitnessConfig());
+			final SpringCharacterEvaluatorBuilder builder = new SpringCharacterEvaluatorBuilder()
+					.from(request.getFitnessConfig());
 			return builder.build();
 		}
 
@@ -111,6 +121,24 @@ public class EvolveCharacter extends BaseCommand<EvolveCharacterRequest, EvolveC
 		public List<AltererConfig> getAltererConfig()
 		{
 			return request.getAlterers();
+		}
+
+		@Override
+		public int getLevel()
+		{
+			return request.getLevel();
+		}
+
+		@Override
+		public List<CharacterItem> getItems()
+		{
+			return request.getItems().stream()
+					.map(item -> {
+						final CharacterItemBuilder builder = CharacterItemBuilder.item();
+						item.getSkillDescriptions().forEach(description -> builder.withStatValue(new StatParser().parseItem(description)));
+						return builder.build();
+					})
+					.collect(Collectors.toList());
 		}
 	}
 

@@ -4,6 +4,7 @@ import java.util.List;
 import poe.command.model.AltererConfig;
 import poe.command.model.EvolutionStatus;
 import poe.entity.CharacterClass;
+import poe.entity.CharacterItem;
 import poe.entity.PoeCharacter;
 import poe.evaluator.CharacterEvaluator;
 
@@ -26,6 +27,10 @@ public interface Evolver
 		int getThreads();
 
 		List<AltererConfig> getAltererConfig();
+
+		int getLevel();
+
+		List<CharacterItem> getItems();
 	}
 
 	public interface PoeEvolutionResult

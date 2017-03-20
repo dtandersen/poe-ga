@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import poe.entity.StatValue.StatBuilder;
 
 public class PassiveSkill
@@ -73,10 +75,7 @@ public class PassiveSkill
 	{
 		for (final StatValue a : attributes)
 		{
-			if (Objects.equals(a.getStat(), expectedAttributeType))
-			{
-				return true;
-			}
+			if (Objects.equals(a.getStat(), expectedAttributeType)) { return true; }
 		}
 
 		return false;
@@ -111,10 +110,7 @@ public class PassiveSkill
 	{
 		for (final PassiveSkill neighbor : neighbors)
 		{
-			if (isNeighbor(neighbor))
-			{
-				return true;
-			}
+			if (isNeighbor(neighbor)) { return true; }
 		}
 
 		return false;
@@ -163,6 +159,19 @@ public class PassiveSkill
 		{
 			this.outputs = Arrays.asList(outputs);
 			return this;
+		}
+
+		public PassiveSkillBuilder withOutputs(final Optional<String> outputs)
+		{
+			if (!outputs.isPresent()) { return this; }
+
+			return withOutputs(Arrays
+					.stream(outputs.get().split(","))
+					.map(o -> o.trim())
+					.filter(o -> !o.isEmpty())
+					.map(o -> Integer.parseInt(o))
+					.collect(Collectors.toList())
+					.toArray(new Integer[0]));
 		}
 
 		public PassiveSkillBuilder withStats(final StatBuilder... statBuilders)

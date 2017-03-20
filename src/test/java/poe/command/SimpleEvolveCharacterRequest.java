@@ -1,10 +1,12 @@
 package poe.command;
 
+import java.util.ArrayList;
 import java.util.List;
 import poe.command.EvolveCharacter.EvolveCharacterRequest;
 import poe.command.model.AltererConfig;
 import poe.command.model.FitnessConfig;
 import poe.command.model.FitnessConfig.FitnessConfigBuilder;
+import poe.command.model.ItemDescription;
 import poe.entity.CharacterClass;
 
 public class SimpleEvolveCharacterRequest implements EvolveCharacterRequest
@@ -134,5 +136,17 @@ public class SimpleEvolveCharacterRequest implements EvolveCharacterRequest
 		{
 			return new SimpleEvolveCharacterRequestBuilder();
 		}
+	}
+
+	@Override
+	public int getLevel()
+	{
+		return 1;
+	}
+
+	@Override
+	public List<ItemDescription> getItems()
+	{
+		return new ArrayList<>();
 	}
 }

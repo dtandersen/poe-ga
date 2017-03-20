@@ -12,14 +12,15 @@ import java.util.Map;
 import org.hamcrest.Matchers;
 import org.jenetics.Alterer;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import poe.command.EvolveCharacter.EvolveCharacterResult;
 import poe.command.PureImmutablePassiveSkill.ImmutablePassiveSkillBuilder;
 import poe.command.SimpleEvolveCharacterRequest.SimpleEvolveCharacterRequestBuilder;
 import poe.command.model.AltererConfig;
 import poe.command.model.EvolutionStatus;
-import poe.command.model.ImmutableCharacter;
 import poe.command.model.FitnessConfig.ElementConfig.ElementConfigBuilder;
+import poe.command.model.ImmutableCharacter;
 import poe.entity.AltererType;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill.PassiveSkillBuilder;
@@ -34,6 +35,7 @@ import poe.repository.PassiveSkillRepository;
 import poe.repository.PassiveSkillTree;
 import poe.repository.RepoBuilder;
 
+@Ignore
 public class EvolveCharacterTest
 {
 	private static final int SLEEP_TIME = 1;

@@ -6,9 +6,14 @@ import poe.command.CreateCharacter.CreateCharacterRequest;
 import poe.command.CreateCharacter.CreateCharacterResult;
 import poe.command.PureImmutableCharacter.ImmutableCharacterBuilder;
 import poe.command.model.ImmutableCharacter;
+import poe.command.model.ItemDescription;
 import poe.entity.CharacterClass;
+import poe.entity.CharacterItem;
+import poe.entity.CharacterItem.CharacterItemBuilder;
 import poe.entity.PassiveSkill;
 import poe.entity.PoeCharacter;
+import poe.entity.StatParser;
+import poe.entity.StatValue;
 import poe.repository.PassiveSkillRepository;
 import poe.repository.PassiveSkillTree;
 
@@ -25,6 +30,12 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 	public void execute()
 	{
 		final PoeCharacter character = new PoeCharacter(request.getCharacterClass());
+		character.setLevel(request.getLevel());
+		request
+				.getItems()
+				.stream()
+				.map(item -> parseItem(item))
+				.forEach(item -> character.addItem(item));
 
 		final List<PassiveSkill> passiveTree = passiveSkillRepository.all();
 		final PassiveSkillTree pst = new PassiveSkillTree(passiveTree);
@@ -38,9 +49,11 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 		character.addPassiveSkills(passiveSkills);
 
 		final ImmutableCharacter pure = new ImmutableCharacterBuilder()
+				.withLevel(character.getLevel())
 				.withPassiveSkills(character.getPassiveSkillsWithoutRoot())
 				.withStats(character.getAttributes())
 				.withStatValues(character.getStatValues())
+				.withAdjustedStats(character.getAdjustedStats())
 				.build();
 
 		result.setCharacter(pure);
@@ -50,11 +63,31 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 				.toUrl());
 	}
 
+	private CharacterItem parseItem(final ItemDescription item)
+	{
+		final StatParser parser = new StatParser();
+
+		CharacterItemBuilder item2 = CharacterItemBuilder.item();
+
+		for (final String skillDescription : item.getSkillDescriptions())
+		{
+			final StatValue stat = parser.parseItem(skillDescription);
+			item2 = item2.withStatValue(stat);
+		}
+		final CharacterItem characterItem = item2.build();
+
+		return characterItem;
+	}
+
 	public interface CreateCharacterRequest
 	{
 		CharacterClass getCharacterClass();
 
+		int getLevel();
+
 		List<Integer> getPassiveSkillIds();
+
+		List<ItemDescription> getItems();
 	}
 
 	public interface CreateCharacterResult

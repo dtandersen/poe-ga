@@ -16,6 +16,10 @@ public class YamlConfig
 
 	private List<YamlEvaluator> evaluators;
 
+	private List<YamlItem> items;
+
+	private int level;
+
 	public YamlConfig()
 	{
 	}
@@ -80,6 +84,26 @@ public class YamlConfig
 		this.evaluators = evaluators;
 	}
 
+	public void setLevel(final int level)
+	{
+		this.level = level;
+	}
+
+	public int getLevel()
+	{
+		return level;
+	}
+
+	public List<YamlItem> getItems()
+	{
+		return items;
+	}
+
+	public void setItems(final List<YamlItem> items)
+	{
+		this.items = items;
+	}
+
 	public static class YamlAlterer
 	{
 		private String type;
@@ -131,6 +155,21 @@ public class YamlConfig
 		public void setScale(final String scale)
 		{
 			this.scale = scale;
+		}
+	}
+
+	public static class YamlItem
+	{
+		public List<YamlItemStat> stats;
+
+		public static class YamlItemStat
+		{
+			public String stat;
+		}
+
+		public List<YamlItemStat> getStats()
+		{
+			return stats;
 		}
 	}
 }

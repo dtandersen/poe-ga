@@ -1,25 +1,32 @@
 package poe.command;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hobsoft.hamcrest.compose.ComposeMatchers.compose;
+import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
 import static org.junit.Assert.assertThat;
 import static poe.entity.CharacterClass.MARAUDER;
-import static poe.entity.CharacterClass.WITCH;
 import static poe.entity.PoeMatchers.hasStats2;
 import static poe.entity.PoeMatchers.passiveSkillEqualTo;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 import org.junit.Before;
 import org.junit.Test;
+import org.yaml.snakeyaml.Yaml;
 import poe.command.CreateCharacter.CreateCharacterRequest;
 import poe.command.CreateCharacter.CreateCharacterResult;
 import poe.command.PureImmutablePassiveSkill.ImmutablePassiveSkillBuilder;
 import poe.command.model.ImmutableCharacter;
 import poe.command.model.ImmutableCharacter.ImmutablePassiveSkill;
+import poe.command.model.ItemDescription;
 import poe.entity.Attribute;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
@@ -51,7 +58,10 @@ public class CreateCharacterTest
 	@Test
 	public void level1Witch()
 	{
-		createCharacter(WITCH);
+		createCharacter("" +
+				"characterClass: witch",
+				"level: 1",
+				"passiveSkills: []");
 
 		assertThat(theCharacter(), PoeMatchers.hasStats()
 				.withStat(Attribute.STRENGTH, 14)
@@ -63,6 +73,20 @@ public class CreateCharacterTest
 				.withStat(Attribute.ACCURACY, 28));
 
 		assertThat(theCharacter(), hasNoPassiveSkills());
+		assertThat(theCharacter(), hasAdjustedStats(
+				StatValue.of(Stat.STRENGTH, 14),
+				StatValue.of(Stat.DEXTERITY, 14),
+				StatValue.of(Stat.INTELLIGENCE, 32),
+				StatValue.of(Stat.MAXIMUM_LIFE, 57),
+				StatValue.of(Stat.MANA_BONUS, 56),
+				StatValue.of(Stat.EVASION_RATING, 58),
+				StatValue.of(Stat.ACC_PLUS, 28)));
+	}
+
+	private Matcher<ImmutableCharacter> hasAdjustedStats(final StatValue... stats)
+	{
+		// return Matchers.containsInAnyOrder(stats);
+		return compose("a character with", hasFeature("stats", ImmutableCharacter::getAdjustedStats, Matchers.containsInAnyOrder(stats)));
 	}
 
 	@Test
@@ -123,29 +147,14 @@ public class CreateCharacterTest
 	}
 
 	@Test
-	public void dontAllowAnotherRoot()
+	public void dontAllowAnotherRoot() throws IOException
 	{
-		final InMemoryPassiveSkillRepository memRepo = new InMemoryPassiveSkillRepository();
-		memRepo.create(PassiveSkillBuilder.passiveSkill()
-				.withId(1)
-				.withName(CharacterClass.SHADOW.getRootPassiveSkillName())
-				.withClassStartingPoint(CharacterClass.SHADOW)
-				.withOutputs(2));
-		memRepo.create(PassiveSkillBuilder.passiveSkill()
-				.withId(2)
-				.withName("some skill")
-				.withOutputs(3));
-		memRepo.create(PassiveSkillBuilder.passiveSkill()
-				.withId(3)
-				.withName(CharacterClass.DUELIST.getRootPassiveSkillName())
-				.withClassStartingPoint(CharacterClass.DUELIST)
-				.withOutputs(4));
-		memRepo.create(PassiveSkillBuilder.passiveSkill()
-				.withId(4)
-				.withName("can't get this"));
-
-		jsonSkillRepo = memRepo;
-		passiveSkillTree = new PassiveSkillTree(memRepo.all());
+		given(passiveSkills("" +
+				"name          | id | startPoint | outputs\n" +
+				"SIX           | 1  | SHADOW     | 2\n" +
+				"some skill    | 2  |            | 3\n" +
+				"DUELIST       | 3  | DUELIST    | 4\n" +
+				"cant get this | 4  |            |"));
 
 		createCharacter(CharacterClass.SHADOW, new Integer[] { 2, 3, 4 });
 
@@ -153,33 +162,32 @@ public class CreateCharacterTest
 	}
 
 	@Test
-	public void statsShouldAdd()
+	public void statsShouldAdd() throws IOException
 	{
-		final InMemoryPassiveSkillRepository memRepo = new InMemoryPassiveSkillRepository();
-		memRepo.create(PassiveSkillBuilder.passiveSkill()
-				.withId(1)
-				.withName(CharacterClass.SHADOW.getRootPassiveSkillName())
-				.withClassStartingPoint(CharacterClass.SHADOW)
-				.withOutputs(2));
+		given(passiveSkills("" +
+				"name          | id | startPoint | outputs | stats\n" +
+				"SIX           | 1  | SHADOW     | 2       |\n" +
+				"strong        | 2  |            | 3       | +10 to Strength \n" +
+				"very strong   | 3  |            | 4       | +20 to Strength\n" +
+				"super strong  | 4  |            |         | +100 to Strength"));
+
 		final PassiveSkillBuilder passive2 = PassiveSkillBuilder.passiveSkill()
 				.withId(2)
-				.withName("some skill")
+				.withName("strong")
 				.withOutputs(3)
 				.withStats(StatBuilder.stat().withStat(Stat.STRENGTH).withValue(10));
-		memRepo.create(passive2);
+
 		final PassiveSkillBuilder passive3 = PassiveSkillBuilder.passiveSkill()
 				.withId(3)
+				.withName("very strong")
 				.withOutputs(4)
 				.withStats(StatBuilder.stat().withStat(Stat.STRENGTH).withValue(20));
-		memRepo.create(passive3);
+
 		final PassiveSkillBuilder passive4 = PassiveSkillBuilder.passiveSkill()
 				.withId(4)
+				.withName("super strong")
 				.withOutputs(5)
 				.withStats(StatBuilder.stat().withStat(Stat.STRENGTH).withValue(100));
-		memRepo.create(passive4);
-
-		jsonSkillRepo = memRepo;
-		passiveSkillTree = new PassiveSkillTree(memRepo.all());
 
 		createCharacter(CharacterClass.SHADOW, new Integer[] { 2, 3, 4 });
 
@@ -191,38 +199,55 @@ public class CreateCharacterTest
 	}
 
 	@Test
-	public void statsShouldntChange()
+	public void statsShouldntChange() throws IOException
 	{
-		final InMemoryPassiveSkillRepository memRepo = new InMemoryPassiveSkillRepository();
-		memRepo.create(PassiveSkillBuilder.passiveSkill()
-				.withId(1)
-				.withName(CharacterClass.SHADOW.getRootPassiveSkillName())
-				.withClassStartingPoint(CharacterClass.SHADOW)
-				.withOutputs(2));
+		given(passiveSkills("" +
+				"name          | id | startPoint | outputs | stats\n" +
+				"SIX           | 1  | SHADOW     | 2       |\n" +
+				"strong        | 2  |            | 3       | +10 to Strength \n" +
+				"very strong   | 3  |            | 4       | +20 to Strength\n" +
+				"super strong  | 4  |            |         | +100 to Strength"));
+
 		final PassiveSkillBuilder passive2 = PassiveSkillBuilder.passiveSkill()
 				.withId(2)
-				.withName("some skill")
+				.withName("strong")
 				.withOutputs(3)
 				.withStats(StatBuilder.stat().withStat(Stat.STRENGTH).withValue(10));
-		memRepo.create(passive2);
-		final PassiveSkillBuilder passive3 = PassiveSkillBuilder.passiveSkill()
-				.withId(3)
-				.withOutputs(4)
-				.withStats(StatBuilder.stat().withStat(Stat.STRENGTH).withValue(20));
-		memRepo.create(passive3);
-		final PassiveSkillBuilder passive4 = PassiveSkillBuilder.passiveSkill()
-				.withId(4)
-				.withOutputs(5)
-				.withStats(StatBuilder.stat().withStat(Stat.STRENGTH).withValue(100));
-		memRepo.create(passive4);
 
-		jsonSkillRepo = memRepo;
-		passiveSkillTree = new PassiveSkillTree(memRepo.all());
-
-		createCharacter(CharacterClass.SHADOW, new Integer[] { 2, 3, 4 });
-		createCharacter(CharacterClass.SHADOW, new Integer[] { 2, 3, 4 });
+		createCharacter("" +
+				"characterClass: shadow\n" +
+				"passiveSkills: [2, 3, 4]");
+		createCharacter("" +
+				"characterClass: shadow\n" +
+				"passiveSkills: [2, 3, 4]");
 
 		assertThat(find(2), passiveSkillEqualTo(passive2));
+	}
+
+	@Test
+	public void withAnItem() throws IOException
+	{
+		given(passiveSkills("" +
+				"name          | id | startPoint | outputs | stats\n" +
+				"SIX           | 1  | Seven      | 2       |\n" +
+				"strong        | 2  |            | 3       | +10 to Strength \n" +
+				"very strong   | 3  |            | 4       | +20 to Strength\n" +
+				"super strong  | 4  |            |         | +100 to Strength"));
+
+		createCharacter(
+				"characterClass: scion",
+				"level: 1",
+				"passiveSkills: [2, 3, 4]",
+				"items:",
+				"  - stats:",
+				"    - stat: +10 to Dexterity",
+				"  - stats:",
+				"    - stat: +30 to Dexterity",
+				"    - stat: +5 to Strength");
+
+		assertThat(theCharacter().getLevel(), equalTo(1));
+		assertThat(theCharacter().getAdjustedStat(Stat.DEXTERITY), equalTo(60f));
+		assertThat(theCharacter().getAdjustedStat(Stat.STRENGTH), equalTo(155f));
 	}
 
 	private PassiveSkill find(final int i)
@@ -266,6 +291,21 @@ public class CreateCharacterTest
 		};
 	}
 
+	private void createCharacter(final String yaml)
+	{
+		final CreateCharacter command = new CreateCharacter(jsonSkillRepo);
+		result = new CreateCharacterResultImplementation();
+		command.setRequest(new YamlCreateCharacterRequest(yaml));
+		command.setResult(result);
+		command.execute();
+	}
+
+	private void createCharacter(final String... yaml)
+	{
+		final String joinedYaml = Arrays.stream(yaml).collect(Collectors.joining("\n"));
+		createCharacter(joinedYaml);
+	}
+
 	private void createCharacter(final CharacterClass marauder, final Integer[] passiveSkillIds)
 	{
 		final CreateCharacter command = new CreateCharacter(jsonSkillRepo);
@@ -282,6 +322,18 @@ public class CreateCharacterTest
 			{
 				return Arrays.asList(passiveSkillIds);
 			}
+
+			@Override
+			public int getLevel()
+			{
+				return 1;
+			}
+
+			@Override
+			public List<ItemDescription> getItems()
+			{
+				return new ArrayList<>();
+			}
 		});
 		command.setResult(result);
 		command.execute();
@@ -297,19 +349,72 @@ public class CreateCharacterTest
 		return result.character;
 	}
 
-	private ImmutablePassiveSkill classPassive(final CharacterClass characterClass)
-	{
-		return passsiveNamed(characterClass.getRootPassiveSkillName());
-	}
-
-	private ImmutablePassiveSkill passsiveNamed(final String name)
-	{
-		return ImmutablePassiveSkillBuilder.passiveSkill().from(passiveSkillTree.findByName(name)).build();
-	}
-
 	private ImmutablePassiveSkill passiveWithId(final int passiveSkillId)
 	{
 		return ImmutablePassiveSkillBuilder.passiveSkill().from(passiveSkillTree.find(passiveSkillId)).build();
+	}
+
+	private static class YamlCreateCharacterRequest implements CreateCharacterRequest
+	{
+		private final YamlRequest r;
+
+		public YamlCreateCharacterRequest(final String yaml)
+		{
+			r = new Yaml().loadAs(yaml, YamlRequest.class);
+		}
+
+		@Override
+		public CharacterClass getCharacterClass()
+		{
+			return CharacterClass.find(r.characterClass);
+		}
+
+		@Override
+		public List<Integer> getPassiveSkillIds()
+		{
+			return r.passiveSkills;
+		}
+
+		@Override
+		public int getLevel()
+		{
+			return r.level;
+		}
+
+		@Override
+		public List<ItemDescription> getItems()
+		{
+			if (r.items == null) { return new ArrayList<>(); }
+
+			return r.items.stream()
+					.map(item -> {
+						final ItemDescription i = new ItemDescription();
+						item.stats.forEach(stat -> i.addSkillDescription(stat.stat));
+						return i;
+					})
+					.collect(Collectors.toList());
+		}
+
+		static class YamlRequest
+		{
+			public String characterClass;
+
+			public int level;
+
+			public List<Integer> passiveSkills;
+
+			public List<YamlItem> items;
+
+			static class YamlItem
+			{
+				public List<YamlStat> stats;
+
+				static class YamlStat
+				{
+					public String stat;
+				}
+			}
+		}
 	}
 
 	public final class CreateCharacterResultImplementation implements CreateCharacterResult
@@ -334,5 +439,66 @@ public class CreateCharacterTest
 		{
 			this.url = url;
 		}
+	}
+
+	private List<PassiveSkillBuilder> passiveSkills(final String markDown) throws IOException
+	{
+		final List<PassiveSkillBuilder> passiveSkillBuilders = MarkdownStream
+				.stream(markDown)
+				.skip(1)
+				.map(md -> PassiveSkillBuilder
+						.passiveSkill()
+						.withName(md.trimmed(0))
+						.withId(md.intValue(1))
+						.withClassStartingPoint(CharacterClass.find(md.trimmed(2)))
+						.withOutputs(md.trimmedOptional(3))
+						.withStats(theStats(md.trimmedOptional(4))))
+				.collect(Collectors.toList());
+
+		return passiveSkillBuilders;
+	}
+
+	private StatBuilder[] theStats(final Optional<String> markDown)
+	{
+		if (!markDown.isPresent()) { return new StatBuilder[0]; }
+
+		return Arrays
+				.stream(markDown.get().split("\\,"))
+				.map(md -> stat(md))
+				.collect(Collectors.toList())
+				.toArray(new StatBuilder[0]);
+	}
+
+	private StatBuilder stat(final String skillDescription)
+	{
+		for (final Stat stat : Stat.values())
+		{
+			final java.util.regex.Matcher m = stat.matcher(skillDescription);
+			if (!m.find())
+			{
+				continue;
+			}
+
+			final java.util.regex.Matcher matcher = m;
+			try
+			{
+				final String group = matcher.group(1);
+				final float val = Float.parseFloat(group);
+				final StatValue attribute = new StatValue(stat, val);
+				return StatBuilder.stat(attribute.getStat(), attribute.getValue());
+			}
+			catch (final IndexOutOfBoundsException e2)
+			{
+			}
+		}
+		return null;
+	}
+
+	private void given(final List<PassiveSkillBuilder> passiveSkillBuilders)
+	{
+		final InMemoryPassiveSkillRepository memRepo = new InMemoryPassiveSkillRepository();
+		jsonSkillRepo = memRepo;
+		passiveSkillBuilders.forEach(builder -> ((InMemoryPassiveSkillRepository)jsonSkillRepo).create(builder));
+		passiveSkillTree = new PassiveSkillTree(jsonSkillRepo.all());
 	}
 }

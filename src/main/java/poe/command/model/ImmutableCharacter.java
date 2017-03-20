@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import poe.entity.AttributeValue;
 import poe.entity.CharacterClass;
+import poe.entity.Stat;
 import poe.entity.StatValue;
 
 public interface ImmutableCharacter
@@ -26,4 +27,10 @@ public interface ImmutableCharacter
 	}
 
 	String getUrl();
+
+	int getLevel();
+
+	float getAdjustedStat(Stat stat);
+
+	List<StatValue> getAdjustedStats();
 }

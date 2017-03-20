@@ -59,7 +59,7 @@ public class JeneticsEvolver implements Evolver
 
 		final ExecutorService exec = Executors.newFixedThreadPool(threads);
 
-		final FitnessFunction fitnessFunction = new FitnessFunction(passiveSkillTree, characterClass, evolutionContext.getCharacterEvaluator());
+		final FitnessFunction fitnessFunction = new FitnessFunction(passiveSkillTree, characterClass, evolutionContext.getCharacterEvaluator(), evolutionContext.getItems(), evolutionContext.getLevel());
 
 		final List<Alterer<SkillGene, Float>> alterers2 = new ArrayList<>();
 		final List<AltererConfig> altererConfig2 = evolutionContext.getAltererConfig();
@@ -77,7 +77,7 @@ public class JeneticsEvolver implements Evolver
 				// .selector(new StochasticUniversalSelector<SkillGene, Float>())
 				// .selector(new BoltzmannSelector<SkillGene, Float>(4))
 				// .maximalPhenotypeAge(50)
-				// .fitnessScaler(f -> f * .5f + 10000f)
+				.fitnessScaler(f -> f * .9f + 10000f)
 				.build();
 
 		final EvolutionResult<SkillGene, Float> result = engine.stream()

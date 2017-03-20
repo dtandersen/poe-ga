@@ -6,6 +6,17 @@ public class StatValue
 
 	private final float value;
 
+	public StatValue(final Stat stat, final float value)
+	{
+		this.stat = stat;
+		this.value = value;
+	}
+
+	public StatValue(final StatBuilder statBuilder)
+	{
+		this(statBuilder.stat, statBuilder.value);
+	}
+
 	public Stat getStat()
 	{
 		return stat;
@@ -16,15 +27,14 @@ public class StatValue
 		return value;
 	}
 
-	public StatValue(final Stat stat, final float value)
+	public StatValue increment(final float value)
 	{
-		this.stat = stat;
-		this.value = value;
+		return new StatValue(stat, this.value + value);
 	}
 
-	public StatValue(final StatBuilder statBuilder)
+	public static StatValue of(final Stat stat, final float value)
 	{
-		this(statBuilder.stat, statBuilder.value);
+		return new StatValue(stat, value);
 	}
 
 	@Override

@@ -59,4 +59,9 @@ public class AttributeValue
 		if (Float.floatToIntBits(value) != Float.floatToIntBits(other.value)) { return false; }
 		return true;
 	}
+
+	public Stat getStat()
+	{
+		return attribute.getStat();
+	}
 }

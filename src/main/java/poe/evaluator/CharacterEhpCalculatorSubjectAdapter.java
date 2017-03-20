@@ -17,7 +17,9 @@ public class CharacterEhpCalculatorSubjectAdapter implements EhpSubject
 	{
 		if (character.getStat(Stat.CHAOS_INNOCULATION) > 0) { return 1; }
 
-		return character.getStat(Stat.MAXIMUM_LIFE) * (1 + character.getStat(Stat.INCRESED_MAXIMUM_LIFE) + (character.getStat(Stat.STRENGTH) / 10 * 5));
+		final float stat = character.getStat(Stat.MAXIMUM_LIFE) + 70 * 12 + (character.getStat(Stat.STRENGTH) / 10 * 5);
+		final float life = stat * (1 + (character.getStat(Stat.INCRESED_MAXIMUM_LIFE) / 100f));
+		return life;
 	}
 
 	@Override

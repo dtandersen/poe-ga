@@ -13,7 +13,7 @@ import poe.command.model.FitnessConfig.ElementConfig;
 import poe.evaluator.CharacterEvaluator;
 import poe.evaluator.EvaluationResult;
 import poe.evaluator.EvaluationResult.EvaluationLineItem;
-import poe.evaluator.ExpressionContext;
+import poe.evaluator.CharacterEvaluatorContext;
 
 public class SpringCharacterEvaluator implements CharacterEvaluator
 {
@@ -28,7 +28,7 @@ public class SpringCharacterEvaluator implements CharacterEvaluator
 	}
 
 	@Override
-	public EvaluationResult evaluate(final ExpressionContext rootObject)
+	public EvaluationResult evaluate(final CharacterEvaluatorContext rootObject)
 	{
 		try
 		{

@@ -1,4 +1,4 @@
-package poe.command;
+package poe.command.model;
 
 import poe.command.model.ImmutableCharacter.ImmutablePassiveSkill;
 import poe.entity.PassiveSkill;

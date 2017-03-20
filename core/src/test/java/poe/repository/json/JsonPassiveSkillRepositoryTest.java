@@ -1,4 +1,4 @@
-package poe.repository;
+package poe.repository.json;
 
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.nullValue;
@@ -14,19 +14,16 @@ import poe.entity.PassiveSkill;
 import poe.entity.PoeMatchers;
 import poe.entity.Stat;
 import poe.matcher.ComposableMatcher;
-import poe.repository.json.JsonPassiveSkillRepository;
+import poe.repository.PassiveSkillMatcherChain;
+import poe.repository.PassiveSkillTree;
 
 public class JsonPassiveSkillRepositoryTest
 {
 	private final JsonPassiveSkillRepository repo = new JsonPassiveSkillRepository();
 
-	private List<PassiveSkill> skills;
-
 	@Test
 	public void test()
 	{
-		skills = repo.all();
-
 		assertThat(passiveNamed("Herbalism"), PoeMatchers.passiveSkillEqualTo(
 				passiveSkill()
 						.withName("Herbalism")
@@ -69,14 +66,32 @@ public class JsonPassiveSkillRepositoryTest
 						.withStats()
 						.withClassStartingPoint(CharacterClass.MARAUDER)));
 
+		assertThat(passiveWithId(26196), PoeMatchers.passiveSkillEqualTo(
+				passiveSkill()
+						.withName("Jewel Socket")
+						.withId(26196)
+						.withOutputs(34171, 37999)
+						.withStats()
+						.withJewels(1)));
+
 		assertThat("Don't include ascendency skills", passiveNamed("Fast and Deadly"), nullValue());
 	}
 
 	private PassiveSkill passiveNamed(final String name)
 	{
-		for (final PassiveSkill passiveSkill : skills)
+		for (final PassiveSkill passiveSkill : repo.all())
 		{
 			if (Objects.equals(name, passiveSkill.getName())) { return passiveSkill; }
+		}
+
+		return null;
+	}
+
+	private PassiveSkill passiveWithId(final int passiveSkillId)
+	{
+		for (final PassiveSkill passiveSkill : repo.all())
+		{
+			if (Objects.equals(passiveSkillId, passiveSkill.getId())) { return passiveSkill; }
 		}
 
 		return null;
@@ -101,18 +116,6 @@ public class JsonPassiveSkillRepositoryTest
 	{
 		return new PassiveSkillMatcherChain();
 	}
-
-	// private Matcher<PassiveSkillTree> hasSkills2(final Matcher<PassiveSkill>
-	// matcher)
-	// {
-	// return new ComposableMatcher<PassiveSkillTree, Object>(null) {
-	// @Override
-	// protected Object getValue(final PassiveSkillTree item)
-	// {
-	// return item.passiveSkills();
-	// }
-	// };
-	// }
 
 	@SafeVarargs
 	private final Matcher<PassiveSkillTree> hasSkills(final Matcher<PassiveSkill>... skills)

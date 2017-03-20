@@ -3,13 +3,13 @@ package poe.evaluator;
 import poe.entity.PoeCharacter;
 import poe.entity.Stat;
 
-public class CharacterExpressionContextAdapter implements ExpressionContext
+public class CharacterEvaluatorContextAdapter implements CharacterEvaluatorContext
 {
 	private final PoeCharacter character;
 
-	EhpCalculator ehpCalculator;
+	private final EhpCalculator ehpCalculator;
 
-	public CharacterExpressionContextAdapter(final PoeCharacter character)
+	public CharacterEvaluatorContextAdapter(final PoeCharacter character)
 	{
 		this.character = character;
 		ehpCalculator = new EhpCalculator(new CharacterEhpCalculatorSubjectAdapter(character));
@@ -2333,5 +2333,11 @@ public class CharacterExpressionContextAdapter implements ExpressionContext
 			}
 		}
 		return largest;
+	}
+
+	@Override
+	public int getJewels()
+	{
+		return (int)character.getPassiveSkills().stream().filter(skill -> skill.getJewels() > 0).count();
 	}
 }

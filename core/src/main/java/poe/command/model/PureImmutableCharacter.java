@@ -1,4 +1,4 @@
-package poe.command;
+package poe.command.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import poe.command.PureImmutablePassiveSkill.ImmutablePassiveSkillBuilder;
-import poe.command.model.ImmutableCharacter;
+import poe.command.model.PureImmutablePassiveSkill.ImmutablePassiveSkillBuilder;
 import poe.entity.AttributeValue;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
 import poe.entity.PoeCharacter;
+import poe.entity.PoeComUrlBuilder;
 import poe.entity.Stat;
 import poe.entity.StatValue;
 

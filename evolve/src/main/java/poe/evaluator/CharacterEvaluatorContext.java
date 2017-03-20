@@ -1,7 +1,9 @@
 package poe.evaluator;
 
-public interface ExpressionContext
+public interface CharacterEvaluatorContext
 {
+	int getJewels();
+
 	int getPassiveSkillCount();
 
 	double ln(double x);

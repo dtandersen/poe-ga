@@ -1,4 +1,4 @@
-package poe.command;
+package poe.entity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -6,7 +6,6 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.Base64.Encoder;
 import java.util.List;
-import poe.entity.CharacterClass;
 
 public class PoeComUrlBuilder
 {

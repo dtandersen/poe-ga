@@ -1,0 +1,65 @@
+---
+characterClass: witch
+level: 60
+items:
+  - stats:
+    - stat: +73 to maximum Energy Shield
+    - stat: 19% increased Spell Damage
+  - stats:
+    - stat: +15 to Intelligence
+    - stat: +81 to maximum Life
+    - stat: 8% increased Energy Shield
+  - stats:
+    - stat: +20 to strength
+    - stat: +2 to maximum Energy Shield
+    - stat: 2% increased Energy Shield
+    - stat: +27% to Cold Resistance
+    - stat: +18% to Lightning Resistance
+  - stats:
+    - stat: +23 to maximum Energy Shield
+  - stats:
+    - stat: +22 to Dexterity
+    - stat: +6 to maximum Life
+    - stat: +25 to maximum Mana
+    - stat: +14% to Fire Resistance
+    - stat: +25% to Lightning Resistance
+  - stats:
+    - stat: +111 to maximum Energy Shield
+    - stat: +44 to maximum Mana
+  - stats:
+    - stat: +13% to Cold Resistance
+    - stat: +13% to Lightning Resistance
+    - stat: +9% to all Elemental Resistances
+    - stat: +9% to Cold Resistance
+    - stat: +6% to Lightning Resistance
+  - stats:
+    - stat: +35 to maximum Energy Shield
+    - stat: +27 to Strength
+    - stat: +75 to maximum Life
+    - stat: +10% to Fire Resistance
+  - stats:
+    - stat: +28 to maximum Energy Shield
+    - stat: +8 to maximum Life
+    - stat: +22% to Cold Resistance
+population: 250
+skills: 250
+generations: 1000000
+alterers:
+  - type: crossover
+    probability: .05
+#  - type: swap
+#    probability: .01
+  #- type: mutator
+  #  probability: .001
+  - type: neighbor
+    probability: .10
+evaluators:
+  - expression: 12500 * (1 + minionDamage/100) * (0.85 + minionAttackSpeed/100) * (3 + zombies) * (1 + hasPassive("Minion Instability") * 0 * increasedMinionLife/100.0)
+  - expression: 5000 * (1 + increasedMinionLife/100.0) * (3 + zombies)
+  - expression: (ehp.maxLightningHit + ehp.maxFireHit + ehp.maxColdHit + ehp.maxPhysicalHit)
+  - expression: 2 * min(dexterity, 150) * min(dexterity, 150)
+#  - expression: 2 * min(strength, 150) * min(strength, 150)
+  - expression: 50000 * ln(dexterity/150.0)
+  - expression: 50000 * ln(strength/150.0)
+  - expression: 25000 * ln(jewels/5.0)
+  - expression: 4000 * manaReserved

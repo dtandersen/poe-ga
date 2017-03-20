@@ -50,7 +50,7 @@ public interface ExpressionContext
 
 	float getManaRegenerationRate();
 
-	float getManaReserve();
+	float getManaReserved();
 
 	float getManaMoveRegen();
 

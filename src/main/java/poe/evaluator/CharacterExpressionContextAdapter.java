@@ -136,9 +136,9 @@ public class CharacterExpressionContextAdapter implements ExpressionContext
 	}
 
 	@Override
-	public float getManaReserve()
+	public float getManaReserved()
 	{
-		return character.getStat(Stat.MANA_RESERVE);
+		return character.getStat(Stat.MANA_RESERVED);
 	}
 
 	@Override

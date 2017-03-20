@@ -39,7 +39,7 @@ public enum Stat
 	MANA(INT + "% increased maximum Mana"),
 	MANA_COST_REDUCED(INT + "% reduced Mana Cost of Skills"),
 	MANA_REGEN(INT + "% increased Mana Regeneration Rate"),
-	MANA_RESERVE(INT + "% reduced Mana Reserved"),
+	MANA_RESERVED(INT + "% reduced Mana Reserved"),
 	MANA_MOVE_REGEN(INT + "% increased Mana Regeneration if you've used a Movement Skill Recently"),
 	MANA_RESERVE_REDUCE(INT + "% less Mana Reserved"),
 	MANA_FLASK(INT + "% increased Mana Recovery from Flasks"),

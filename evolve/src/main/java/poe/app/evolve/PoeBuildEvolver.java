@@ -10,7 +10,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import poe.app.evolve.YamlConfig.YamlAlterer;
 import poe.app.evolve.YamlConfig.YamlEvaluator;
-import poe.command.CommandFactory;
 import poe.command.EvolveCharacter;
 import poe.command.EvolveCharacter.EvolveCharacterRequest;
 import poe.command.EvolveCharacter.EvolveCharacterResult;
@@ -22,6 +21,7 @@ import poe.command.model.FitnessConfig.FitnessConfigBuilder;
 import poe.command.model.ImmutableCharacter;
 import poe.command.model.ImmutableCharacter.ImmutablePassiveSkill;
 import poe.command.model.ItemDescription;
+import poe.repository.Evolver;
 import poe.util.StreamUtils;
 
 @SpringBootApplication
@@ -31,10 +31,10 @@ public class PoeBuildEvolver implements CommandLineRunner
 	private static final String CONFIG = "necromancer.yaml";
 
 	@Autowired
-	private CommandFactory commandFactory;
+	private CharacterView characterView;
 
 	@Autowired
-	private CharacterView characterView;
+	private Evolver evolver;
 
 	@Override
 	public void run(final String... args) throws FileNotFoundException
@@ -43,7 +43,7 @@ public class PoeBuildEvolver implements CommandLineRunner
 
 		try
 		{
-			final EvolveCharacter command = commandFactory.evolveCharacter();
+			final EvolveCharacter command = new EvolveCharacter(evolver);
 			final YamlEvolveCharacterRequest request = new YamlEvolveCharacterRequest(CONFIG);
 			command.setRequest(request);
 			command.setResult(new EvolveCharacterResult() {

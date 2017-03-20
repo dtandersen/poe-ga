@@ -33,8 +33,8 @@ public class CommandFactory
 		return new RandomBuild(passiveSkillRepository, new JavaRandomizer());
 	}
 
-	public EvolveCharacter evolveCharacter()
-	{
-		return new EvolveCharacter(evolver);
-	}
+//	public EvolveCharacter evolveCharacter()
+//	{
+//		return new EvolveCharacter(evolver);
+//	}
 }

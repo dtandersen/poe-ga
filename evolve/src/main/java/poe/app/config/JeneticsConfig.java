@@ -2,6 +2,10 @@ package poe.app.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import poe.app.evolve.CharacterView;
+import poe.app.evolve.ConsoleCharacterView;
+import poe.app.evolve.MultiCharacterView;
+import poe.app.evolve.selenium.SeleniumCharacterView;
 import poe.jenetics.AltererFactory;
 import poe.jenetics.JeneticsEvolver;
 import poe.repository.Evolver;
@@ -22,5 +26,13 @@ public class JeneticsConfig
 	AltererFactory altererFactory(final PassiveSkillTree passiveSkillTree)
 	{
 		return new AltererFactory(passiveSkillTree);
+	}
+
+	@Bean
+	CharacterView viewer()
+	{
+		return new MultiCharacterView(
+				new SeleniumCharacterView(),
+				new ConsoleCharacterView());
 	}
 }

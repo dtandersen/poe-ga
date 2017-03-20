@@ -2,10 +2,6 @@ package poe.app.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import poe.app.evolve.CharacterView;
-import poe.app.evolve.ConsoleCharacterView;
-import poe.app.evolve.MultiCharacterView;
-import poe.app.evolve.selenium.SeleniumCharacterView;
 import poe.command.CommandFactory;
 import poe.repository.Evolver;
 import poe.repository.PassiveSkillRepository;
@@ -36,11 +32,11 @@ public class PoeConfig
 		return new PassiveSkillTree(passiveSkillRepository.all());
 	}
 
-	@Bean
-	CharacterView viewer()
-	{
-		return new MultiCharacterView(
-				new SeleniumCharacterView(),
-				new ConsoleCharacterView());
-	}
+//	@Bean
+//	CharacterView viewer()
+//	{
+//		return new MultiCharacterView(
+//				new SeleniumCharacterView(),
+//				new ConsoleCharacterView());
+//	}
 }

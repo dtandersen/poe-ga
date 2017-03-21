@@ -2340,4 +2340,10 @@ public class CharacterEvaluatorContextAdapter implements CharacterEvaluatorConte
 	{
 		return (int)character.getPassiveSkills().stream().filter(skill -> skill.getJewels() > 0).count();
 	}
+
+	@Override
+	public float rising(final float x)
+	{
+		return 1 - (1 / (x + 1));
+	}
 }

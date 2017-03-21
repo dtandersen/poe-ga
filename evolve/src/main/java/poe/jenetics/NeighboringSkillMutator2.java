@@ -30,19 +30,19 @@ public class NeighboringSkillMutator2 extends Mutator<SkillGene, Float>
 		// final Set<Integer> walk = pst.randomWalk(startPoint, 10, random);
 
 		final AtomicInteger atom = new AtomicInteger(-1);
-		return (int)indexes(RandomRegistry.getRandom(), genes.length(), p)
+		return (int)indexes(RandomRegistry.getRandom(), genes.length(), random.nextFloat())
 				.peek(i -> {
 					if (atom.get() == -1)
 					{
-						final Random random2 = RandomRegistry.getRandom();
-						if (random2.nextFloat() < .5)
-						{
-							atom.set(genes.get(random2.nextInt(genes.length())).getAllele());
-						}
-						else
-						{
-							atom.set(genes.get(i).getAllele());
-						}
+						// final Random random2 = RandomRegistry.getRandom();
+						// if (random2.nextFloat() < .5)
+						// {
+						// atom.set(genes.get(random2.nextInt(genes.length())).getAllele());
+						// }
+						// else
+						// {
+						atom.set(genes.get(i).getAllele());
+						// }
 					}
 					final int randomNeighbor = atom.get();
 					final Integer newNeighbor = pst.randomNeighbor(randomNeighbor, random);

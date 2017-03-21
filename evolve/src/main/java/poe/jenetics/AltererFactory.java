@@ -25,7 +25,7 @@ public class AltererFactory
 			// return new MultiPointCrossover<>(probability);
 			return new UniformCrossover<>(probability);
 		case "neighbor":
-			return new NeighboringSkillMutator3(probability, passiveSkillTree);
+			return new NeighboringSkillMutator2(probability, passiveSkillTree);
 		case "mutator":
 			return new Mutator<>(probability);
 		case "swap":

@@ -1,21 +1,21 @@
 ---
 characterClass: witch
 level: 100
-genes: 40
-chromosomes: 10
+genes: 500
+chromosomes: 1
 skillPoints: 122
 population: 250
 generations: 1000000
 threads: 8
 alterers:
-  - type: crossover
-    probability: .15
-#  - type: swap
-#    probability: .01
-  #- type: mutator
-  #  probability: .001
-  - type: neighbor
-    probability: .10
+#  - type: crossover
+#    probability: .1
+  - type: swap
+    probability: .1
+#  - type: mutator
+#    probability: .05
+#  - type: neighbor
+#    probability: .0005
 evaluators:
   - expression: 52500 * (1 + minionDamage/100) * (0.85 + minionAttackSpeed/100) * (3 + zombies) * (1 + hasPassive("Minion Instability") * 0 * increasedMinionLife/100.0)
   - expression: 50000 * (1 + increasedMinionLife/100.0) * (3 + zombies)
@@ -26,7 +26,8 @@ evaluators:
   - expression: 100 * min(strength, 150)
   - expression: 25000 * min(jewels, 5) + 5000 * jewels
 #  - expression: 25000 * min(jewels, 5)
-  - expression: 500000 * manaReserved
+#  - expression: 29411 * min(manaReserved, 34)
+  - expression: 4000000 * 2 * rising(min(manaReserved,34)/34.0)
   - expression: 5000 * min(maxMana * (1 + increasedMaxMana/100.0) * (manaRegenerationRate/100.0) - (12 * (1.25 * (1+castSpeed/100.0))), 0)
 items:
   - stats:

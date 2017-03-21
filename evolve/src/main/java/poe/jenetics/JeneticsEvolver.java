@@ -7,10 +7,10 @@ import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.jenetics.Alterer;
+import org.jenetics.BoltzmannSelector;
 import org.jenetics.Chromosome;
 import org.jenetics.Genotype;
 import org.jenetics.PublicCompositeAlterer;
-import org.jenetics.StochasticUniversalSelector;
 import org.jenetics.engine.Engine;
 import org.jenetics.engine.EvolutionResult;
 import org.jenetics.util.Factory;
@@ -43,8 +43,7 @@ public class JeneticsEvolver implements Evolver
 		final List<PassiveSkill> passives = passiveSkillTree.passiveSkills();
 		final CharacterClass characterClass = evolutionContext.getCharacterClass();
 		final int pop = evolutionContext.getPopulation();
-		final int threads = evolutionContext.getThreads();// Runtime.getRuntime().availableProcessors();
-		// final float mutRate = (1f / length);
+		final int threads = evolutionContext.getThreads();
 
 		final List<Integer> ids = passives.stream().map(new Function<PassiveSkill, Integer>() {
 			@Override
@@ -82,8 +81,8 @@ public class JeneticsEvolver implements Evolver
 				.populationSize(pop)
 				.alterers(PublicCompositeAlterer.of(altererArray))
 				// .selector(new TournamentSelector<SkillGene, Float>())
-				.selector(new StochasticUniversalSelector<SkillGene, Float>())
-				// .selector(new BoltzmannSelector<SkillGene, Float>(4))
+				// .selector(new StochasticUniversalSelector<SkillGene, Float>())
+				.selector(new BoltzmannSelector<SkillGene, Float>(8))
 				// .maximalPhenotypeAge(50)
 				// .fitnessScaler(f -> f * .9f + 10000f)
 				.executor(exec)

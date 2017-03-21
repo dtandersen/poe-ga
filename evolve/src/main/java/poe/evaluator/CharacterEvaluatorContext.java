@@ -771,4 +771,6 @@ public interface CharacterEvaluatorContext
 	float getManaBeforeLife();
 
 	float getEnemyElemResist();
+
+	float rising(float x);
 }

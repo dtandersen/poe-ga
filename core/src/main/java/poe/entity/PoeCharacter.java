@@ -21,19 +21,25 @@ public class PoeCharacter
 
 	private int skillPoints = 123;
 
-	public PoeCharacter(final CharacterClass characterClass)
+	public PoeCharacter(final CharacterClass characterClass, final int level)
 	{
 		this.characterClass = characterClass;
 		attributes = new HashMap<>();
 		stats = new StatValues();
 		character = new CharacterState();
 
-		calculateBaseAttributes(1, characterClass);
+		character.setLevel(level);
+		calculateBaseAttributes(level, characterClass);
 	}
+
+	// public PoeCharacter(final CharacterBuilder characterBuilder)
+	// {
+	// this(characterBuilder.characterClass, 1);
+	// }
 
 	public PoeCharacter(final CharacterBuilder characterBuilder)
 	{
-		this(characterBuilder.characterClass);
+		this(characterBuilder.characterClass, characterBuilder.level);
 	}
 
 	public float getAttributeValue(final Attribute attribute)
@@ -63,7 +69,8 @@ public class PoeCharacter
 
 	public boolean addPassiveSkill(final PassiveSkill passiveSkill)
 	{
-		if (passiveSkillCount() > skillPoints) { return false; }
+		// todo: unit test passiveSkillCount() >= skillPoints
+		if (passiveSkillCount() >= skillPoints) { return false; }
 		if (passiveSkill == null) { return false; }
 		if (hasPassiveSkill(passiveSkill.getId())) { return false; }
 		if (character.size() > 0 && passiveSkill.isClassStartingNode()) { return false; }
@@ -255,10 +262,10 @@ public class PoeCharacter
 		return character.getLevel();
 	}
 
-	public void setLevel(final int level)
-	{
-		character.setLevel(level);
-	}
+	// public void setLevel(final int level)
+	// {
+	// character.setLevel(level);
+	// }
 
 	public void addItem(final CharacterItem item)
 	{
@@ -276,6 +283,15 @@ public class PoeCharacter
 		return adjustedStatsCache.getStatValues();
 	}
 
+	public float getAdjustedStat(final Stat manaGainOnHit)
+	{
+		final Map<Stat, Float> stats = new HashMap<>();
+		getAdjustedStats().stream().forEach(stat -> stats.put(stat.getStat(), stat.getValue()));
+		final Float statValue = stats.get(manaGainOnHit);
+		if (statValue == null) { return 0; }
+		return statValue;
+	}
+
 	public void setItems(final List<CharacterItem> items)
 	{
 		character.setItems(items);
@@ -288,6 +304,8 @@ public class PoeCharacter
 
 	public static class CharacterBuilder
 	{
+		public int level = 1;
+
 		private CharacterClass characterClass;
 
 		public PoeCharacter build()

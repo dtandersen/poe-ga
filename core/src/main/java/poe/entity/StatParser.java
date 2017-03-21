@@ -27,6 +27,7 @@ public class StatParser
 			}
 		}
 
+		System.out.println("BAD: " + skillDescription);
 		return null;
 	}
 }

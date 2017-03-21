@@ -1,14 +1,15 @@
 ---
 characterClass: witch
 level: 100
-genes: 20
-chromosomes: 15
+genes: 40
+chromosomes: 10
 skillPoints: 122
 population: 250
 generations: 1000000
+threads: 8
 alterers:
   - type: crossover
-    probability: .05
+    probability: .15
 #  - type: swap
 #    probability: .01
   #- type: mutator
@@ -16,15 +17,17 @@ alterers:
   - type: neighbor
     probability: .10
 evaluators:
-  - expression: 12500 * (1 + minionDamage/100) * (0.85 + minionAttackSpeed/100) * (3 + zombies) * (1 + hasPassive("Minion Instability") * 0 * increasedMinionLife/100.0)
-  - expression: 10000 * (1 + increasedMinionLife/100.0) * (3 + zombies)
+  - expression: 52500 * (1 + minionDamage/100) * (0.85 + minionAttackSpeed/100) * (3 + zombies) * (1 + hasPassive("Minion Instability") * 0 * increasedMinionLife/100.0)
+  - expression: 50000 * (1 + increasedMinionLife/100.0) * (3 + zombies)
   - expression: (ehp.maxLightningHit + ehp.maxFireHit + ehp.maxColdHit + ehp.maxPhysicalHit)
-  - expression: 2 * min(dexterity, 150) * min(dexterity, 150)
+#  - expression: 2 * min(dexterity, 150) * min(dexterity, 150)
 #  - expression: 2 * min(strength, 150) * min(strength, 150)
-  - expression: 250 * min(dexterity, 150)
-  - expression: 250 * min(strength, 150)
-  - expression: 25000 * min(jewels, 5)
-  - expression: 10000 * manaReserved
+  - expression: 100 * min(dexterity, 150)
+  - expression: 100 * min(strength, 150)
+  - expression: 25000 * min(jewels, 5) + 5000 * jewels
+#  - expression: 25000 * min(jewels, 5)
+  - expression: 500000 * manaReserved
+  - expression: 5000 * min(maxMana * (1 + increasedMaxMana/100.0) * (manaRegenerationRate/100.0) - (12 * (1.25 * (1+castSpeed/100.0))), 0)
 items:
   - stats:
     - stat: +73 to maximum Energy Shield
@@ -32,13 +35,14 @@ items:
   - stats:
     - stat: +15 to Intelligence
     - stat: +81 to maximum Life
-    - stat: 8% increased Energy Shield
+    - stat: 8% increased maximum Energy Shield
   - stats:
     - stat: +20 to strength
     - stat: +2 to maximum Energy Shield
-    - stat: 2% increased Energy Shield
+    - stat: 2% increased maximum Energy Shield
     - stat: +27% to Cold Resistance
     - stat: +18% to Lightning Resistance
+    - stat: 70% increased Cast Speed
   - stats:
     - stat: +23 to maximum Energy Shield
   - stats:

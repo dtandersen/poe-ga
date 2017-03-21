@@ -1,6 +1,7 @@
 package poe.jenetics;
 
 import java.util.List;
+import java.util.Set;
 import org.jenetics.AbstractChromosome;
 import org.jenetics.Chromosome;
 import org.jenetics.util.ISeq;
@@ -9,7 +10,7 @@ import org.jenetics.util.MSeq;
 @SuppressWarnings("serial")
 public class SkillChromosome extends AbstractChromosome<SkillGene>
 {
-	private final List<Integer> allowedSkills;
+	private final Set<Integer> allowedSkills;
 
 	protected SkillChromosome(final ISeq<? extends SkillGene> genes)
 	{
@@ -17,12 +18,12 @@ public class SkillChromosome extends AbstractChromosome<SkillGene>
 		allowedSkills = genes.get(0).getAllowedSkills();
 	}
 
-	public SkillChromosome(final List<Integer> allowedSkills, final int length)
+	public SkillChromosome(final Set<Integer> allowedSkills, final int length)
 	{
 		this(SkillGene.seq(allowedSkills, length));
 	}
 
-	public SkillChromosome(final List<Integer> allowedSkills, final List<Integer> actualSkills)
+	public SkillChromosome(final Set<Integer> allowedSkills, final List<Integer> actualSkills)
 	{
 		this(SkillGene.seq(allowedSkills, actualSkills));
 	}
@@ -39,7 +40,7 @@ public class SkillChromosome extends AbstractChromosome<SkillGene>
 		return new SkillChromosome(this.allowedSkills, length());
 	}
 
-	public static Iterable<SkillChromosome> seq(final List<Integer> ids, final int length)
+	public static Iterable<SkillChromosome> seq(final Set<Integer> ids, final int length)
 	{
 		return MSeq.<SkillChromosome> ofLength(1)
 				.fill(() -> new SkillChromosome(ids, length))
@@ -47,7 +48,7 @@ public class SkillChromosome extends AbstractChromosome<SkillGene>
 	}
 
 	public static Iterable<SkillChromosome> seq(
-			final List<Integer> ids,
+			final Set<Integer> ids,
 			final int length,
 			final int chromosomeCount)
 	{
@@ -56,7 +57,7 @@ public class SkillChromosome extends AbstractChromosome<SkillGene>
 				.toISeq();
 	}
 
-	public static Iterable<SkillChromosome> seq(final List<Integer> allowedSkills, final List<Integer> actualSkills)
+	public static Iterable<SkillChromosome> seq(final Set<Integer> allowedSkills, final List<Integer> actualSkills)
 	{
 		return MSeq.<SkillChromosome> ofLength(1)
 				.fill(() -> new SkillChromosome(allowedSkills, actualSkills))

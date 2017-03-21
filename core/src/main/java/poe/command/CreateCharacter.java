@@ -30,8 +30,7 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 	@Override
 	public void execute()
 	{
-		final PoeCharacter character = new PoeCharacter(request.getCharacterClass());
-		character.setLevel(request.getLevel());
+		final PoeCharacter character = new PoeCharacter(request.getCharacterClass(), request.getLevel());
 		request
 				.getItems()
 				.stream()

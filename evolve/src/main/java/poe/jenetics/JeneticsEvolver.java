@@ -10,7 +10,7 @@ import org.jenetics.Alterer;
 import org.jenetics.Chromosome;
 import org.jenetics.Genotype;
 import org.jenetics.PublicCompositeAlterer;
-import org.jenetics.TournamentSelector;
+import org.jenetics.StochasticUniversalSelector;
 import org.jenetics.engine.Engine;
 import org.jenetics.engine.EvolutionResult;
 import org.jenetics.util.Factory;
@@ -81,22 +81,22 @@ public class JeneticsEvolver implements Evolver
 				.builder(fitnessFunction, gtf)
 				.populationSize(pop)
 				.alterers(PublicCompositeAlterer.of(altererArray))
-				.selector(new TournamentSelector<SkillGene, Float>())
-				// .selector(new StochasticUniversalSelector<SkillGene, Float>())
+				// .selector(new TournamentSelector<SkillGene, Float>())
+				.selector(new StochasticUniversalSelector<SkillGene, Float>())
 				// .selector(new BoltzmannSelector<SkillGene, Float>(4))
 				// .maximalPhenotypeAge(50)
-				.fitnessScaler(f -> f * .9f + 10000f)
+				// .fitnessScaler(f -> f * .9f + 10000f)
 				.executor(exec)
 				.build();
 
 		final EvolutionResult<SkillGene, Float> result = engine.stream()
 				.limit(evolutionContext.getGenerationLimit())
-				.peek(new EvolutionWatcher(new CharacterUpdateCallback(poeEvolutionResult), passiveSkillTree, evolutionContext.getCharacterClass(), evolutionContext.getCharacterEvaluator()))
+				.peek(new EvolutionWatcher(new CharacterUpdateCallback(poeEvolutionResult), passiveSkillTree, evolutionContext.getCharacterClass(), evolutionContext.getCharacterEvaluator(), evolutionContext.getLevel(), evolutionContext.getItems()))
 				.collect(EvolutionResult.toBestEvolutionResult());
 
 		final Chromosome<SkillGene> chromosome = result.getBestPhenotype().getGenotype().getChromosome(0);
 
-		final PoeCharacter character = new PoeCharacter(characterClass);
+		final PoeCharacter character = new PoeCharacter(characterClass, evolutionContext.getLevel());
 		character.addPassiveSkill(passiveSkillTree.findByName(characterClass.getRootPassiveSkillName()));
 		final List<PassiveSkill> myPassives = new ArrayList<>();
 		for (final SkillGene g : chromosome)

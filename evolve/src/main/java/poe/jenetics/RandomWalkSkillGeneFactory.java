@@ -1,6 +1,8 @@
 package poe.jenetics;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.jenetics.Genotype;
 import org.jenetics.util.Factory;
 import poe.entity.CharacterClass;
@@ -17,14 +19,14 @@ public class RandomWalkSkillGeneFactory implements Factory<Genotype<SkillGene>>
 
 	private final int length;
 
-	private final List<Integer> allowedSkills;
+	private final Set<Integer> allowedSkills;
 
 	public RandomWalkSkillGeneFactory(final PassiveSkillTree pst, final CharacterClass characterClass, final int length, final List<Integer> ids)
 	{
 		this.pst = pst;
 		this.characterClass = characterClass;
 		this.length = length;
-		this.allowedSkills = ids;
+		this.allowedSkills = new HashSet<>(ids);
 	}
 
 	@Override

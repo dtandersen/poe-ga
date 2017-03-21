@@ -30,7 +30,7 @@ public class RandomCharacterGenerator
 		PassiveSkill curSkill = skillTree.findByName(characterClass.getRootPassiveSkillName());
 		PassiveSkill prevSkill = curSkill;
 
-		final PoeCharacter character = new PoeCharacter(characterClass);
+		final PoeCharacter character = new PoeCharacter(characterClass, 1);
 		final PassiveSkill root = curSkill;
 		character.addPassiveSkill(root);
 

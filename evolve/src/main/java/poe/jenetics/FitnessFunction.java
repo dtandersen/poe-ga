@@ -47,8 +47,7 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Float>
 	public Float apply(final Genotype<SkillGene> genotype)
 	{
 		final PassiveSkill root = passiveSkillTree.findByName(characterClass.getRootPassiveSkillName());
-		final PoeCharacter character = new PoeCharacter(characterClass);
-		character.setLevel(level);
+		final PoeCharacter character = new PoeCharacter(characterClass, level);
 		character.setItems(items);
 		character.addPassiveSkill(root);
 		character.setSkillPoints(skillPoints);

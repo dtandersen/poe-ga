@@ -24,6 +24,8 @@ public class YamlConfig
 
 	private int skillpoints;
 
+	private int threads;
+
 	public YamlConfig()
 	{
 	}
@@ -126,6 +128,16 @@ public class YamlConfig
 	public void setSkillPoints(final int skillpoints)
 	{
 		this.skillpoints = skillpoints;
+	}
+
+	public int getThreads()
+	{
+		return threads;
+	}
+
+	public void setThreads(final int threads)
+	{
+		this.threads = threads;
 	}
 
 	public static class YamlAlterer

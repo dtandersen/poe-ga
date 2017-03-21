@@ -8,9 +8,10 @@ import org.jenetics.Phenotype;
 import org.jenetics.engine.EvolutionResult;
 import org.jenetics.util.ISeq;
 import poe.command.model.EvolutionStatus.EvolutionStatusBuilder;
-import poe.command.model.PureImmutableCharacter.ImmutableCharacterBuilder;
 import poe.command.model.ImmutableCharacter;
+import poe.command.model.PureImmutableCharacter.ImmutableCharacterBuilder;
 import poe.entity.CharacterClass;
+import poe.entity.CharacterItem;
 import poe.entity.PassiveSkill;
 import poe.entity.PoeCharacter;
 import poe.evaluator.CharacterEvaluator;
@@ -29,17 +30,25 @@ class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Float>>
 
 	private final CharacterEvaluator characterEvaluator;
 
+	private final int level;
+
+	private final List<CharacterItem> items;
+
 	public EvolutionWatcher(
 			final CharacterUpdateCallback callback,
 			final PassiveSkillTree passiveSkillTree,
 			final CharacterClass characterClass,
-			final CharacterEvaluator characterEvaluator)
+			final CharacterEvaluator characterEvaluator,
+			final int level,
+			final List<CharacterItem> items)
 	{
 		this.characterEvaluator = characterEvaluator;
+		this.items = items;
 		best = null;
 		this.callback = callback;
 		this.passiveSkillTree = passiveSkillTree;
 		this.characterClass = characterClass;
+		this.level = level;
 	}
 
 	@Override
@@ -52,7 +61,7 @@ class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Float>>
 			System.out.println("Generation: " + evolutionResult.getGeneration() + ", Fitness: " + evolutionResult.getBestFitness() + ", Age: " + oldest);
 			final Genotype<SkillGene> genotype = best.getGenotype();
 			final PoeCharacter character = make(genotype);
-
+			character.setItems(items);
 			final ImmutableCharacter retchar = ImmutableCharacterBuilder.character()
 					.from(character)
 					.build();
@@ -68,7 +77,7 @@ class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Float>>
 	private PoeCharacter make(final Genotype<SkillGene> genotype)
 	{
 		final PassiveSkill root = passiveSkillTree.findByName(characterClass.getRootPassiveSkillName());
-		final PoeCharacter character = new PoeCharacter(characterClass);
+		final PoeCharacter character = new PoeCharacter(characterClass, level);
 		character.addPassiveSkill(root);
 		for (int i = 0; i < genotype.length(); i++)
 		{

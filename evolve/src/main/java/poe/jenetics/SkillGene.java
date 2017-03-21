@@ -1,6 +1,7 @@
 package poe.jenetics;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import org.jenetics.Gene;
@@ -11,18 +12,23 @@ import org.jenetics.util.RandomRegistry;
 public class SkillGene implements Gene<Integer, SkillGene>,
 		Comparable<SkillGene>
 {
-	private final List<Integer> allowedSkills;
+	private final Set<Integer> allowedSkills;
 
 	private final int passiveSkillId;
 
-	public SkillGene(final List<Integer> allowedSkills)
+	public SkillGene(final Set<Integer> allowedSkills)
 	{
-		this(
-				allowedSkills,
-				allowedSkills.get(RandomRegistry.getRandom().nextInt(allowedSkills.size())));
+		this.allowedSkills = allowedSkills;
+		this.passiveSkillId = randomSetElement(allowedSkills);
 	}
 
-	public SkillGene(final List<Integer> allowedSkills, final Integer passiveSkillId)
+	int randomSetElement(final Set<Integer> set)
+	{
+		final int index = RandomRegistry.getRandom().nextInt(set.size());
+		return SetUtil.randomElement(set, index);
+	}
+
+	public SkillGene(final Set<Integer> allowedSkills, final Integer passiveSkillId)
 	{
 		this.allowedSkills = allowedSkills;
 		this.passiveSkillId = passiveSkillId;
@@ -58,14 +64,14 @@ public class SkillGene implements Gene<Integer, SkillGene>,
 		return new SkillGene(allowedSkills, value);
 	}
 
-	public static ISeq<? extends SkillGene> seq(final List<Integer> passiveSkillIds, final int length)
+	public static ISeq<? extends SkillGene> seq(final Set<Integer> passiveSkillIds, final int length)
 	{
 		return MSeq.<SkillGene> ofLength(length)
 				.fill(() -> new SkillGene(passiveSkillIds))
 				.toISeq();
 	}
 
-	public static ISeq<? extends SkillGene> seq(final List<Integer> allowedSkills, final List<Integer> actualSkills)
+	public static ISeq<? extends SkillGene> seq(final Set<Integer> allowedSkills, final List<Integer> actualSkills)
 	{
 		final MSeq<SkillGene> ofLength = MSeq.<SkillGene> ofLength(actualSkills.size());
 		ofLength.setAll(actualSkills.stream()
@@ -86,7 +92,7 @@ public class SkillGene implements Gene<Integer, SkillGene>,
 		return "" + getAllele();
 	}
 
-	public List<Integer> getAllowedSkills()
+	public Set<Integer> getAllowedSkills()
 	{
 		return allowedSkills;
 	}

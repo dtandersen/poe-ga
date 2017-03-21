@@ -123,8 +123,7 @@ public class PoeBuildEvolver implements CommandLineRunner
 		@Override
 		public int getThreads()
 		{
-			// return Runtime.getRuntime().availableProcessors() * 2;
-			return 20;
+			return evolveConfig.getThreads();
 		}
 
 		@Override

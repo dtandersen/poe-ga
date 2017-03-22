@@ -61,15 +61,15 @@ class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Float>>
 		}
 		else if ((evolutionResult.getTotalGenerations() % 100 == 0))
 		{
-			printgeno(evolutionResult, evolutionResult.getBestPhenotype());
+			// printgeno(evolutionResult, evolutionResult.getBestPhenotype());
 		}
 	}
 
-	private void printgeno(final EvolutionResult<SkillGene, Float> evolutionResult, final Phenotype<SkillGene, Float> best)
+	private void printgeno(final EvolutionResult<SkillGene, Float> evolutionResult, final Phenotype<SkillGene, Float> phenotype)
 	{
 		final long oldest = evolutionResult.getWorstPhenotype().getAge(evolutionResult.getGeneration());
 		System.out.println("Generation: " + evolutionResult.getGeneration() + ", Fitness: " + evolutionResult.getBestFitness() + ", Age: " + oldest);
-		final Genotype<SkillGene> genotype = best.getGenotype();
+		final Genotype<SkillGene> genotype = phenotype.getGenotype();
 		final PoeCharacter character = make(genotype);
 		character.setItems(items);
 		final ImmutableCharacter retchar = ImmutableCharacterBuilder.character()

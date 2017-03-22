@@ -6,24 +6,25 @@ chromosomes: 1
 skillPoints: 122
 population: 500
 generations: 1000000
-threads: 8
+threads: 1
 alterers:
-  - type: crossover
-    probability: .001
+#  - type: crossover
+#    probability: .5
 #  - type: swap
-#    probability: .005
+#    probability: .0025
 #  - type: mutator
-#    probability: .005
+#    probability: .15
   - type: neighbor
-    probability: .1
+    probability: .05
 evaluators:
   - expression: 52500 * (1 + minionDamage/100) * (0.85 + minionAttackSpeed/100) * (3 + zombies) * (1 + hasPassive("Minion Instability") * 0 * increasedMinionLife/100.0)
   - expression: 50000 * (1 + increasedMinionLife/100.0) * (3 + zombies)
   - expression: (ehp.maxLightningHit + ehp.maxFireHit + ehp.maxColdHit + ehp.maxPhysicalHit)
 #  - expression: 2 * min(dexterity, 150) * min(dexterity, 150)
 #  - expression: 2 * min(strength, 150) * min(strength, 150)
-  - expression: 100 * min(dexterity, 150)
-  - expression: 100 * min(strength, 150)
+  - expression: 200 * min(min(dexterity,strength), 150)
+#  - expression: 100 * min(dexterity, 150)
+#  - expression: 100 * min(strength, 150)
   - expression: 25000 * min(jewels, 5) + 5000 * jewels
 #  - expression: 25000 * min(jewels, 5)
 #  - expression: 29411 * min(manaReserved, 34)

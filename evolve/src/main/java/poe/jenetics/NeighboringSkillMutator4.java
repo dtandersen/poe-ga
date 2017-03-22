@@ -60,7 +60,8 @@ public class NeighboringSkillMutator4 extends AbstractAlterer<SkillGene, Float>
 		final Chromosome<SkillGene> chromosome = chromosomes.get(chromosomeIndex);
 		final MSeq<SkillGene> genes = chromosome.toSeq().copy();
 
-		final int mutations = mutate(genes, _probability, chromosomes);
+		final AtomicInteger atom = new AtomicInteger(randomPassiveSkillId(chromosomes));
+		final int mutations = mutate(genes, _probability, chromosomes, atom);
 		if (mutations > 0)
 		{
 			chromosomes.set(chromosomeIndex, chromosome.newInstance(genes.toISeq()));
@@ -69,20 +70,20 @@ public class NeighboringSkillMutator4 extends AbstractAlterer<SkillGene, Float>
 		return mutations;
 	}
 
-	protected int mutate(final MSeq<SkillGene> genes, final double p, final MSeq<Chromosome<SkillGene>> chromosomes)
+	protected int mutate(final MSeq<SkillGene> genes, final double p, final MSeq<Chromosome<SkillGene>> chromosomes, final AtomicInteger passiveSkillId)
 	{
 		final Random random = RandomRegistry.getRandom();
-		final AtomicInteger atom;
-		atom = new AtomicInteger(randomPassiveSkillId(chromosomes));
+		// final AtomicInteger atom;
+		// atom = new AtomicInteger(randomPassiveSkillId(chromosomes));
 
-		final float p2 = random.nextFloat();
+		// final float p2 = random.nextFloat();
 		// final float p2 = (random.nextFloat() + random.nextFloat()) / 2f;
-		return (int)indexes(RandomRegistry.getRandom(), genes.length(), p2)
+		return (int)indexes(RandomRegistry.getRandom(), genes.length(), p)
 				.peek(i -> {
-					final int randomNeighbor = atom.get();
+					final int randomNeighbor = passiveSkillId.get();
 					final Integer newNeighbor = pst.randomNeighbor(randomNeighbor, random);
 					genes.set(i, genes.get(i).newInstance(newNeighbor));
-					atom.set(newNeighbor);
+					passiveSkillId.set(newNeighbor);
 				})
 				.count();
 	}

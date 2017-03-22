@@ -30,7 +30,7 @@ public class NeighboringSkillMutator2 extends Mutator<SkillGene, Float>
 		// final Set<Integer> walk = pst.randomWalk(startPoint, 10, random);
 
 		final AtomicInteger atom = new AtomicInteger(-1);
-		return (int)indexes(RandomRegistry.getRandom(), genes.length(), random.nextFloat())
+		return (int)indexes(RandomRegistry.getRandom(), genes.length(), p)
 				.peek(i -> {
 					if (atom.get() == -1)
 					{

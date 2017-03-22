@@ -92,7 +92,7 @@ public class PoeCharacter
 	{
 		for (final PassiveSkill passiveSkill : passiveSkills)
 		{
-			addPassiveSkill(passiveSkill);
+			if (!addPassiveSkill(passiveSkill) && passiveSkillCount() >= skillPoints) { return; }
 		}
 	}
 
@@ -219,6 +219,8 @@ public class PoeCharacter
 
 	public void sneakyAdd(final List<PassiveSkill> passives)
 	{
+		// addPassiveSkills(passives);
+		// return;
 		List<PassiveSkill> tryToAdd = new ArrayList<>(passives);
 		List<PassiveSkill> notAdded = new ArrayList<>();
 

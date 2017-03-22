@@ -57,21 +57,30 @@ class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Float>>
 		if (best == null || best.compareTo(evolutionResult.getBestPhenotype()) < 0)
 		{
 			best = evolutionResult.getBestPhenotype();
-			final long oldest = evolutionResult.getWorstPhenotype().getAge(evolutionResult.getGeneration());
-			System.out.println("Generation: " + evolutionResult.getGeneration() + ", Fitness: " + evolutionResult.getBestFitness() + ", Age: " + oldest);
-			final Genotype<SkillGene> genotype = best.getGenotype();
-			final PoeCharacter character = make(genotype);
-			character.setItems(items);
-			final ImmutableCharacter retchar = ImmutableCharacterBuilder.character()
-					.from(character)
-					.build();
-
-			callback.accept(new EvolutionStatusBuilder()
-					.withCharacter(retchar)
-					.withGeneration(evolutionResult.getTotalGenerations())
-					.withEvaluation(characterEvaluator.evaluate(new CharacterEvaluatorContextAdapter(character)))
-					.build());
+			printgeno(evolutionResult, best);
 		}
+		else if ((evolutionResult.getTotalGenerations() % 100 == 0))
+		{
+			printgeno(evolutionResult, evolutionResult.getBestPhenotype());
+		}
+	}
+
+	private void printgeno(final EvolutionResult<SkillGene, Float> evolutionResult, final Phenotype<SkillGene, Float> best)
+	{
+		final long oldest = evolutionResult.getWorstPhenotype().getAge(evolutionResult.getGeneration());
+		System.out.println("Generation: " + evolutionResult.getGeneration() + ", Fitness: " + evolutionResult.getBestFitness() + ", Age: " + oldest);
+		final Genotype<SkillGene> genotype = best.getGenotype();
+		final PoeCharacter character = make(genotype);
+		character.setItems(items);
+		final ImmutableCharacter retchar = ImmutableCharacterBuilder.character()
+				.from(character)
+				.build();
+
+		callback.accept(new EvolutionStatusBuilder()
+				.withCharacter(retchar)
+				.withGeneration(evolutionResult.getTotalGenerations())
+				.withEvaluation(characterEvaluator.evaluate(new CharacterEvaluatorContextAdapter(character)))
+				.build());
 	}
 
 	private PoeCharacter make(final Genotype<SkillGene> genotype)

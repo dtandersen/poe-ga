@@ -82,7 +82,7 @@ public class JeneticsEvolver implements Evolver
 				.alterers(PublicCompositeAlterer.of(altererArray))
 				// .selector(new TournamentSelector<SkillGene, Float>())
 				// .selector(new StochasticUniversalSelector<SkillGene, Float>())
-				.selector(new BoltzmannSelector<SkillGene, Float>(8))
+				.selector(new BoltzmannSelector<SkillGene, Float>(2))
 				// .maximalPhenotypeAge(50)
 				// .fitnessScaler(f -> f * .9f + 10000f)
 				.executor(exec)

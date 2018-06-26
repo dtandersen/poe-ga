@@ -4,6 +4,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import com.google.gson.Gson;
 import poe.entity.CharacterClass;
@@ -26,7 +27,7 @@ public class JsonPassiveSkillRepository implements PassiveSkillRepository
 		final Stuff x = gson.fromJson(new InputStreamReader(in), Stuff.class);
 		final List<PassiveSkill> skills = new ArrayList<>();
 
-		for (final Node22 n : x.nodes)
+		for (final Node22 n : x.nodes.values())
 		{
 			if (n.asc || n.ascendancyName != null)
 			{
@@ -86,7 +87,7 @@ public class JsonPassiveSkillRepository implements PassiveSkillRepository
 
 	public static final class Stuff
 	{
-		List<Node22> nodes;
+		Map<Integer, Node22> nodes;
 
 		public static final class Node22
 		{

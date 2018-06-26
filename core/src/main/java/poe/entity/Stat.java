@@ -20,7 +20,7 @@ public enum Stat
 
 	// flask
 	FLASK_LIFE(INT + "% increased Life Recovery from Flasks"),
-	FLASK_RECOVERY(INT + "% increased Flask Recovery Speed"),
+	FLASK_RECOVERY(INT + "% increased Flask Recovery rate"),
 	FLASK_EXTRA(INT + "% reduced Flask Charges used"),
 	FLASK_DMG(INT + "% increased Damage while using a Flask"),
 	FLASK_DURATION(INT + "% increased Flask effect duration"),
@@ -77,9 +77,9 @@ public enum Stat
 	ELEMENTAL_STATUS_AILMENTS(INT + "% increased Duration of Elemental Status Ailments on Enemies"),
 	ELEMENTAL_DAMAGE_ON_CRIT(INT + "% more Elemental Damage if you've Crit in the past 8 seconds"),
 	CSC_ELEM_STATUS(INT + "% increased Critical Strike Chance against Enemies affected"), // by
-																							// Elemental
-																							// Status
-																							// Ailments
+																							 // Elemental
+																							 // Status
+																							 // Ailments
 
 	FIRE_DAMAGE(INT + "% increased Fire Damage"),
 	FIRE_DAMAGE_CONVERT(INT + "% of Physical, Cold and Lightning Damage Converted to Fire Damage"),
@@ -154,7 +154,8 @@ public enum Stat
 	PROJ_FAR("Projectile Attacks gain damage as they travel farther, dealing up to 30% more Damage to targets"),
 	PROJ_SKILL("Skills fire an additional Projectile"),
 	PROJ_PIERCE(INT + "% chance of Projectiles Piercing"),
-	PROJ_POINT_BLANK("Projectile Attacks deal up to " + INT + "% more Damage to targets at the start of their movement, dealing less Damage to targets as the projectile travels farther"),
+	PROJ_POINT_BLANK("Projectile Attacks deal up to " + INT +
+			"% more Damage to targets at the start of their movement, dealing less Damage to targets as the projectile travels farther"),
 	PROJ_STR("The increase to Physical Damage from Strength applies to Projectile Attacks as well as Melee Attacks"),
 
 	// arrows
@@ -479,7 +480,7 @@ public enum Stat
 	// dodge
 	DODGE_ATTACK(INT + "% chance to Dodge Attacks"),
 	DODGE_ATTACK2(INT + "% additional chance to Dodge Attacks"),
-	DODGE_SPELL(INT + "% chance to Dodge Spell Damage"),
+	DODGE_SPELL(INT + "% Chance to Dodge Spell Hits"),
 	DODGE_ACROBATICS("30% Chance to Dodge Attacks. 50% less Armour and Energy Shield, 30% less Chance to Block Spells and Attacks"),
 
 	// aura
@@ -531,14 +532,16 @@ public enum Stat
 	ATTACK_CAST_SPEED(INT + "% increased Attack and Cast Speed if Energy"),
 	ATK_CAST(INT + "% increased Attack and Cast Speed"),
 	ATCK_CAST_MOVE(INT + "% increased Attack and Cast Speed if you've used a Movement Skill Recently"),
-	LIFE_MANA_REGEN(INT + "% increased Recovery Rate of Life, Mana and Energy Shield if you've Killed an Enemy affected by your Damage Over Time Recently"),
+	LIFE_MANA_REGEN(
+			INT + "% increased Recovery Rate of Life, Mana and Energy Shield if you've Killed an Enemy affected by your Damage Over Time Recently"),
 	AVOID_ELEM(INT + "% chance to Avoid Elemental Status Ailments"),
 	FREEZE_SHOCK_IGNITE(INT + "% chance to Freeze, Shock and Ignite"),
 	NEVER_EVADED("Your hits can't be Evaded"),
 	NEVER_CRIT("Never deal Critical Strikes"),
 	ENEMY_NEVER_LEECH("Enemies Cannot Leech Life From You"),
 	MIND_OVER_MATTER("When Hit, " + INT + "% of Damage is taken from Mana before Life"),
-	ENEMY_ELEM_RESIST("Enemies you hit with Elemental Damage temporarily get +25% Resistance to those Elements and -50% Resistance to other Elements");
+	ENEMY_ELEM_RESIST(
+			"Enemies you hit with Elemental Damage temporarily get +25% Resistance to those Elements and -50% Resistance to other Elements");
 
 	private Pattern pattern;
 

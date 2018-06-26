@@ -1,9 +1,12 @@
 package poe.app.evolve.selenium;
 
+import java.util.List;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import poe.app.evolve.CharacterView;
 import poe.command.model.EvolutionStatus;
 
@@ -25,10 +28,91 @@ public class SeleniumCharacterView implements CharacterView
 	@Override
 	public void update(final EvolutionStatus evolutionStatus)
 	{
+		final WebDriverWait wait = new WebDriverWait(driver, 10);
+		final WebElement builds = driver.findElement(By.className("user-builds-content-container"));
+		if (builds.isDisplayed())
+		{
+			final WebElement closeButton = driver.findElement(By.cssSelector("#user-builds-toggle"));
+			closeButton.click();
+		}
+		closeAds(By.className("fixed-mobile-close"));
+		closeAds(By.className("tynt-close-btn-container"));
+
+		waitUntilNoAds();
+		closeBackdrop();
+		importPassiveSkillTree(evolutionStatus, wait);
+		closeBackdrop();
+	}
+
+	private void waitUntilNoAds()
+	{
+		isNotPresentOrInvisible(By.className("fixed-mobile-close"));
+		isNotPresentOrInvisible(By.className("tynt-close-btn-container"));
+	}
+
+	private void isNotPresentOrInvisible(final By className)
+	{
+		try
+		{
+			final WebDriverWait wait = new WebDriverWait(driver, 10);
+			wait.until(ExpectedConditions.invisibilityOf(driver.findElement(className)));
+		}
+		catch (final Exception e)
+		{
+		}
+	}
+
+	private void importPassiveSkillTree(final EvolutionStatus evolutionStatus, final WebDriverWait wait2)
+	{
+		final WebDriverWait wait = new WebDriverWait(driver, 10);
+		final WebElement element = wait
+				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#footer-import-button")));
+		element.click();
 		final WebElement searchBox = driver.findElement(By.id("passive-tree-decode"));
 		searchBox.sendKeys(evolutionStatus.getCharacter().getUrl());
 		final WebElement button = driver.findElement(By.id("passive-tree-decode-button"));
 		button.click();
+	}
+
+	private void closeBackdrop()
+	{
+		try
+		{
+			final WebElement backdrop = driver.findElement(By.className("backdrop"));
+			if (backdrop.isEnabled())
+			{
+				backdrop.click();
+			}
+		}
+		catch (final Exception e)
+		{
+		}
+	}
+
+	private void closeAds(final By className)
+	{
+		try
+		{
+			final List<WebElement> ads = driver.findElements(className);
+
+			// WebElement ad = driver.findElement(By.partialLinkText("Close
+			// Ad"));
+			// WebElement element =
+			// wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#footer-import-button")));
+			for (final WebElement ad : ads)
+			{
+				try
+				{
+					ad.click();
+				}
+				catch (final Exception e)
+				{
+				}
+			}
+		}
+		catch (final Exception e)
+		{
+		}
 	}
 
 	@Override

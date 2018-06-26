@@ -71,7 +71,7 @@ public class PassiveSkill
 	@Override
 	public String toString()
 	{
-		return name + ": " + attributes + ", outputs=" + outputs;
+		return name + " (" + id + "): " + attributes + ", outputs=" + outputs;
 	}
 
 	public boolean hasAttribute(final Stat expectedAttributeType)

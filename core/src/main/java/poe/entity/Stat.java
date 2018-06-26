@@ -23,8 +23,9 @@ public enum Stat
 	FLASK_RECOVERY(INT + "% increased Flask Recovery rate"),
 	FLASK_EXTRA(INT + "% reduced Flask Charges used"),
 	FLASK_DMG(INT + "% increased Damage while using a Flask"),
+	FLASK_ELEM_DMG(INT + "% increased Elemental Damage during any Flask Effect"),
 	FLASK_DURATION(INT + "% increased Flask effect duration"),
-	FLASK_INCREASED_EFFECT(INT + "% increased effect of Flasks"),
+	FLASK_INCREASED_EFFECT(INT + "% increased effect of Flasks on you"),
 
 	// stats
 	STRENGTH(PLUS + INT + " to Strength"),
@@ -61,34 +62,50 @@ public enum Stat
 	ATTACK_SPEED(INT + "% increased Attack Speed"),
 	STUN_THRESH(INT + "% reduced Enemy Stun Threshold"),
 
-	// extra damage
+	// damage
+	DAMAGE(INT + "% increased Damage"),
 	DAMAGE_ATTACK(INT + "% increased Attack Damage"),
-	DAMAGE_FROZEN_SHOCK_IGNITED(INT + "% increased Damage against Frozen, Shocked or Ignited Enemies"),
-	DAMAGE_ON_ENEMY_LOW_LIFE("Hits deal " + INT + "% increased Damage against Enemies that are on Low Life"),
 
-	PHYSICAL_DAMAGE(INT + "% increased Physical Damage"),
-	PHYSICAL_DAMAGE_2(INT + "% increased Physical Damage with Attacks"),
+	// status damage
+	DAMAGE_FROZEN_SHOCK_IGNITED(INT + "% increased Damage with Hits against Frozen, Shocked or Ignited Enemies"),
+	DAMAGE_ON_ENEMY_LOW_LIFE(INT + "% increased Damage with Hits against Enemies that are on Low Life"),
+
+	// physical damage
+	PHYSICAL_DAMAGE(INT + "% increased Global Physical Damage"),
+	PHYSICAL_DAMAGE_2(INT + "% increased Attack Physical Damage"),
 	PHYSICAL_DOT(INT + "% increased Physical Damage over Time"),
 
 	CHAOS_DAMAGE(INT + "% increased Chaos Damage"),
 	CHAOS_DAMAGE_ON_PHYSICAL("Gain " + INT + "% of Physical Damage as Extra Chaos Damage"),
 
+	// elemental
 	ELEM_DAMAGE(INT + "% increased Elemental Damage"),
+	ELEM_DAMAGE_ATTACK(INT + "% increased Elemental Damage with Attack Skills"),
 	ELEMENTAL_STATUS_AILMENTS(INT + "% increased Duration of Elemental Status Ailments on Enemies"),
 	ELEMENTAL_DAMAGE_ON_CRIT(INT + "% more Elemental Damage if you've Crit in the past 8 seconds"),
-	CSC_ELEM_STATUS(INT + "% increased Critical Strike Chance against Enemies affected"), // by
-																							 // Elemental
-																							 // Status
-																							 // Ailments
+	CSC_ELEM_STATUS(INT + "% increased Critical Strike Chance against Enemies affected"),
+	ELEMENTAL_AILMENT_DURATION(INT + "% increased Duration of Elemental Ailments on Enemies"),
+	ELEMENTAL_AILMENT_EFFECT(INT + "% increased Effect of non-Damaging Ailments on Enemies"),
 
+	// fire
 	FIRE_DAMAGE(INT + "% increased Fire Damage"),
-	FIRE_DAMAGE_CONVERT(INT + "% of Physical, Cold and Lightning Damage Converted to Fire Damage"),
+	FIRE_DAMAGE_ATTACK(INT + "% increased Fire Damage with Attack Skills"),
+	FIRE_DAMAGE_CONVERT(INT + "% of Physical, Cold and Lightning Damage Converted to Fire Damage\\nDeal no Non-Fire Damage"),
 	BURN_DAMAGE(INT + "% increased Burning Damage"),
 	PHYSICAL_DAMAGE_AS_FIRE_DAMAGE("Gain " + INT + "% of Physical Damage as Extra Fire Damage"),
 	FIRE_DAMAGE_ONLY("Deal no Non-Fire Damage"),
 
+	// lightning
 	LIGHTNING_DAMAGE(INT + "% increased Lightning Damage"),
+	LIGHTNING_DAMAGE_ATTACK(INT + "% increased Lightning Damage with Attack Skills"),
 
+	// cold
+	PHYSICAL_TO_COLD(INT + "% of Physical Damage Converted to Cold Damage"),
+	COLD(INT + "% increased Cold Damage"),
+	COLD_ATTACK(INT + "% increased Cold Damage with Attack Skills"),
+	COLD_PEN("Damage Penetrates " + INT + "% Cold Resistance"),
+
+	// dot
 	DOT_DAMAGE(INT + "% increased Damage over Time"),
 
 	// spell damage
@@ -107,6 +124,8 @@ public enum Stat
 	TRAP_ELEM_PEN("Trap Damage Penetrates " + INT + "% Elemental Resistances"),
 	TRAP_ADDITIONAL("Can have up to " + INT + " additional Trap[s]? placed at a time"),
 	TRAP_FRENZY_CHARGE(INT + "% chance to gain a Frenzy Charge when your Trap is triggered by an Enemy"),
+	TRAP_RED(INT + "% reduced Damage taken from Traps and Mines"),
+	TRAP_AOE(INT + "% increased Trap Trigger Area of Effect"),
 
 	// mine
 	MINE_CSM(PLUS_INT + "% to Critical Strike Multiplier with Mines"),
@@ -118,16 +137,23 @@ public enum Stat
 	MINE_ADDITIONAL("Can have up to 1 additional Remote Mine placed at a time"),
 	MINE_INSTANT("Detonating Mines is Instant"),
 	MINE_INVULN("Mines cannot be Damaged for 5 seconds after being Placed"),
-	MINE_RADIUS(INT + "% increased Mine Detonation Radius"),
+	MINE_RADIUS(INT + "% increased Mine Detonation Area of Effect"),
 	MINE_ELEM_PEN("Mine Damage Penetrates " + INT + "% Elemental Resistances"),
 
 	// chill
 	CHILL_ON_UNFREEZE("Enemies Become Chilled as they Unfreeze"),
+	CHILL_DURATION(INT + "% increased Chill Duration on Enemies"),
+	CHILL_EFFECT(INT + "% increased Effect of Chill"),
+
+	// freeze
+	FREEZE_CHANCE(INT + "% chance to Freeze"),
 	FREEZE_ON_CHILL(INT + "% chance to Freeze Enemies which are Chilled"),
+	FREEZE_DURATION(INT + "% increased Freeze Duration on Enemies"),
 
 	// shock
 	SHOCK_DURATION(INT + "% increased Shock Duration on Enemies"),
 	SHOCK_CHANCE(INT + "% chance to Shock"),
+	SHOCK_EFFECT(INT + "% increased Effect of Shock"),
 
 	// skills
 	SKILL_DUR(INT + "% increased Skill Effect Duration"),
@@ -147,6 +173,7 @@ public enum Stat
 	TOTAL_GLOBAL_CSC(INT + "% increased Global Critical Strike Chance if you've Summoned a Totem Recently"),
 	TOTEM_ADD("Can have up to " + INT + " additional Totem summoned at a time"),
 	TOTEM_RESIST_ELEMENTAL("Totems gain " + PLUS_INT + "% to all Elemental Resistances"),
+	ANCESTRAL_BOND("You can't deal Damage with Skills yourself\\nCan have up to 1 additional Totem summoned at a time"),
 
 	// projectiles
 	PROJ_DAMAGE(INT + "% increased Projectile Damage"),
@@ -154,8 +181,9 @@ public enum Stat
 	PROJ_FAR("Projectile Attacks gain damage as they travel farther, dealing up to 30% more Damage to targets"),
 	PROJ_SKILL("Skills fire an additional Projectile"),
 	PROJ_PIERCE(INT + "% chance of Projectiles Piercing"),
-	PROJ_POINT_BLANK("Projectile Attacks deal up to " + INT +
-			"% more Damage to targets at the start of their movement, dealing less Damage to targets as the projectile travels farther"),
+	PROJ_PIERCE_1("Projectiles Pierce an additional Target"),
+	PROJ_PIERCE_2("Projectiles Pierce 2 additional Targets"),
+	PROJ_POINT_BLANK("Projectile Attacks deal up to " + INT + "% more Damage to targets at the start of their movement, dealing less Damage to targets as the projectile travels farther"),
 	PROJ_STR("The increase to Physical Damage from Strength applies to Projectile Attacks as well as Melee Attacks"),
 
 	// arrows
@@ -173,16 +201,19 @@ public enum Stat
 	// melee
 	MELEE_DMG(INT + "% increased Melee Damage"),
 	MELEE_PHYSICAL_DAMAGE(INT + "% increased Melee Physical Damage"),
+	MELEE_PHYSICAL_DAMAGE_ON_FORTIFY(INT + "% increased Melee Physical Damage while you have Fortify"),
 	MELEE_ATTACK_SPEED(INT + "% increased Melee Attack Speed"),
 	MELEE_CSC(INT + "% increased Melee Critical Strike Chance"),
 	MELEE_CSM(PLUS_INT + "% to Melee Critical Strike Multiplier"),
-	MELEE_RANGE(PLUS_INT + " to Melee Weapon and Unarmed range"),
+	MELEE_RANGE(PLUS_INT + " to Melee Weapon and Unarmed Attack range"),
+	MELEE_AILMENTS(INT + "% increased Damage with Ailments from Attack Skills while wielding a Melee Weapon"),
 
 	// one-handed
 	ONE_HANDED_PHYSICAL_DAMAGE(INT + "% increased Physical Damage with One Handed Melee Weapons"),
 	ONE_HANDED_ATTACK_SPEED(INT + "% increased Attack Speed with One Handed Melee Weapons"),
 	ONE_HANDED_ACCURACY(INT + "% increased Accuracy Rating with One Handed Melee Weapons"),
 	ONE_HANDED_CSC(INT + "% increased Critical Strike Chance with One Handed Melee Weapons"),
+	ONE_HANDED_AILMENTS(INT + "% increased Damage with Ailments from Attack Skills while wielding a One Handed Weapon"),
 
 	// two-handed
 	TWO_HANDED_PHYSICAL_DAMAGE(INT + "% increased Physical Damage with Two Handed Melee Weapons"),
@@ -190,6 +221,7 @@ public enum Stat
 	TWO_HANDED_ATTACK_SPEED(INT + "% increased Attack Speed with Two Handed Melee Weapons"),
 	TWO_HANDED_STUN_DURATION(INT + "% increased Stun Duration with Two Handed Melee Weapons on Enemies"),
 	TWO_HANDED_DAMAGE(INT + "% increased Damage with Two Handed Weapons"),
+	TWO_HANDED_AILMENT(INT + "% increased Damage with Ailments from Attack Skills while wielding a Two Handed Weapon"),
 
 	// staves
 	STAVE_PHYSICAL_DAMAGE(INT + "% increased Physical Damage with Staves"),
@@ -209,30 +241,35 @@ public enum Stat
 	WAND_ACCURACT(INT + "% increased Accuracy Rating with Wands"),
 	WAND_ATTACK_SPEED(INT + "% increased Attack Speed with Wands"),
 	WAND_ELEM_DAMAGE(INT + "% increased Elemental Damage with Wands"),
-	WAND_PHYSICAL_TO_LIGHTNING(INT + "% of Wand Physical Damage Added as Lightning Damage"),
-	WAND_PHYSICAL_TO_COLD(INT + "% of Wand Physical Damage Added as Cold Damage"),
-	WAND_PHYSICAL_TO_FIRE(INT + "% of Wand Physical Damage Added as Fire Damage"),
+	WAND_PHYSICAL_TO_LIGHTNING("Gain " + INT + "% of Wand Physical Damage as Extra Lightning Damage"),
+	WAND_PHYSICAL_TO_COLD("Gain " + INT + "% of Wand Physical Damage as Extra Cold Damage"),
+	WAND_PHYSICAL_TO_FIRE("Gain " + INT + "% of Wand Physical Damage as Extra Fire Damage"),
 	WAND_DAMAGE_PER_POWER_CHARGE(INT + "% increased Wand Damage per Power Charge"),
+	WAND_AILMENT(INT + "% increased Damage with Ailments from Attack Skills while wielding a Wand"),
 
 	// dagger
 	DAGGER_PHYSICAL_DAMAGE(INT + "% increased Physical Damage with Daggers"),
 	DAGGER_ACCURACY(INT + "% increased Accuracy Rating with Daggers"),
 	DAGGER_ATTACK_SPEED(INT + "% increased Attack Speed with Daggers"),
 	DAGGER_CSC(INT + "% increased Critical Strike Chance with Daggers"),
-	DAGGER_POISON_ON_CRIT("Critical Strikes with Daggers have a 30% chance to Poison the Enemy"),
+	DAGGER_POISON_ON_CRIT("Critical Strikes with Daggers have a " + INT + "% chance to Poison the Enemy"),
 	DAGGER_CSM(PLUS_INT + "% to Critical Strike Multiplier with Daggers"),
+	DAGGER_AILMENT(INT + "% increased Damage with Ailments from Attack Skills while wielding a Dagger"),
 
 	// axe
 	AXE_PHYSICAL_DAMAGE(INT + "% increased Physical Damage with Axes"),
 	AXE_ATTACK_SPEED(INT + "% increased Attack Speed with Axes"),
 	AXE_ACCURACY(INT + "% increased Accuracy Rating with Axes"),
+	AXE_AILMENT(INT + "% increased Damage with Ailments from Attack Skills while wielding an Axe"),
 
 	// sword
 	SWORD_PHYSICAL_DAMAGE(INT + "% increased Physical Damage with Swords"),
 	SWORD_ACCURACY(INT + "% increased Accuracy Rating with Swords"),
+	SWORD_PLUS_ACCURACY(PLUS_INT + " to Accuracy Rating with Swords"),
 	SWORD_ATTACK_SPEED(INT + "% increased Attack Speed with Swords"),
 	SWORD_CSC(INT + "% increased Critical Strike Chance with Swords"),
 	SWORD_CSM(PLUS_INT + "% to Critical Strike Multiplier with Swords"),
+	SWORD_AILMENT(INT + "% increased Damage with Ailments from Attack Skills while wielding a Sword"),
 
 	// claw
 	CLAW_PHYSICAL_DAMAGE(INT + "% increased Physical Damage with Claws"),
@@ -243,6 +280,7 @@ public enum Stat
 	CLAW_STEAL_CHARGE(INT + "% chance to Steal Power, Frenzy, and Endurance Charges on Hit with Claws"),
 	CLAW_LIFE_LEECH(FLOAT + "% of Physical Damage Dealt with Claws Leeched as Life"),
 	CLAW_MANA_LEECH(FLOAT + "% of Physical Damage Dealt with Claws Leeched as Mana"),
+	CLAW_AILMENT(INT + "% increased Damage with Ailments from Attack Skills while wielding a Claw"),
 
 	// mace
 	MACE_ATTACK_SPEED(INT + "% increased Attack Speed with Maces"),
@@ -252,8 +290,13 @@ public enum Stat
 	MACE_STUN_THRESHOLD(INT + "% reduced Enemy Stun Threshold with Maces"),
 	MACE_ELEMENTAL_DAMAGE(INT + "% increased Elemental Damage with Maces"),
 	MACE_CSC(INT + "% increased Critical Strike Chance with Maces"),
+	MACE_AILMENT(INT + "% increased Damage with Ailments from Attack Skills while wielding a Mace"),
+
+	// staff
+	STAFF_AILMENT(INT + "% increased Damage with Ailments from Attack Skills while wielding a Staff"),
 
 	// bow
+	BOW_DAMAGE(INT + "% increased Damage with Bows"),
 	BOW_KB("Knocks Back Enemies if you get a Critical Strike with a Bow"),
 	BOW_CSC(INT + "% increased Critical Strike Chance with Bows"),
 	BOW_CSM(PLUS_INT + "% to Critical Strike Multiplier with Bows"),
@@ -262,6 +305,8 @@ public enum Stat
 	BOW_ATTACK_SPEED(INT + "% increased Attack Speed with Bows"),
 	BOW_STUN_THRESHHOLD(INT + "% reduced Enemy Stun Threshold with Bows"),
 	BOW_STUN_DURATION(INT + "% increased Stun Duration with Bows on Enemies"),
+	BOW_AILMENT(INT + "% increased Damage with Ailments from Attack Skills while wielding a Bow"),
+	BOW_BLEED("Bow Attacks have " + INT + "% chance to cause Bleeding"),
 
 	// dual
 	DUAL_PHYS(INT + "% increased Physical Weapon Damage while Dual Wielding"),
@@ -272,14 +317,16 @@ public enum Stat
 	DUAL_MAIN_DAMAGE(INT + "% increased Attack Damage with Main Hand"),
 	DUAL_OFF_HAND_DAMAGE(INT + "% increased Attack Speed with Off Hand"),
 	DUAL_CAST_SPEED(INT + "% increased Cast Speed while Dual Wielding"),
+	DUAL_AILMENTS("Attack Skills deal " + INT + "% increased Damage with Ailments while Dual Wielding"),
 
 	// shield
 	SHIELD_ATTACK_SPEED(INT + "% increased Attack Speed while holding a Shield"),
 	SHIELD_PHYSICAL_DAMAGE(INT + "% increased Physical Attack Damage while holding a Shield"),
 	SHIELD_MELEE_PHYSICAL_DAMAGE(INT + "% increased Melee Physical Damage while holding a Shield"),
+	SHIELD_AILMENT("Attack Skills deal " + INT + "% increased Damage with Ailments while holding a Shield"),
 
-	// accuracy
-	ACCURACY(INT + "% increased Accuracy Rating"),
+	// global accuracy
+	ACCURACY(INT + "% increased Global Accuracy Rating"),
 	ACC_PLUS(PLUS_INT + " to Accuracy Rating"),
 
 	// evasion
@@ -329,10 +376,6 @@ public enum Stat
 
 	RESIST_ALL(PLUS_INT + "% to all Elemental Resistances"),
 
-	FREEZE(INT + "% chance to Freeze"),
-	COLD(INT + "% increased Cold Damage"),
-	COLD_PEN("Damage Penetrates " + INT + "% Cold Resistance"),
-
 	// damage reduction
 	PHYSICAL_DAMAGE_REDUCTION(INT + "% additional Physical Damage Reduction"),
 	ELEMENTAL_DAMAGE_REDUCTION_ON_CONSECRATE("Take " + INT + "% reduced Elemental Damage while on Consecrated Ground"),
@@ -345,12 +388,13 @@ public enum Stat
 	SHOCK_AVOID(INT + "% chance to Avoid being Shocked"),
 	AVOID_STUN_ON_CAST(INT + "% chance to Avoid interruption from Stuns while Casting"),
 
-	CHILL_DURATION(INT + "% increased Chill Duration on Enemies"),
-	FREEZE_DURATION(INT + "% increased Freeze Duration on Enemies"),
 	BLOCK_RECOVERY(INT + "% increased Block Recovery"),
 	MANA_ON_BLOCK(PLUS + INT + " Mana gained when you Block"),
+
+	// cast speed
 	CAST_SPEED(INT + "% increased Cast Speed"),
 	CAST_SPEED_CHAOS(INT + "% increased Cast Speed with Chaos Skills"),
+	CAST_SPEED_FIRE(INT + "% increased Cast Speed with Fire Skills"),
 
 	// spells
 	SPELL_DAMAGE(INT + "% increased Spell Damage"),
@@ -384,12 +428,12 @@ public enum Stat
 
 	// onslaught
 	ONSLAUGHT_ON_RARE_OR_UNIQUE("Gain Onslaught for 20 seconds when you Kill a Rare or Unique Enemy"),
-	ONSLAUGHT_ON_KILL_KILL(INT + "% chance to gain Onslaught for 3 seconds on Kill"),
+	ONSLAUGHT_ON_KILL_KILL(INT + "% chance to gain Onslaught for 4 seconds on Kill"),
 	ONSLAUGHT_ON_FULL_FRENZY("You have Onslaught while on full Frenzy Charges"),
 	EVASION_ON_ONSLAUGHT(INT + "% increased Evasion Rating while you have Onslaught"),
 
 	// aoe
-	AOE_RADIUS(INT + "% increased Radius of Area Skills"),
+	AOE_RADIUS(INT + "% increased Area of Effect"),
 	AOE_DAMAGE(INT + "% increased Area Damage"),
 
 	// stun
@@ -405,8 +449,11 @@ public enum Stat
 	STUN_AND_BLOCK_RECOVERY(INT + "% increased Stun and Block Recovery"),
 	STUN_THRESHHOLD(INT + "% increased Stun Threshold"),
 
-	//
+	// damage reflection
 	REFLECT_REDUCE(INT + "% reduced Reflected Physical Damage taken"),
+	REFLECT_REDUCE_ELEM(INT + "% reduced Reflected Elemental Damage taken"),
+
+	//
 	RECENT_KILL_DAMAGE(INT + "% more Damage if you've Killed Recently"),
 
 	SINGLE_SPLASH("Single-target Melee attacks deal Splash Damage to surrounding targets"),
@@ -445,6 +492,8 @@ public enum Stat
 
 	// bleed
 	BLEED("Attacks have " + INT + "% chance to cause Bleeding"),
+	BLEED_DURATION(INT + "% increased Bleeding Duration"),
+	BLEED_DAMAGE(INT + "% increased Damage with Bleeding"),
 	BLEED_DAMAGE_ON_KILL(INT + "% increased Damage if you've killed a Bleeding Enemy Recently"),
 	BLEED_DMG(INT + "% increased Attack Damage against Bleeding Enemies"),
 	BLEED_MELEE("Melee Attacks have " + INT + "% chance to cause Bleeding"),
@@ -454,7 +503,9 @@ public enum Stat
 
 	// poison
 	POISON_DAMAGE(INT + "% increased Damage with Poison"),
+	POISON_DURATION(INT + "% increased Poison Duration"),
 	POISON_ON_HIT(INT + "% chance to Poison on Hit"),
+	POISON_ON_HIT_ATTACK(INT + "% chance to Poison on Hit with Attacks"),
 
 	// energy shield
 	MAX_ENERGY_SHIELD(PLUS + INT + " to maximum Energy Shield"),
@@ -468,8 +519,6 @@ public enum Stat
 	ENERGY_SHIELD_SHIELD(INT + "% increased Energy Shield from equipped Shield"),
 	ENERGY_SHIELD_LIFE_REGEN("Life Regeneration is applied to Energy Shield instead"),
 	ENERGY_SHIELD_LIFE_LEECH("Life Leech is applied to Energy Shield instead"),
-	ENERGY_SHIELD_BEFORE_MANA("Spend Energy Shield before Mana for Skill Costs"),
-	ENERGY_SHIELD_PROTECT_MANA("Energy Shield protects Mana instead of Life"),
 
 	//
 	CHAIN("Skills Chain \\+1 times"),
@@ -478,19 +527,21 @@ public enum Stat
 	ES_FASTER(INT + "% faster start of Energy Shield Recharge"),
 
 	// dodge
-	DODGE_ATTACK(INT + "% chance to Dodge Attacks"),
+	DODGE_ATTACK(INT + "% additional chance to Dodge Attack Hits"),
 	DODGE_ATTACK2(INT + "% additional chance to Dodge Attacks"),
 	DODGE_SPELL(INT + "% Chance to Dodge Spell Hits"),
 	DODGE_ACROBATICS("30% Chance to Dodge Attacks. 50% less Armour and Energy Shield, 30% less Chance to Block Spells and Attacks"),
 
 	// aura
-	AURA_RAD(INT + "% increased Radius of Aura Skills"),
+	AURA_RAD(INT + "% increased Area of Effect of Aura Skills"),
 	NON_CURSE_AURA_EFFECT(INT + "% increased effect of Non-Curse Auras you Cast"),
+
+	// curse
 	CURSE_EFFECT(INT + "% increased Effect of your Curses"),
 	CURSE_NUM("Enemies can have " + INT + " additional Curse"),
 	CURSE_DUR(INT + "% increased Curse Duration"),
 	CURSE_CAST_SPEED(INT + "% increased Cast Speed for Curses"),
-	CURSE_RADIUS(INT + "% increased Radius of Curse Skills"),
+	CURSE_RADIUS(INT + "% increased Area of Effect of Curse Skills"),
 
 	// charges
 	FRENZ_CHARG(PLUS_INT + " to Maximum Frenzy Charges"),
@@ -508,9 +559,6 @@ public enum Stat
 	ENDURANCE_CHARGE_ON_MELEE_CRITICAL(INT + "% chance to gain an Endurance Charge on Melee Critical Strike"),
 	POWER_CHARGE_ON_BLOCK(INT + "% chance to gain a Power Charge when you Block"),
 
-	// trap
-	TRAP_RED(INT + "% reduced Damage taken from Traps and Mines"),
-
 	// fortify
 	MELEE_FORT(INT + "% increased Physical Melee Damage while you have Fortify"),
 	INC_FORT(INT + "% increased effect of Fortify on You"),
@@ -527,21 +575,39 @@ public enum Stat
 	LIGHT_RADIUS_ENERGY_SHIELD("Light Radius is based on Energy Shield instead of Life"),
 	LIGHT_RADIUS(INT + "% increased Light Radius"),
 
-	// misc
-	STUN_CULL("Hits that Stun Enemies have Culling Strike"),
+	// elemental ailments
+	AVOID_ELEM(INT + "% chance to Avoid Elemental Ailments"),
+
+	// attack and cast
 	ATTACK_CAST_SPEED(INT + "% increased Attack and Cast Speed if Energy"),
 	ATK_CAST(INT + "% increased Attack and Cast Speed"),
 	ATCK_CAST_MOVE(INT + "% increased Attack and Cast Speed if you've used a Movement Skill Recently"),
-	LIFE_MANA_REGEN(
-			INT + "% increased Recovery Rate of Life, Mana and Energy Shield if you've Killed an Enemy affected by your Damage Over Time Recently"),
-	AVOID_ELEM(INT + "% chance to Avoid Elemental Status Ailments"),
+
+	// misc
+	STUN_CULL("Hits that Stun Enemies have Culling Strike"),
+	LIFE_MANA_REGEN(INT + "% increased Recovery Rate of Life, Mana and Energy Shield if you've Killed an Enemy affected by your Damage Over Time Recently"),
 	FREEZE_SHOCK_IGNITE(INT + "% chance to Freeze, Shock and Ignite"),
 	NEVER_EVADED("Your hits can't be Evaded"),
 	NEVER_CRIT("Never deal Critical Strikes"),
 	ENEMY_NEVER_LEECH("Enemies Cannot Leech Life From You"),
-	MIND_OVER_MATTER("When Hit, " + INT + "% of Damage is taken from Mana before Life"),
-	ENEMY_ELEM_RESIST(
-			"Enemies you hit with Elemental Damage temporarily get +25% Resistance to those Elements and -50% Resistance to other Elements");
+	MIND_OVER_MATTER(INT + "% of Damage is taken from Mana before Life"),
+	ENEMY_ELEM_RESIST("Enemies you hit with Elemental Damage temporarily get +25% Resistance to those Elements and -50% Resistance to other Elements"),
+
+	// strange ones
+	CRIMSON_DANCE("You can inflict Bleeding on an Enemy up to 8 times\\nYour Bleeding does not deal extra Damage while the Enemy is moving\\n50% less Damage with Bleeding"),
+	ENERGY_SHIELD_BEFORE_MANA("Spend Energy Shield before Mana for Skill Costs\\nEnergy Shield protects Mana instead of Life"),
+	RESOLUTE_TECHNIQUE("Your hits can't be Evaded\\nNever deal Critical Strikes"),
+	ARROW_DANCING("40% more chance to Evade Projectile Attacks\\n20% less chance to Evade Melee Attacks"),
+	PERFECT_AGONY("Modifiers to Critical Strike Multiplier also apply to Damage Multiplier for Ailments from Critical Strikes at 30% of their value\\n30% less Damage with Hits"),
+	GHOST_REAVER("Life Leech is applied to Energy Shield instead\\n50% less Energy Shield Recharge Rate"),
+	VAAL_PACT("Life Leeched per Second is doubled.\\nMaximum Life Leech Rate is doubled.\\nLife Regeneration has no effect."),
+	UNWAVERING_STANCE("Cannot Evade enemy Attacks\\nCannot be Stunned"),
+	ELEM_OVERLOAD("40% more Elemental Damage if you've Crit in the past 8 seconds\\nNo Critical Strike Multiplier\\nNo Damage Multiplier for Ailments from Critical Strikes"),
+	POINT_BLACK("Projectile Attack Hits deal up to 50% more Damage to targets at the start of their movement, dealing less Damage to targets as the projectile travels farther"),
+	ACROBATICS("30% Chance to Dodge Attack Hits. 50% less Armour, 30% less Energy Shield, 30% less Chance to Block Spells and Attacks"),
+	BATTLE_ROUSE(INT + "% of Damage taken gained as Mana over 4 seconds when Hit");
+	// ENERGY_SHIELD_PROTECT_MANA("Energy Shield protects Mana instead of
+	// Life"),
 
 	private Pattern pattern;
 

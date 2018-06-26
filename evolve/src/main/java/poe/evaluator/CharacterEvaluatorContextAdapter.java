@@ -1356,7 +1356,7 @@ public class CharacterEvaluatorContextAdapter implements CharacterEvaluatorConte
 	@Override
 	public float getFreeze()
 	{
-		return character.getAdjustedStat(Stat.FREEZE);
+		return character.getAdjustedStat(Stat.FREEZE_CHANCE);
 	}
 
 	@Override

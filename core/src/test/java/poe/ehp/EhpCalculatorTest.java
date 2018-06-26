@@ -1,8 +1,8 @@
 package poe.ehp;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.closeTo;
-import static org.junit.Assert.assertThat;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import poe.evaluator.EhpCalculator;
 import poe.evaluator.EhpCalculator.EhpCalculatorBuilder;
 

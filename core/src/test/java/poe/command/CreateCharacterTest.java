@@ -1,9 +1,9 @@
 package poe.command;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.compose;
 import static org.hobsoft.hamcrest.compose.ComposeMatchers.hasFeature;
-import static org.junit.Assert.assertThat;
 import static poe.entity.CharacterClass.MARAUDER;
 import static poe.entity.PoeMatchers.hasStats2;
 import static poe.entity.PoeMatchers.passiveSkillEqualTo;
@@ -18,15 +18,15 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.yaml.snakeyaml.Yaml;
 import poe.command.CreateCharacter.CreateCharacterRequest;
 import poe.command.CreateCharacter.CreateCharacterResult;
 import poe.command.model.ImmutableCharacter;
 import poe.command.model.ImmutableCharacter.ImmutablePassiveSkill;
-import poe.command.model.PureImmutablePassiveSkill.ImmutablePassiveSkillBuilder;
 import poe.command.model.ItemDescription;
+import poe.command.model.PureImmutablePassiveSkill.ImmutablePassiveSkillBuilder;
 import poe.entity.Attribute;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
@@ -48,7 +48,7 @@ public class CreateCharacterTest
 
 	private PassiveSkillTree passiveSkillTree;
 
-	@Before
+	@BeforeEach
 	public void setUp()
 	{
 		jsonSkillRepo = new JsonPassiveSkillRepository();
@@ -254,7 +254,10 @@ public class CreateCharacterTest
 	{
 		for (final PassiveSkill passive : jsonSkillRepo.all())
 		{
-			if (passive.getId() == i) { return passive; }
+			if (passive.getId() == i)
+			{
+				return passive;
+			}
 		}
 
 		return null;
@@ -270,7 +273,7 @@ public class CreateCharacterTest
 
 	private Matcher<ImmutableCharacter> hasNoPassiveSkills()
 	{
-		return new TypeSafeDiagnosingMatcher<ImmutableCharacter>() {
+		return new TypeSafeDiagnosingMatcher<>() {
 			@Override
 			public void describeTo(final Description description)
 			{
@@ -384,7 +387,10 @@ public class CreateCharacterTest
 		@Override
 		public List<ItemDescription> getItems()
 		{
-			if (r.items == null) { return new ArrayList<>(); }
+			if (r.items == null)
+			{
+				return new ArrayList<>();
+			}
 
 			return r.items.stream()
 					.map(item -> {
@@ -460,7 +466,10 @@ public class CreateCharacterTest
 
 	private StatBuilder[] theStats(final Optional<String> markDown)
 	{
-		if (!markDown.isPresent()) { return new StatBuilder[0]; }
+		if (!markDown.isPresent())
+		{
+			return new StatBuilder[0];
+		}
 
 		return Arrays
 				.stream(markDown.get().split("\\,"))

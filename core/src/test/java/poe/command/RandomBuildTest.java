@@ -1,9 +1,9 @@
 package poe.command;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import poe.command.RandomBuild.RandomBuildRequest;
 import poe.command.RandomBuild.RandomBuildResult;
 import poe.command.model.ImmutableCharacter;
@@ -23,7 +23,7 @@ public class RandomBuildTest
 
 	private Randomizer randomizer;
 
-	@Before
+	@BeforeEach
 	public void setUp()
 	{
 		passiveRepo = new InMemoryPassiveSkillRepository();

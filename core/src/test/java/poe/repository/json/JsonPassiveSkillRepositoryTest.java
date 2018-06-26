@@ -1,14 +1,14 @@
 package poe.repository.json;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
 import static poe.entity.PassiveSkill.PassiveSkillBuilder.passiveSkill;
 import static poe.entity.StatValue.StatBuilder.stat;
 import java.util.List;
 import java.util.Objects;
 import org.hamcrest.Matcher;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
 import poe.entity.PoeMatchers;

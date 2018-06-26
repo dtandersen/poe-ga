@@ -1,12 +1,12 @@
 package poe.command;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import poe.entity.CharacterClass;
 
 public class DecoderTest

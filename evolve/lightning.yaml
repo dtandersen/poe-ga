@@ -1,22 +1,26 @@
 ---
-characterClass: witch
+characterClass: templar
+level: 100
+genes: 300
+chromosomes: 1
+skillPoints: 90
 population: 500
-skills: 200
 generations: 1000000
+threads: 1
 alterers:
-  - type: crossover
-    probability: .2
-  - type: swap
-    probability: .01
-  - type: mutator
-    probability: .01
-  - type: neighbor
-    probability: .15
+- type: crossover
+  probability: .005
+#  - type: swap
+#    probability: .01
+#- type: mutator
+#  probability: .005
+- type: neighbor
+  probability: .005
 evaluators:
-  - expression:  ehp.maxLightningHit
-  - expression:  ehp.maxFireHit
-  - expression:  ehp.maxColdHit
-  - expression:  ehp.maxPhysicalHit
+  - expression:  2 * ehp.maxLightningHit
+  - expression:  2 * ehp.maxFireHit
+  - expression:  2 * ehp.maxColdHit
+  - expression:  2 * ehp.maxPhysicalHit
   - expression:  50 * (466.5 * (1 + lightningDamage/100.0 + elementalDamage/100.0 + spellDamage/100.0) * (1.25 + castSpeed/100.0) * (1 + 5/100.0 * (1 + csc/100.0 + spellCsc/100.0) * (0.5 + csm/100.0 + spellCsm/100.0))) 
 #  - expression: hasPassive('Trickery') * -10000
 #  - expression: hasPassive('Coldhearted Calculation') * -10000
@@ -30,3 +34,45 @@ evaluators:
 #  - expression: hasPassive('Breath of Lightning') * 10
 #  - expression: hasPassive('Mind Over Matter') * 10
 #  - expression: hasPassive('Annihilation') * 10
+items:
+  - stats:
+    - stat: +73 to maximum Energy Shield
+    - stat: 19% increased Spell Damage
+  - stats:
+    - stat: +15 to Intelligence
+    - stat: +81 to maximum Life
+    - stat: 8% increased maximum Energy Shield
+  - stats:
+    - stat: +20 to strength
+    - stat: +2 to maximum Energy Shield
+    - stat: 2% increased maximum Energy Shield
+    - stat: +27% to Cold Resistance
+    - stat: +18% to Lightning Resistance
+    - stat: 70% increased Cast Speed
+  - stats:
+    - stat: +23 to maximum Energy Shield
+  - stats:
+    - stat: +22 to Dexterity
+    - stat: +6 to maximum Life
+    - stat: +25 to maximum Mana
+    - stat: +14% to Fire Resistance
+    - stat: +25% to Lightning Resistance
+  - stats:
+    - stat: +111 to maximum Energy Shield
+    - stat: +44 to maximum Mana
+  - stats:
+    - stat: +13% to Cold Resistance
+    - stat: +13% to Lightning Resistance
+    - stat: +9% to all Elemental Resistances
+    - stat: +9% to Cold Resistance
+    - stat: +6% to Lightning Resistance
+  - stats:
+    - stat: +35 to maximum Energy Shield
+    - stat: +27 to Strength
+    - stat: +75 to maximum Life
+    - stat: +10% to Fire Resistance
+  - stats:
+    - stat: +28 to maximum Energy Shield
+    - stat: +8 to maximum Life
+    - stat: +22% to Cold Resistance
+

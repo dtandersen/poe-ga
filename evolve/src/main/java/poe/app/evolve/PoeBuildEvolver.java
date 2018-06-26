@@ -28,7 +28,7 @@ import poe.util.StreamUtils;
 @ComponentScan(basePackages = { "poe.app.config" }, excludeFilters = {})
 public class PoeBuildEvolver implements CommandLineRunner
 {
-	private static final String CONFIG = "necromancer.yaml";
+	private static final String CONFIG = "lightning.yaml";
 
 	@Autowired
 	private CharacterView characterView;

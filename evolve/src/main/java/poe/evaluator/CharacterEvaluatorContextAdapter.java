@@ -1980,7 +1980,7 @@ public class CharacterEvaluatorContextAdapter implements CharacterEvaluatorConte
 	@Override
 	public float getEnergyShieldProtectMana()
 	{
-		return character.getAdjustedStat(Stat.ENERGY_SHIELD_PROTECT_MANA);
+		return character.getAdjustedStat(Stat.ENERGY_SHIELD_BEFORE_MANA);
 	}
 
 	@Override

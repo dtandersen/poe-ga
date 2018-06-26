@@ -77,26 +77,6 @@ public class JsonPassiveSkillRepositoryTest
 		assertThat("Don't include ascendency skills", passiveNamed("Fast and Deadly"), nullValue());
 	}
 
-	private PassiveSkill passiveNamed(final String name)
-	{
-		for (final PassiveSkill passiveSkill : repo.all())
-		{
-			if (Objects.equals(name, passiveSkill.getName())) { return passiveSkill; }
-		}
-
-		return null;
-	}
-
-	private PassiveSkill passiveWithId(final int passiveSkillId)
-	{
-		for (final PassiveSkill passiveSkill : repo.all())
-		{
-			if (Objects.equals(passiveSkillId, passiveSkill.getId())) { return passiveSkill; }
-		}
-
-		return null;
-	}
-
 	@Test
 	public void skillTree()
 	{
@@ -110,6 +90,32 @@ public class JsonPassiveSkillRepositoryTest
 								58427,
 								64111,
 								56856)));
+	}
+
+	private PassiveSkill passiveNamed(final String name)
+	{
+		for (final PassiveSkill passiveSkill : repo.all())
+		{
+			if (Objects.equals(name, passiveSkill.getName()))
+			{
+				return passiveSkill;
+			}
+		}
+
+		return null;
+	}
+
+	private PassiveSkill passiveWithId(final int passiveSkillId)
+	{
+		for (final PassiveSkill passiveSkill : repo.all())
+		{
+			if (Objects.equals(passiveSkillId, passiveSkill.getId()))
+			{
+				return passiveSkill;
+			}
+		}
+
+		return null;
 	}
 
 	private PassiveSkillMatcherChain skill2()

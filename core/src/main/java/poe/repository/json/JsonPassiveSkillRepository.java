@@ -14,45 +14,47 @@ import poe.entity.StatValue;
 import poe.entity.UnknownStatValue;
 import poe.repository.PassiveSkillRepository;
 import poe.repository.PassiveSkillTree;
-import poe.repository.json.JsonPassiveSkillRepository.Stuff.Node22;
+import poe.repository.json.JsonPassiveSkillRepository.PassiveSkillTreeJson.PassiveSkillJson;
 
 public class JsonPassiveSkillRepository implements PassiveSkillRepository
 {
+	private static final String PASSIVE_TREE_RESOURCE = "passivetree.json";
+
 	@Override
 	public List<PassiveSkill> all()
 	{
-		final InputStream in = this.getClass().getClassLoader()
-				.getResourceAsStream("passivetree.json");
+		final InputStream in = this.getClass().getClassLoader().getResourceAsStream(PASSIVE_TREE_RESOURCE);
 		final Gson gson = new Gson();
-		final Stuff x = gson.fromJson(new InputStreamReader(in), Stuff.class);
+		final PassiveSkillTreeJson passiveSkillTree = gson.fromJson(new InputStreamReader(in), PassiveSkillTreeJson.class);
 		final List<PassiveSkill> skills = new ArrayList<>();
 
-		for (final Node22 n : x.nodes.values())
+		for (final PassiveSkillJson passiveSkillJson : passiveSkillTree.nodes.values())
 		{
-			if (n.asc || n.ascendancyName != null)
+			if (passiveSkillJson.asc || passiveSkillJson.ascendancyName != null)
 			{
 				continue;
 			}
-			final PassiveSkill e = new PassiveSkill(n.dn);
-			e.setId(n.id);
-			e.setOutputs(n.out);
 
-			if (n.isJewelSocket)
+			final PassiveSkill passiveSkill = new PassiveSkill(passiveSkillJson.dn);
+			passiveSkill.setId(passiveSkillJson.id);
+			passiveSkill.setOutputs(passiveSkillJson.out);
+
+			if (passiveSkillJson.isJewelSocket)
 			{
-				e.setJewels(1);
+				passiveSkill.setJewels(1);
 			}
 
-			if (n.spc.size() > 0)
+			if (passiveSkillJson.spc.size() > 0)
 			{
-				e.setClassStartingPoint(CharacterClass.byId(n.spc.get(0)));
+				passiveSkill.setClassStartingPoint(CharacterClass.byId(passiveSkillJson.spc.get(0)));
 			}
 
-			for (final String s : n.sd)
+			for (final String statDescription : passiveSkillJson.sd)
 			{
 				boolean matched = false;
 				for (final Stat at : Stat.values())
 				{
-					final Matcher matcher = at.matcher(s);
+					final Matcher matcher = at.matcher(statDescription);
 					if (!matcher.find())
 					{
 						continue;
@@ -69,27 +71,32 @@ public class JsonPassiveSkillRepository implements PassiveSkillRepository
 					catch (final IndexOutOfBoundsException e2)
 					{
 					}
-					e.addAttribute(attribute);
+					passiveSkill.addAttribute(attribute);
 					matched = true;
 					break;
 				}
 				if (!matched)
 				{
-					// System.out.println("failed at " + s);
-					e.addAttribute(new UnknownStatValue(s));
+					passiveSkill.addAttribute(new UnknownStatValue(statDescription));
 				}
 			}
-			skills.add(e);
+			skills.add(passiveSkill);
 		}
 
 		return skills;
 	}
 
-	public static final class Stuff
+	@Override
+	public PassiveSkillTree skillTree()
 	{
-		Map<Integer, Node22> nodes;
+		return new PassiveSkillTree(all());
+	}
 
-		public static final class Node22
+	public static final class PassiveSkillTreeJson
+	{
+		Map<Integer, PassiveSkillJson> nodes;
+
+		public static final class PassiveSkillJson
 		{
 			String ascendancyName;
 
@@ -99,12 +106,12 @@ public class JsonPassiveSkillRepository implements PassiveSkillRepository
 			int id;
 
 			/**
-			 * description
+			 * stat description
 			 */
 			List<String> sd;
 
 			/**
-			 * name
+			 * skill name
 			 */
 			String dn;
 
@@ -121,11 +128,5 @@ public class JsonPassiveSkillRepository implements PassiveSkillRepository
 
 			List<Integer> spc;
 		}
-	}
-
-	@Override
-	public PassiveSkillTree skillTree()
-	{
-		return new PassiveSkillTree(all());
 	}
 }

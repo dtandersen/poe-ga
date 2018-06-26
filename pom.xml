@@ -12,6 +12,7 @@
 		<module>evolve</module>
 		<module>ga</module>
 		<module>verifier</module>
+		<module>sample</module>
 	</modules>
 
 	<dependencies>

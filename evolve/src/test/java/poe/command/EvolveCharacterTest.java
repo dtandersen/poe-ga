@@ -1,7 +1,7 @@
 package poe.command;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
 import static poe.command.SimpleEvolveCharacterRequest.SimpleEvolveCharacterRequestBuilder.request;
 import static poe.command.model.FitnessConfig.FitnessConfigBuilder.config;
 import java.util.ArrayList;
@@ -11,16 +11,16 @@ import java.util.List;
 import java.util.Map;
 import org.hamcrest.Matchers;
 import org.jenetics.Alterer;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import poe.command.EvolveCharacter.EvolveCharacterResult;
 import poe.command.SimpleEvolveCharacterRequest.SimpleEvolveCharacterRequestBuilder;
 import poe.command.model.AltererConfig;
 import poe.command.model.EvolutionStatus;
 import poe.command.model.FitnessConfig.ElementConfig.ElementConfigBuilder;
-import poe.command.model.PureImmutablePassiveSkill.ImmutablePassiveSkillBuilder;
 import poe.command.model.ImmutableCharacter;
+import poe.command.model.PureImmutablePassiveSkill.ImmutablePassiveSkillBuilder;
 import poe.entity.AltererType;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill.PassiveSkillBuilder;
@@ -35,7 +35,7 @@ import poe.repository.PassiveSkillRepository;
 import poe.repository.PassiveSkillTree;
 import poe.repository.RepoBuilder;
 
-@Ignore
+@Disabled
 public class EvolveCharacterTest
 {
 	private static final int SLEEP_TIME = 1;
@@ -50,7 +50,7 @@ public class EvolveCharacterTest
 
 	private List<AltererConfig> altererConfig;
 
-	@Before
+	@BeforeEach
 	public void setUp()
 	{
 		result = null;

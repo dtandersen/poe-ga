@@ -254,6 +254,21 @@ public class PoeCharacter
 		return false;
 	}
 
+	public int passiveCount(final String string)
+	{
+		int count = 0;
+		for (final PassiveSkill passive : character.getPassiveSkills())
+		{
+			if (Objects.equals(string, passive.getName()))
+			{
+				// return true;
+				count++;
+			}
+		}
+
+		return count;
+	}
+
 	public CharacterClass getCharacterClass()
 	{
 		return characterClass;

@@ -173,7 +173,7 @@ public enum Stat
 	TOTAL_GLOBAL_CSC(INT + "% increased Global Critical Strike Chance if you've Summoned a Totem Recently"),
 	TOTEM_ADD("Can have up to " + INT + " additional Totem summoned at a time"),
 	TOTEM_RESIST_ELEMENTAL("Totems gain " + PLUS_INT + "% to all Elemental Resistances"),
-	ANCESTRAL_BOND("You can't deal Damage with Skills yourself\\nCan have up to 1 additional Totem summoned at a time"),
+	ANCESTRAL_BOND("You can't deal Damage with Skills yourself\\nCan have up to " + INT + " additional Totem summoned at a time"),
 
 	// projectiles
 	PROJ_DAMAGE(INT + "% increased Projectile Damage"),
@@ -484,7 +484,7 @@ public enum Stat
 	SKEL(PLUS + " to Maximum number of Skeletons"),
 	SKEL_MAX(PLUS_INT + " to Maximum number of Skeletons"),
 	SPEC_MAX(PLUS_INT + " to Maximum number of Spectres"),
-	ANC_BOND("You can't deal Damage with Skills yourself"),
+	// ANC_BOND("You can't deal Damage with Skills yourself"),
 
 	// knockback
 	KNOCKBACK_ON_HIT(INT + "% chance to Knock Enemies Back on hit"),

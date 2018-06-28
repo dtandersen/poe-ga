@@ -1822,15 +1822,15 @@ public class CharacterEvaluatorContextAdapter implements CharacterEvaluatorConte
 	}
 
 	@Override
-	public float getAncBond()
+	public int getTotemAdd()
 	{
-		return character.getAdjustedStat(Stat.ANC_BOND);
+		return (int)character.getAdjustedStat(Stat.TOTEM_ADD);
 	}
 
 	@Override
-	public float getTotemAdd()
+	public int getTotemCount()
 	{
-		return character.getAdjustedStat(Stat.TOTEM_ADD);
+		return 1 + (int)character.getAdjustedStat(Stat.TOTEM_ADD) + (int)character.getAdjustedStat(Stat.ANCESTRAL_BOND);
 	}
 
 	@Override
@@ -2304,7 +2304,7 @@ public class CharacterEvaluatorContextAdapter implements CharacterEvaluatorConte
 	@Override
 	public int hasPassive(final String passiveSkillName)
 	{
-		return character.hasPassiveNamed(passiveSkillName) ? 1 : 0;
+		return character.passiveCount(passiveSkillName);
 	}
 
 	@Override
@@ -2345,5 +2345,17 @@ public class CharacterEvaluatorContextAdapter implements CharacterEvaluatorConte
 	public float rising(final float x)
 	{
 		return 1 - (1 / (x + 1));
+	}
+
+	@Override
+	public float getFinalTotemCsc()
+	{
+		return (5 + getCsc() + getSpellCsc() + getTotemCsc()) / 100f;
+	}
+
+	@Override
+	public float getFinalTotemCsm()
+	{
+		return (50 + getCsm() + getSpellCsm() + getTotemCsm()) / 100f;
 	}
 }

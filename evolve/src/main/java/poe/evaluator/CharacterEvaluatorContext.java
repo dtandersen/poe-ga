@@ -180,6 +180,10 @@ public interface CharacterEvaluatorContext
 
 	float getSkillDur();
 
+	int getTotemAdd();
+
+	int getTotemCount();
+
 	float getTotemDamage();
 
 	float getTotemPlacementSpeed();
@@ -201,6 +205,10 @@ public interface CharacterEvaluatorContext
 	float getTotemCsc();
 
 	float getTotemCsm();
+
+	float getFinalTotemCsc();
+
+	float getFinalTotemCsm();
 
 	float getTotalGlobalCsc();
 
@@ -613,10 +621,6 @@ public interface CharacterEvaluatorContext
 	float getSkelMax();
 
 	float getSpecMax();
-
-	float getAncBond();
-
-	float getTotemAdd();
 
 	float getTotemResistElemental();
 

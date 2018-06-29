@@ -5,10 +5,11 @@ import java.util.List;
 import java.util.function.Function;
 import org.jenetics.Genotype;
 import org.jenetics.util.ISeq;
+import poe.entity.CharInstance;
+import poe.entity.CharInstance.PoeCharacter;
 import poe.entity.CharacterClass;
 import poe.entity.CharacterItem;
 import poe.entity.PassiveSkill;
-import poe.entity.PoeCharacter;
 import poe.evaluator.CharacterEvaluator;
 import poe.evaluator.CharacterEvaluatorContextAdapter;
 import poe.repository.PassiveSkillTree;
@@ -54,7 +55,6 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Float>
 		for (int i = 0; i < genotype.length(); i++)
 		{
 			final SkillChromosome c = genotype.getChromosome(i).as(SkillChromosome.class);
-			// final SkillChromosome c = genotype.getChromosome().as(SkillChromosome.class);
 			final ISeq<SkillGene> seq = c.toSeq();
 			final List<PassiveSkill> passives = new ArrayList<>();
 			for (final SkillGene gene : seq)
@@ -64,7 +64,8 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Float>
 			}
 			character.sneakyAdd(passives);
 		}
-		final CharacterEvaluatorContextAdapter context = new CharacterEvaluatorContextAdapter(character);
+		final CharInstance charInstance = character.build();
+		final CharacterEvaluatorContextAdapter context = new CharacterEvaluatorContextAdapter(character, charInstance);
 		final float fitness = characterEvaluator.evaluate(context).getFitness();
 
 		return fitness;

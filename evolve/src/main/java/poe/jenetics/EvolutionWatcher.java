@@ -10,10 +10,10 @@ import org.jenetics.util.ISeq;
 import poe.command.model.EvolutionStatus.EvolutionStatusBuilder;
 import poe.command.model.ImmutableCharacter;
 import poe.command.model.PureImmutableCharacter.ImmutableCharacterBuilder;
+import poe.entity.CharInstance.PoeCharacter;
 import poe.entity.CharacterClass;
 import poe.entity.CharacterItem;
 import poe.entity.PassiveSkill;
-import poe.entity.PoeCharacter;
 import poe.evaluator.CharacterEvaluator;
 import poe.evaluator.CharacterEvaluatorContextAdapter;
 import poe.repository.PassiveSkillTree;
@@ -79,7 +79,7 @@ class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Float>>
 		callback.accept(new EvolutionStatusBuilder()
 				.withCharacter(retchar)
 				.withGeneration(evolutionResult.getTotalGenerations())
-				.withEvaluation(characterEvaluator.evaluate(new CharacterEvaluatorContextAdapter(character)))
+				.withEvaluation(characterEvaluator.evaluate(new CharacterEvaluatorContextAdapter(character, null)))
 				.build());
 	}
 
@@ -91,7 +91,8 @@ class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Float>>
 		for (int i = 0; i < genotype.length(); i++)
 		{
 			final SkillChromosome c = genotype.getChromosome(i).as(SkillChromosome.class);
-			// final SkillChromosome c = genotype.getChromosome().as(SkillChromosome.class);
+			// final SkillChromosome c =
+			// genotype.getChromosome().as(SkillChromosome.class);
 			final ISeq<SkillGene> seq = c.toSeq();
 			final List<PassiveSkill> passives = new ArrayList<>();
 			for (final SkillGene gene : seq)

@@ -1,21 +1,28 @@
 package poe.evaluator;
 
-import poe.entity.PoeCharacter;
+import poe.entity.CharInstance;
+import poe.entity.CharInstance.PoeCharacter;
 import poe.entity.Stat;
 
 public class CharacterEhpCalculatorSubjectAdapter implements EhpSubject
 {
 	private final PoeCharacter character;
 
-	public CharacterEhpCalculatorSubjectAdapter(final PoeCharacter character)
+	private final CharInstance charInstance;
+
+	public CharacterEhpCalculatorSubjectAdapter(final PoeCharacter character, final CharInstance charInstance)
 	{
 		this.character = character;
+		this.charInstance = charInstance;
 	}
 
 	@Override
 	public float getLife()
 	{
-		if (character.getStat(Stat.CHAOS_INNOCULATION) > 0) { return 1; }
+		if (character.getStat(Stat.CHAOS_INNOCULATION) > 0)
+		{
+			return 1;
+		}
 
 		final float stat = character.getStat(Stat.MAXIMUM_LIFE) + 70 * 12 + (character.getStat(Stat.STRENGTH) / 10 * 5);
 		final float life = stat * (1 + (character.getStat(Stat.INCRESED_MAXIMUM_LIFE) / 100f));

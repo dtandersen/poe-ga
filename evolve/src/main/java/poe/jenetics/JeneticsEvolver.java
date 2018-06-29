@@ -15,9 +15,9 @@ import org.jenetics.engine.Engine;
 import org.jenetics.engine.EvolutionResult;
 import org.jenetics.util.Factory;
 import poe.command.model.AltererConfig;
+import poe.entity.CharInstance.PoeCharacter;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
-import poe.entity.PoeCharacter;
 import poe.repository.Evolver;
 import poe.repository.PassiveSkillTree;
 
@@ -56,7 +56,9 @@ public class JeneticsEvolver implements Evolver
 				ids,
 				evolutionContext.getGenes(),
 				evolutionContext.getChromosomes());
-		// final Factory<Genotype<SkillGene>> gtf = new RandomWalkSkillGeneFactory(passiveSkillTree, characterClass, length, ids);
+		// final Factory<Genotype<SkillGene>> gtf = new
+		// RandomWalkSkillGeneFactory(passiveSkillTree, characterClass, length,
+		// ids);
 
 		final ExecutorService exec = Executors.newFixedThreadPool(threads);
 
@@ -81,7 +83,8 @@ public class JeneticsEvolver implements Evolver
 				.populationSize(pop)
 				.alterers(PublicCompositeAlterer.of(altererArray))
 				// .selector(new TournamentSelector<SkillGene, Float>())
-				// .selector(new StochasticUniversalSelector<SkillGene, Float>())
+				// .selector(new StochasticUniversalSelector<SkillGene,
+				// Float>())
 				.selector(new BoltzmannSelector<SkillGene, Float>(2))
 				// .maximalPhenotypeAge(50)
 				// .fitnessScaler(f -> f * .9f + 10000f)

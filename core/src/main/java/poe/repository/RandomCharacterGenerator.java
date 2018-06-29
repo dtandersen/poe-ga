@@ -1,9 +1,9 @@
 package poe.repository;
 
 import java.util.List;
+import poe.entity.CharInstance.PoeCharacter;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
-import poe.entity.PoeCharacter;
 
 public class RandomCharacterGenerator
 {
@@ -61,10 +61,12 @@ public class RandomCharacterGenerator
 			}
 			prevSkill = curSkill;
 			final List<Integer> neighbors = skillTree.neighbors(curSkill.getId());
-			// System.out.println("neighbors of " + curSkill.getName() + " are " + neighbors);
+			// System.out.println("neighbors of " + curSkill.getName() + " are "
+			// + neighbors);
 			final int nextIndex = randomizer.nextInt(neighbors.size());
 			curSkill = skillTree.find(neighbors.get(nextIndex));
-			// System.out.println("rolled " + nextIndex + " and got " + curSkill.getName());
+			// System.out.println("rolled " + nextIndex + " and got " +
+			// curSkill.getName());
 		}
 		while ((character.passiveSkillCount()) - 1 < skillCount);
 		return character;

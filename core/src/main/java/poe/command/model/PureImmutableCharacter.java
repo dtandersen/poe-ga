@@ -9,9 +9,9 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import poe.command.model.PureImmutablePassiveSkill.ImmutablePassiveSkillBuilder;
 import poe.entity.AttributeValue;
+import poe.entity.CharInstance.PoeCharacter;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
-import poe.entity.PoeCharacter;
 import poe.entity.PoeComUrlBuilder;
 import poe.entity.Stat;
 import poe.entity.StatValue;
@@ -53,7 +53,10 @@ public class PureImmutableCharacter implements ImmutableCharacter
 	public float getAdjustedStat(final Stat stat)
 	{
 		final StatValue value = adjustedStats.get(stat);
-		if (value == null) { return 0; }
+		if (value == null)
+		{
+			return 0;
+		}
 
 		return value.getValue();
 	}

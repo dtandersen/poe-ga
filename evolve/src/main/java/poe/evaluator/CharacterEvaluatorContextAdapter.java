@@ -1,6 +1,7 @@
 package poe.evaluator;
 
-import poe.entity.PoeCharacter;
+import poe.entity.CharInstance;
+import poe.entity.CharInstance.PoeCharacter;
 import poe.entity.Stat;
 
 public class CharacterEvaluatorContextAdapter implements CharacterEvaluatorContext
@@ -9,10 +10,10 @@ public class CharacterEvaluatorContextAdapter implements CharacterEvaluatorConte
 
 	private final EhpCalculator ehpCalculator;
 
-	public CharacterEvaluatorContextAdapter(final PoeCharacter character)
+	public CharacterEvaluatorContextAdapter(final PoeCharacter character, final CharInstance charInstance)
 	{
 		this.character = character;
-		ehpCalculator = new EhpCalculator(new CharacterEhpCalculatorSubjectAdapter(character));
+		ehpCalculator = new EhpCalculator(new CharacterEhpCalculatorSubjectAdapter(character, charInstance));
 	}
 
 	@Override

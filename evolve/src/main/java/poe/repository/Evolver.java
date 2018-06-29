@@ -3,9 +3,9 @@ package poe.repository;
 import java.util.List;
 import poe.command.model.AltererConfig;
 import poe.command.model.EvolutionStatus;
+import poe.entity.CharInstance.PoeCharacter;
 import poe.entity.CharacterClass;
 import poe.entity.CharacterItem;
-import poe.entity.PoeCharacter;
 import poe.evaluator.CharacterEvaluator;
 
 public interface Evolver

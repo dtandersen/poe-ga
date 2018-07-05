@@ -7,6 +7,7 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 import poe.util.TypeUtil;
 
+@Deprecated
 public abstract class MatcherChain<T> extends TypeSafeDiagnosingMatcher<T>
 {
 	private final List<Chain<T>> chains = new ArrayList<>();

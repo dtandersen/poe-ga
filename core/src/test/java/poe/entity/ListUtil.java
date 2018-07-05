@@ -2,7 +2,7 @@ package poe.entity;
 
 import java.util.List;
 
-public class MatcherHelper
+public class ListUtil
 {
 	public static <T> T[] listToArray(final List<T> values)
 	{

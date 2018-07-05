@@ -18,7 +18,7 @@ public class PoeMatchers
 {
 	public static <T> Matcher<Iterable<? extends T>> containsInAnyOrder(final List<T> values)
 	{
-		return org.hamcrest.Matchers.containsInAnyOrder(MatcherHelper.listToArray(values));
+		return org.hamcrest.Matchers.containsInAnyOrder(ListUtil.listToArray(values));
 	}
 
 	public static Matcher<PassiveSkill> passiveSkillEqualTo(final PassiveSkillBuilder expected)

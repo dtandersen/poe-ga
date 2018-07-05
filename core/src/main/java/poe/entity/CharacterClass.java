@@ -29,7 +29,6 @@ public enum CharacterClass
 		this.dexterity = dexterity;
 		this.intelligence = intelligence;
 		this.rootPassiveSkillName = rootPassiveSkillName;
-
 	}
 
 	public int getStrength()

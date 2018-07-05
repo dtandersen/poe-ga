@@ -5,6 +5,7 @@ import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
 import poe.util.TypeUtil;
 
+@Deprecated
 public abstract class ComposableMatcher<T, U> extends TypeSafeDiagnosingMatcher<T>
 {
 	private final Matcher<?> matcher;

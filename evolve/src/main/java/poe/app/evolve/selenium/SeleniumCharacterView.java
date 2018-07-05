@@ -67,11 +67,29 @@ public class SeleniumCharacterView implements CharacterView
 		final WebDriverWait wait = new WebDriverWait(driver, 10);
 		final WebElement element = wait
 				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("#footer-import-button")));
-		element.click();
+		try
+		{
+			element.click();
+		}
+		catch (final Exception e)
+		{
+			if (e.getMessage().contains("backdrop"))
+			{
+				sleep(1000);
+				closeBackdrop();
+				sleep(1000);
+				element.click();
+			}
+			else
+			{
+				throw e;
+			}
+		}
 		final WebElement searchBox = driver.findElement(By.id("passive-tree-decode"));
 		searchBox.sendKeys(evolutionStatus.getCharacter().getUrl());
 		final WebElement button = driver.findElement(By.id("passive-tree-decode-button"));
 		button.click();
+		closeBackdrop();
 	}
 
 	private void closeBackdrop()
@@ -81,7 +99,12 @@ public class SeleniumCharacterView implements CharacterView
 			final WebElement backdrop = driver.findElement(By.className("backdrop"));
 			if (backdrop.isEnabled())
 			{
+				System.out.println("close backdrop");
 				backdrop.click();
+			}
+			else
+			{
+				System.out.println("backdrop not open");
 			}
 		}
 		catch (final Exception e)
@@ -119,5 +142,16 @@ public class SeleniumCharacterView implements CharacterView
 	public void stop()
 	{
 		driver.quit();
+	}
+
+	void sleep(final int millis)
+	{
+		try
+		{
+			Thread.sleep(millis);
+		}
+		catch (final Exception e)
+		{
+		}
 	}
 }

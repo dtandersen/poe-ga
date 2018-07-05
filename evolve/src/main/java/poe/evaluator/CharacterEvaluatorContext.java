@@ -777,4 +777,10 @@ public interface CharacterEvaluatorContext
 	float getEnemyElemResist();
 
 	float rising(float x);
+
+	float getAreaDamage();
+
+	int getEnergyShield();
+
+	int getLife();
 }

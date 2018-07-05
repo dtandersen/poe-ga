@@ -28,7 +28,7 @@ import poe.util.StreamUtils;
 @ComponentScan(basePackages = { "poe.app.config" }, excludeFilters = {})
 public class PoeBuildEvolver implements CommandLineRunner
 {
-	private static final String CONFIG = "totem.yaml";
+	private static final String CONFIG = "blade.yaml";
 
 	@Autowired
 	private CharacterView characterView;

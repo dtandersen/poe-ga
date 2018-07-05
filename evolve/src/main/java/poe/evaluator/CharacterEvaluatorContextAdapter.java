@@ -2359,4 +2359,26 @@ public class CharacterEvaluatorContextAdapter implements CharacterEvaluatorConte
 	{
 		return (50 + getCsm() + getSpellCsm() + getTotemCsm()) / 100f;
 	}
+
+	@Override
+	public float getAreaDamage()
+	{
+		return character.getAdjustedStat(Stat.AOE_DAMAGE) / 100f;
+	}
+
+	@Override
+	public int getLife()
+	{
+		final int base = 38;
+		final float level = character.getLevel() * 12f;
+		final float str = this.getStrength() / 2f;
+		return (int)((base + level + str + this.getMaximumLife()) * (1 + this.getIncreasedMaximumLife() / 100f));
+	}
+
+	@Override
+	public int getEnergyShield()
+	{
+		final float intel = (this.getIntelligence() / 10f) * 2f;
+		return (int)((intel + this.getMaxEnergyShield()) * (1 + this.getIncreasedEnergyShield() / 100f));
+	}
 }

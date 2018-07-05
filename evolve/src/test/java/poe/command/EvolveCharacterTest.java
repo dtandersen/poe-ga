@@ -21,7 +21,6 @@ import poe.command.model.EvolutionStatus;
 import poe.command.model.FitnessConfig.ElementConfig.ElementConfigBuilder;
 import poe.command.model.ImmutableCharacter;
 import poe.command.model.PureImmutablePassiveSkill.ImmutablePassiveSkillBuilder;
-import poe.entity.AltererType;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill.PassiveSkillBuilder;
 import poe.entity.PoeMatchers;

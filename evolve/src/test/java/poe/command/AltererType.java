@@ -1,4 +1,4 @@
-package poe.entity;
+package poe.command;
 
 public enum AltererType
 {

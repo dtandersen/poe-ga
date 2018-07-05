@@ -10,12 +10,9 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.hamcrest.TypeSafeDiagnosingMatcher;
-import poe.command.CreateCharacterTest;
-import poe.command.CreateCharacterTest.CreateCharacterResultImplementation;
 import poe.command.model.ImmutableCharacter;
 import poe.command.model.ImmutableCharacter.ImmutablePassiveSkill;
 import poe.entity.PassiveSkill.PassiveSkillBuilder;
-import poe.matcher.ComposableMatcher;
 
 public class PoeMatchers
 {
@@ -44,17 +41,6 @@ public class PoeMatchers
 	public static StatValuesMatcher hasStats()
 	{
 		return StatValuesMatcher.hasStats();
-	}
-
-	public static Matcher<CreateCharacterResultImplementation> hasUrl(final Matcher<String> matcher)
-	{
-		return new ComposableMatcher<CreateCharacterTest.CreateCharacterResultImplementation, String>(matcher) {
-			@Override
-			protected String getValue(final CreateCharacterResultImplementation item)
-			{
-				return item.getUrl();
-			}
-		};
 	}
 
 	public static Matcher<ImmutableCharacter> hasPassives(final Matcher<Iterable<? extends ImmutablePassiveSkill>> matcher)

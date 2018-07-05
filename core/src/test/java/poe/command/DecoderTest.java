@@ -5,7 +5,8 @@ import static org.hamcrest.Matchers.equalTo;
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
-import org.apache.tomcat.util.codec.binary.Base64;
+import java.util.Base64;
+// import org.apache.tomcat.util.codec.binary.Base64;
 import org.junit.jupiter.api.Test;
 import poe.entity.CharacterClass;
 
@@ -36,7 +37,7 @@ public class DecoderTest
 
 	private Info readInfo(final String string) throws IOException
 	{
-		final byte[] bytes = Base64.decodeBase64(string);
+		final byte[] bytes = Base64.getUrlDecoder().decode(string);
 		final DataInputStream targetReader = new DataInputStream(new ByteArrayInputStream(bytes));
 
 		final Info i = new Info();

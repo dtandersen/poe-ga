@@ -35,6 +35,7 @@ import poe.entity.PoeMatchers;
 import poe.entity.Stat;
 import poe.entity.StatValue;
 import poe.entity.StatValue.StatBuilder;
+import poe.matcher.ComposableMatcher;
 import poe.repository.InMemoryPassiveSkillRepository;
 import poe.repository.PassiveSkillRepository;
 import poe.repository.PassiveSkillTree;
@@ -254,10 +255,7 @@ public class CreateCharacterTest
 	{
 		for (final PassiveSkill passive : jsonSkillRepo.all())
 		{
-			if (passive.getId() == i)
-			{
-				return passive;
-			}
+			if (passive.getId() == i) { return passive; }
 		}
 
 		return null;
@@ -268,7 +266,7 @@ public class CreateCharacterTest
 	{
 		createCharacter(CharacterClass.MARAUDER, new Integer[] { 31628 });
 
-		assertThat(result, PoeMatchers.hasUrl(equalTo("https://www.pathofexile.com/passive-skill-tree/AAAABAEAAHuM")));
+		assertThat(result, hasUrl(equalTo("https://www.pathofexile.com/passive-skill-tree/AAAABAEAAHuM")));
 	}
 
 	private Matcher<ImmutableCharacter> hasNoPassiveSkills()
@@ -387,10 +385,7 @@ public class CreateCharacterTest
 		@Override
 		public List<ItemDescription> getItems()
 		{
-			if (r.items == null)
-			{
-				return new ArrayList<>();
-			}
+			if (r.items == null) { return new ArrayList<>(); }
 
 			return r.items.stream()
 					.map(item -> {
@@ -466,10 +461,7 @@ public class CreateCharacterTest
 
 	private StatBuilder[] theStats(final Optional<String> markDown)
 	{
-		if (!markDown.isPresent())
-		{
-			return new StatBuilder[0];
-		}
+		if (!markDown.isPresent()) { return new StatBuilder[0]; }
 
 		return Arrays
 				.stream(markDown.get().split("\\,"))
@@ -509,5 +501,16 @@ public class CreateCharacterTest
 		jsonSkillRepo = memRepo;
 		passiveSkillBuilders.forEach(builder -> ((InMemoryPassiveSkillRepository)jsonSkillRepo).create(builder));
 		passiveSkillTree = new PassiveSkillTree(jsonSkillRepo.all());
+	}
+
+	public static Matcher<CreateCharacterResultImplementation> hasUrl(final Matcher<String> matcher)
+	{
+		return new ComposableMatcher<CreateCharacterTest.CreateCharacterResultImplementation, String>(matcher) {
+			@Override
+			protected String getValue(final CreateCharacterResultImplementation item)
+			{
+				return item.getUrl();
+			}
+		};
 	}
 }

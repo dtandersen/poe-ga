@@ -7,7 +7,7 @@ import poe.command.CreateCharacter.CreateCharacterResult;
 import poe.command.model.ImmutableCharacter;
 import poe.command.model.ItemDescription;
 import poe.command.model.PureImmutableCharacter.ImmutableCharacterBuilder;
-import poe.entity.CharInstance.PoeCharacter;
+import poe.entity.CharacterInstance.PoeCharacterEditor;
 import poe.entity.CharacterClass;
 import poe.entity.CharacterItem;
 import poe.entity.CharacterItem.CharacterItemBuilder;
@@ -30,7 +30,7 @@ public class CreateCharacter extends BaseCommand<CreateCharacterRequest, CreateC
 	@Override
 	public void execute()
 	{
-		final PoeCharacter character = new PoeCharacter(request.getCharacterClass(), request.getLevel());
+		final PoeCharacterEditor character = new PoeCharacterEditor(request.getCharacterClass(), request.getLevel());
 		request
 				.getItems()
 				.stream()

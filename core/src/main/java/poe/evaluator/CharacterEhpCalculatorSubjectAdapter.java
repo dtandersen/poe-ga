@@ -1,16 +1,16 @@
 package poe.evaluator;
 
-import poe.entity.CharInstance;
-import poe.entity.CharInstance.PoeCharacter;
+import poe.entity.CharacterInstance;
+import poe.entity.CharacterInstance.PoeCharacterEditor;
 import poe.entity.Stat;
 
 public class CharacterEhpCalculatorSubjectAdapter implements EhpSubject
 {
-	private final PoeCharacter character;
+	private final PoeCharacterEditor character;
 
-	private final CharInstance charInstance;
+	private final CharacterInstance charInstance;
 
-	public CharacterEhpCalculatorSubjectAdapter(final PoeCharacter character, final CharInstance charInstance)
+	public CharacterEhpCalculatorSubjectAdapter(final PoeCharacterEditor character, final CharacterInstance charInstance)
 	{
 		this.character = character;
 		this.charInstance = charInstance;

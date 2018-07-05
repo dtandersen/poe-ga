@@ -9,7 +9,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import poe.command.model.PureImmutablePassiveSkill.ImmutablePassiveSkillBuilder;
 import poe.entity.AttributeValue;
-import poe.entity.CharInstance.PoeCharacter;
+import poe.entity.CharacterInstance.PoeCharacterEditor;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
 import poe.entity.PoeComUrlBuilder;
@@ -162,7 +162,7 @@ public class PureImmutableCharacter implements ImmutableCharacter
 			this.url = url;
 		}
 
-		public ImmutableCharacterBuilder from(final PoeCharacter character)
+		public ImmutableCharacterBuilder from(final PoeCharacterEditor character)
 		{
 			withCharacterClass(character.getCharacterClass());
 			withPassiveSkills(character.getPassiveSkillsWithoutRoot());

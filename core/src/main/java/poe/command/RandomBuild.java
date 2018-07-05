@@ -7,7 +7,7 @@ import poe.command.RandomBuild.RandomBuildRequest;
 import poe.command.RandomBuild.RandomBuildResult;
 import poe.command.model.ImmutableCharacter;
 import poe.command.model.PureImmutableCharacter.ImmutableCharacterBuilder;
-import poe.entity.CharInstance.PoeCharacter;
+import poe.entity.CharacterInstance.PoeCharacterEditor;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
 import poe.entity.PoeComUrlBuilder;
@@ -35,7 +35,7 @@ public class RandomBuild extends BaseCommand<RandomBuildRequest, RandomBuildResu
 	{
 		final List<PassiveSkill> skills = passiveSkillRepository.all();
 		final PassiveSkillTree skillTree = new PassiveSkillTree(skills);
-		final PoeCharacter character = new RandomCharacterGenerator(skillTree, randomizer)
+		final PoeCharacterEditor character = new RandomCharacterGenerator(skillTree, randomizer)
 				.withCharacterClass(request.getCharacterClass())
 				.generate(request.getSize());
 

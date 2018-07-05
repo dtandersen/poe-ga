@@ -7,8 +7,8 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import poe.ehp.DpsCalculator.DpsContext;
-import poe.entity.CharInstance;
-import poe.entity.CharInstance.PoeCharacter;
+import poe.entity.CharacterInstance;
+import poe.entity.CharacterInstance.PoeCharacterEditor;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
 import poe.repository.PassiveSkillTree;
@@ -30,7 +30,7 @@ public class DpsCalculatorTest
 	@Test
 	public void meleeAttack()
 	{
-		final CharInstance character = given(character()
+		final CharacterInstance character = given(character()
 				.withPassiveSkills(passiveSkills("Melee Damage and Life")));
 
 		dpsCalc = new DpsCalculator();
@@ -43,7 +43,7 @@ public class DpsCalculatorTest
 		return dpsCalc.ford(new DpsContext());
 	}
 
-	private CharInstance given(final PoeCharacter poeCharacter)
+	private CharacterInstance given(final PoeCharacterEditor poeCharacter)
 	{
 		return poeCharacter.build();
 	}
@@ -60,8 +60,8 @@ public class DpsCalculatorTest
 		return passiveSkills;
 	}
 
-	private PoeCharacter character()
+	private PoeCharacterEditor character()
 	{
-		return new PoeCharacter(CharacterClass.MARAUDER, 10);
+		return new PoeCharacterEditor(CharacterClass.MARAUDER, 10);
 	}
 }

@@ -10,7 +10,7 @@ import org.jenetics.util.ISeq;
 import poe.command.model.EvolutionStatus.EvolutionStatusBuilder;
 import poe.command.model.ImmutableCharacter;
 import poe.command.model.PureImmutableCharacter.ImmutableCharacterBuilder;
-import poe.entity.CharInstance.PoeCharacter;
+import poe.entity.CharacterInstance.PoeCharacterEditor;
 import poe.entity.CharacterClass;
 import poe.entity.CharacterItem;
 import poe.entity.PassiveSkill;
@@ -70,7 +70,7 @@ class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Float>>
 		final long oldest = evolutionResult.getWorstPhenotype().getAge(evolutionResult.getGeneration());
 		System.out.println("Generation: " + evolutionResult.getGeneration() + ", Fitness: " + evolutionResult.getBestFitness() + ", Age: " + oldest);
 		final Genotype<SkillGene> genotype = phenotype.getGenotype();
-		final PoeCharacter character = make(genotype);
+		final PoeCharacterEditor character = make(genotype);
 		character.setItems(items);
 		final ImmutableCharacter retchar = ImmutableCharacterBuilder.character()
 				.from(character)
@@ -83,10 +83,10 @@ class EvolutionWatcher implements Consumer<EvolutionResult<SkillGene, Float>>
 				.build());
 	}
 
-	private PoeCharacter make(final Genotype<SkillGene> genotype)
+	private PoeCharacterEditor make(final Genotype<SkillGene> genotype)
 	{
 		final PassiveSkill root = passiveSkillTree.findByName(characterClass.getRootPassiveSkillName());
-		final PoeCharacter character = new PoeCharacter(characterClass, level);
+		final PoeCharacterEditor character = new PoeCharacterEditor(characterClass, level);
 		character.addPassiveSkill(root);
 		for (int i = 0; i < genotype.length(); i++)
 		{

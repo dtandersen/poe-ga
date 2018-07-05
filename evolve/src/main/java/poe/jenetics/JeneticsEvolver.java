@@ -15,7 +15,7 @@ import org.jenetics.engine.Engine;
 import org.jenetics.engine.EvolutionResult;
 import org.jenetics.util.Factory;
 import poe.command.model.AltererConfig;
-import poe.entity.CharInstance.PoeCharacter;
+import poe.entity.CharacterInstance.PoeCharacterEditor;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
 import poe.repository.Evolver;
@@ -98,7 +98,7 @@ public class JeneticsEvolver implements Evolver
 
 		final Chromosome<SkillGene> chromosome = result.getBestPhenotype().getGenotype().getChromosome(0);
 
-		final PoeCharacter character = new PoeCharacter(characterClass, evolutionContext.getLevel());
+		final PoeCharacterEditor character = new PoeCharacterEditor(characterClass, evolutionContext.getLevel());
 		character.addPassiveSkill(passiveSkillTree.findByName(characterClass.getRootPassiveSkillName()));
 		final List<PassiveSkill> myPassives = new ArrayList<>();
 		for (final SkillGene g : chromosome)

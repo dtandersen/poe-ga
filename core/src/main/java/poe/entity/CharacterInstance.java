@@ -9,41 +9,41 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class CharInstance
+public class CharacterInstance
 {
-	public CharInstance(final PoeCharacter poeCharacter)
+	public CharacterInstance(final PoeCharacterEditor poeCharacter)
 	{
 	}
 
 	/**
 	 * Prototype of a character.
 	 */
-	public static class PoeCharacter
+	public static class PoeCharacterEditor
 	{
+		private final CharacterClass characterClass;
+
+		private final int level;
+
 		private final Map<Attribute, AttributeValue> attributes;
 
 		private final StatValues stats;
 
-		private final CharacterState character;
+		private final Map<Integer, PassiveSkill> passiveSkills;
 
-		private final CharacterClass characterClass;
+		private List<CharacterItem> items;
 
 		private int skillPoints = 123;
 
-		public PoeCharacter(final CharacterClass characterClass, final int level)
+		public PoeCharacterEditor(final CharacterClass characterClass, final int level)
 		{
 			this.characterClass = characterClass;
+			this.level = level;
+			passiveSkills = new HashMap<>();
+			items = new ArrayList<>();
 			attributes = new HashMap<>();
 			stats = new StatValues();
-			character = new CharacterState();
 
-			character.setLevel(level);
 			calculateBaseAttributes(level, characterClass);
-		}
-
-		public PoeCharacter(final CharacterBuilder characterBuilder)
-		{
-			this(characterBuilder.characterClass, characterBuilder.level);
 		}
 
 		public float getAttributeValue(final Attribute attribute)
@@ -63,7 +63,7 @@ public class CharInstance
 
 		public List<Integer> getPassiveSkillIds()
 		{
-			return character.getPassiveSkillIds();
+			return new ArrayList<>(passiveSkills.keySet());
 		}
 
 		public StatValues getPassiveAttributes()
@@ -74,33 +74,15 @@ public class CharInstance
 		public boolean addPassiveSkill(final PassiveSkill passiveSkill)
 		{
 			// todo: unit test passiveSkillCount() >= skillPoints
-			if (passiveSkillCount() >= skillPoints)
-			{
-				return false;
-			}
-			if (passiveSkill == null)
-			{
-				return false;
-			}
-			if (hasPassiveSkill(passiveSkill.getId()))
-			{
-				return false;
-			}
-			if (character.size() > 0 && passiveSkill.isClassStartingNode())
-			{
-				return false;
-			}
-			if (!hasNeighbor(passiveSkill))
-			{
-				return false;
-			}
+			if (passiveSkillCount() >= skillPoints) { return false; }
+			if (passiveSkill == null) { return false; }
+			if (hasPassiveSkill(passiveSkill.getId())) { return false; }
+			if (passiveSkills.size() > 0 && passiveSkill.isClassStartingNode()) { return false; }
+			if (!hasNeighbor(passiveSkill)) { return false; }
 
-			character.addPassiveSkill(passiveSkill);
+			passiveSkills.put(passiveSkill.getId(), passiveSkill);
 
-			if (passiveSkill.getStatValues() == null)
-			{
-				return true;
-			}
+			if (passiveSkill.getStatValues() == null) { return true; }
 
 			for (final StatValue statValue : passiveSkill.getStatValues())
 			{
@@ -114,16 +96,13 @@ public class CharInstance
 		{
 			for (final PassiveSkill passiveSkill : passiveSkills)
 			{
-				if (!addPassiveSkill(passiveSkill) && passiveSkillCount() >= skillPoints)
-				{
-					return;
-				}
+				if (!addPassiveSkill(passiveSkill) && passiveSkillCount() >= skillPoints) { return; }
 			}
 		}
 
 		public int passiveSkillCount()
 		{
-			return character.size();
+			return passiveSkills.size();
 		}
 
 		public boolean hasPassiveSkill(final PassiveSkill passiveSkill)
@@ -138,17 +117,17 @@ public class CharInstance
 
 		public boolean hasPassiveSkill(final int passiveSkillId)
 		{
-			return character.contains(passiveSkillId);
+			return passiveSkills.containsKey(passiveSkillId);
 		}
 
 		public Collection<PassiveSkill> getPassiveSkills()
 		{
-			return character.getPassiveSkills();
+			return passiveSkills.values();
 		}
 
 		public Collection<PassiveSkill> getPassiveSkillsWithoutRoot()
 		{
-			return character.getPassiveSkillMap().values().stream().filter(new Predicate<PassiveSkill>() {
+			return passiveSkills.values().stream().filter(new Predicate<PassiveSkill>() {
 				@Override
 				public boolean test(final PassiveSkill t)
 				{
@@ -170,7 +149,7 @@ public class CharInstance
 			final Attribute attribute4 = Attribute.MANA;
 			attributes.put(attribute4, new AttributeValue(attribute4, (40 - 6) + level * 6 + getAttributeValue(Attribute.INTELLIGENCE) / 2));
 			final float attributeValue = getAttributeValue(Attribute.DEXTERITY);
-			final int dexdiv5 = PoeCharacter.div5(attributeValue);
+			final int dexdiv5 = PoeCharacterEditor.div5(attributeValue);
 			final Attribute attribute5 = Attribute.EVASION_RATING;
 			attributes.put(attribute5, new AttributeValue(attribute5, 53 + level * 3 + dexdiv5));
 			final Attribute attribute6 = Attribute.ACCURACY;
@@ -179,11 +158,8 @@ public class CharInstance
 
 		private boolean hasNeighbor(final PassiveSkill passiveSkill)
 		{
-			if (this.character.size() == 0)
-			{
-				return true;
-			}
-			return passiveSkill.isNeighbor(character.getPassiveSkills());
+			if (passiveSkills.size() == 0) { return true; }
+			return passiveSkill.isNeighbor(passiveSkills.values());
 		}
 
 		@Override
@@ -199,41 +175,20 @@ public class CharInstance
 		@Override
 		public boolean equals(final Object obj)
 		{
-			if (this == obj)
-			{
-				return true;
-			}
-			if (obj == null)
-			{
-				return false;
-			}
-			if (getClass() != obj.getClass())
-			{
-				return false;
-			}
-			final PoeCharacter other = (PoeCharacter)obj;
+			if (this == obj) { return true; }
+			if (obj == null) { return false; }
+			if (getClass() != obj.getClass()) { return false; }
+			final PoeCharacterEditor other = (PoeCharacterEditor)obj;
 			if (getPassiveAttributes() == null)
 			{
-				if (other.getPassiveAttributes() != null)
-				{
-					return false;
-				}
+				if (other.getPassiveAttributes() != null) { return false; }
 			}
-			else if (!getPassiveAttributes().equals(other.getPassiveAttributes()))
-			{
-				return false;
-			}
+			else if (!getPassiveAttributes().equals(other.getPassiveAttributes())) { return false; }
 			if (attributes == null)
 			{
-				if (other.attributes != null)
-				{
-					return false;
-				}
+				if (other.attributes != null) { return false; }
 			}
-			else if (!attributes.equals(other.attributes))
-			{
-				return false;
-			}
+			else if (!attributes.equals(other.attributes)) { return false; }
 			return true;
 		}
 
@@ -246,10 +201,7 @@ public class CharInstance
 		public static int div5(final float attributeValue)
 		{
 			final float gg = attributeValue % 5;
-			if (gg == 0)
-			{
-				return (int)(attributeValue / 5);
-			}
+			if (gg == 0) { return (int)(attributeValue / 5); }
 
 			final int g = (int)(attributeValue - gg);
 			final int f = g / 5;
@@ -264,10 +216,7 @@ public class CharInstance
 		public float getStat(final Stat stat)
 		{
 			final StatValue statValue = getStatValue(stat);
-			if (statValue == null)
-			{
-				return 0;
-			}
+			if (statValue == null) { return 0; }
 
 			return statValue.getValue();
 		}
@@ -301,12 +250,9 @@ public class CharInstance
 
 		public boolean hasPassiveNamed(final String string)
 		{
-			for (final PassiveSkill passive : character.getPassiveSkills())
+			for (final PassiveSkill passive : passiveSkills.values())
 			{
-				if (Objects.equals(string, passive.getName()))
-				{
-					return true;
-				}
+				if (Objects.equals(string, passive.getName())) { return true; }
 			}
 
 			return false;
@@ -315,11 +261,10 @@ public class CharInstance
 		public int passiveCount(final String string)
 		{
 			int count = 0;
-			for (final PassiveSkill passive : character.getPassiveSkills())
+			for (final PassiveSkill passive : passiveSkills.values())
 			{
 				if (Objects.equals(string, passive.getName()))
 				{
-					// return true;
 					count++;
 				}
 			}
@@ -334,17 +279,12 @@ public class CharInstance
 
 		public int getLevel()
 		{
-			return character.getLevel();
+			return level;
 		}
-
-		// public void setLevel(final int level)
-		// {
-		// character.setLevel(level);
-		// }
 
 		public void addItem(final CharacterItem item)
 		{
-			character.addItem(item);
+			items.add(item);
 		}
 
 		public List<StatValue> getAdjustedStats()
@@ -352,8 +292,8 @@ public class CharInstance
 			final StatBucket adjustedStatsCache = new StatBucket();
 
 			attributes.values().forEach(attr -> adjustedStatsCache.add(StatValue.of(attr.getStat(), attr.getValue())));
-			character.getPassiveSkills().forEach(skill -> skill.getStatValues().forEach(stat -> adjustedStatsCache.add(stat)));
-			character.getItems().forEach(item -> item.forEachStatValue(stat -> adjustedStatsCache.add(stat)));
+			passiveSkills.values().forEach(skill -> skill.getStatValues().forEach(stat -> adjustedStatsCache.add(stat)));
+			items.forEach(item -> item.forEachStatValue(stat -> adjustedStatsCache.add(stat)));
 
 			return adjustedStatsCache.getStatValues();
 		}
@@ -363,17 +303,14 @@ public class CharInstance
 			final Map<Stat, Float> stats = new HashMap<>();
 			getAdjustedStats().stream().forEach(s -> stats.put(s.getStat(), s.getValue()));
 			final Float statValue = stats.get(stat);
-			if (statValue == null)
-			{
-				return 0;
-			}
+			if (statValue == null) { return 0; }
 
 			return statValue;
 		}
 
 		public void setItems(final List<CharacterItem> items)
 		{
-			character.setItems(items);
+			this.items = items;
 		}
 
 		public void setSkillPoints(final int skillPoints)
@@ -381,32 +318,14 @@ public class CharInstance
 			this.skillPoints = skillPoints;
 		}
 
-		public CharInstance build()
+		public CharacterInstance build()
 		{
-			return new CharInstance(this);
+			return new CharacterInstance(this);
 		}
 
-		public PoeCharacter withPassiveSkills(final List<PassiveSkill> passiveSkills)
+		public PoeCharacterEditor withPassiveSkills(final List<PassiveSkill> passiveSkills)
 		{
 			addPassiveSkills(passiveSkills);
-			return this;
-		}
-	}
-
-	public static class CharacterBuilder
-	{
-		public int level = 1;
-
-		private CharacterClass characterClass;
-
-		public PoeCharacter build()
-		{
-			return new PoeCharacter(this);
-		}
-
-		public CharacterBuilder withCharacterClass(final CharacterClass marauder)
-		{
-			characterClass = marauder;
 			return this;
 		}
 	}

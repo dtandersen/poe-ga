@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.function.Function;
 import org.jenetics.Genotype;
 import org.jenetics.util.ISeq;
-import poe.entity.CharInstance;
-import poe.entity.CharInstance.PoeCharacter;
+import poe.entity.CharacterInstance;
+import poe.entity.CharacterInstance.PoeCharacterEditor;
 import poe.entity.CharacterClass;
 import poe.entity.CharacterItem;
 import poe.entity.PassiveSkill;
@@ -48,7 +48,7 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Float>
 	public Float apply(final Genotype<SkillGene> genotype)
 	{
 		final PassiveSkill root = passiveSkillTree.findByName(characterClass.getRootPassiveSkillName());
-		final PoeCharacter character = new PoeCharacter(characterClass, level);
+		final PoeCharacterEditor character = new PoeCharacterEditor(characterClass, level);
 		character.setItems(items);
 		character.addPassiveSkill(root);
 		character.setSkillPoints(skillPoints);
@@ -64,7 +64,7 @@ public class FitnessFunction implements Function<Genotype<SkillGene>, Float>
 			}
 			character.sneakyAdd(passives);
 		}
-		final CharInstance charInstance = character.build();
+		final CharacterInstance charInstance = character.build();
 		final CharacterEvaluatorContextAdapter context = new CharacterEvaluatorContextAdapter(character, charInstance);
 		final float fitness = characterEvaluator.evaluate(context).getFitness();
 

@@ -10,7 +10,7 @@ import poe.command.model.FitnessConfig;
 import poe.command.model.ImmutableCharacter;
 import poe.command.model.ItemDescription;
 import poe.command.model.PureImmutableCharacter.ImmutableCharacterBuilder;
-import poe.entity.CharInstance.PoeCharacter;
+import poe.entity.CharacterInstance.PoeCharacterEditor;
 import poe.entity.CharacterClass;
 import poe.entity.CharacterItem;
 import poe.entity.CharacterItem.CharacterItemBuilder;
@@ -168,7 +168,7 @@ public class EvolveCharacter extends BaseCommand<EvolveCharacterRequest, EvolveC
 		}
 
 		@Override
-		public void setCharacter(final PoeCharacter character)
+		public void setCharacter(final PoeCharacterEditor character)
 		{
 			result.setCharacter(ImmutableCharacterBuilder.character()
 					.withPassiveSkills(character.getPassiveSkillsWithoutRoot())

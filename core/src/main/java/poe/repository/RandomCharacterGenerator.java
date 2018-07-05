@@ -1,7 +1,7 @@
 package poe.repository;
 
 import java.util.List;
-import poe.entity.CharInstance.PoeCharacter;
+import poe.entity.CharacterInstance.PoeCharacterEditor;
 import poe.entity.CharacterClass;
 import poe.entity.PassiveSkill;
 
@@ -25,12 +25,12 @@ public class RandomCharacterGenerator
 		return this;
 	}
 
-	public PoeCharacter generate(final int skillCount)
+	public PoeCharacterEditor generate(final int skillCount)
 	{
 		PassiveSkill curSkill = skillTree.findByName(characterClass.getRootPassiveSkillName());
 		PassiveSkill prevSkill = curSkill;
 
-		final PoeCharacter character = new PoeCharacter(characterClass, 1);
+		final PoeCharacterEditor character = new PoeCharacterEditor(characterClass, 1);
 		final PassiveSkill root = curSkill;
 		character.addPassiveSkill(root);
 

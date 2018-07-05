@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 import org.jenetics.Genotype;
 import org.jenetics.util.Factory;
-import poe.entity.CharInstance.PoeCharacter;
+import poe.entity.CharacterInstance.PoeCharacterEditor;
 import poe.entity.CharacterClass;
 import poe.repository.JavaRandomizer;
 import poe.repository.PassiveSkillTree;
@@ -32,7 +32,7 @@ public class RandomWalkSkillGeneFactory implements Factory<Genotype<SkillGene>>
 	@Override
 	public Genotype<SkillGene> newInstance()
 	{
-		final PoeCharacter character = new RandomCharacterGenerator(pst, new JavaRandomizer())
+		final PoeCharacterEditor character = new RandomCharacterGenerator(pst, new JavaRandomizer())
 				.withCharacterClass(characterClass)
 				.generate(length);
 

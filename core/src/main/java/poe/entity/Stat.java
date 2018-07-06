@@ -18,6 +18,21 @@ public enum Stat
 	LIFE_ON_KILL(PLUS_INT + " Life gained on Kill"),
 	LIFE_ON_HIT(PLUS_INT + " Life gained for each Enemy hit by your Attacks"),
 
+	// mana
+	MANA_BONUS(PLUS_INT + " to maximum Mana"),
+	MANA(INT + "% increased maximum Mana"),
+	MANA_COST_REDUCED(INT + "% reduced Mana Cost of Skills"),
+	MANA_REGEN(INT + "% increased Mana Regeneration Rate"),
+	MANA_RESERVED(INT + "% reduced Mana Reserved"),
+	MANA_MOVE_REGEN(INT + "% increased Mana Regeneration if you've used a Movement Skill Recently"),
+	MANA_RESERVE_REDUCE(INT + "% less Mana Reserved"),
+	MANA_FLASK(INT + "% increased Mana Recovery from Flasks"),
+	MANA_LEECH_PHYSICAL(FLOAT + "% of Physical Attack Damage Leeched as Mana"),
+	MANA_ON_KILL(PLUS_INT + " Mana gained on Kill"),
+	MANA_ON_HIT(PLUS_INT + " Mana gained for each Enemy hit by your Attacks"),
+	MANA_TO_LIFE("Removes all mana. Spend Life instead of Mana for Skills"),
+	MANA_GAIN_ON_HIT(INT + "% of Damage taken gained as Mana when Hit"),
+
 	// flask
 	FLASK_LIFE(INT + "% increased Life Recovery from Flasks"),
 	FLASK_RECOVERY(INT + "% increased Flask Recovery rate"),
@@ -34,21 +49,7 @@ public enum Stat
 	STR_INT(PLUS_INT + " to Strength and Intelligence"),
 	DEX_INT(PLUS_INT + " to Dexterity and Intelligence"),
 	STR_DEX(PLUS_INT + " to Strength and Dexterity"),
-
-	// mana
-	MANA_BONUS(PLUS_INT + " to maximum Mana"),
-	MANA(INT + "% increased maximum Mana"),
-	MANA_COST_REDUCED(INT + "% reduced Mana Cost of Skills"),
-	MANA_REGEN(INT + "% increased Mana Regeneration Rate"),
-	MANA_RESERVED(INT + "% reduced Mana Reserved"),
-	MANA_MOVE_REGEN(INT + "% increased Mana Regeneration if you've used a Movement Skill Recently"),
-	MANA_RESERVE_REDUCE(INT + "% less Mana Reserved"),
-	MANA_FLASK(INT + "% increased Mana Recovery from Flasks"),
-	MANA_LEECH_PHYSICAL(FLOAT + "% of Physical Attack Damage Leeched as Mana"),
-	MANA_ON_KILL(PLUS_INT + " Mana gained on Kill"),
-	MANA_ON_HIT(PLUS_INT + " Mana gained for each Enemy hit by your Attacks"),
-	MANA_TO_LIFE("Removes all mana. Spend Life instead of Mana for Skills"),
-	MANA_GAIN_ON_HIT(INT + "% of Damage taken gained as Mana when Hit"),
+	ALL_ATTRIBUTES(PLUS_INT + " to all Attributes"),
 
 	// critical
 	CSM(PLUS_INT + "% to Critical Strike Multiplier"),

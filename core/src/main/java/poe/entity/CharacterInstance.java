@@ -1,6 +1,7 @@
 package poe.entity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -21,14 +22,45 @@ public class CharacterInstance
 
 	private final int mana;
 
+	private final int evasion;
+
+	private final int accuracy;
+
+	private final int energyShield;
+
+	private final int meleePhysicalDamage;
+
 	public CharacterInstance(final PoeCharacterEditor poeCharacter)
 	{
-		dexterity = poeCharacter.characterClass.getDexterity();
-		intelligence = poeCharacter.characterClass.getIntelligence();
-		strength = poeCharacter.characterClass.getStrength();
 		final int level = poeCharacter.level;
-		mana = PoeCalc.calcMana(level, intelligence);
-		life = PoeCalc.calcLife(level, strength);
+
+		// attributes
+		dexterity = poeCharacter.characterClass.getDexterity() +
+				(int)poeCharacter.getAdjustedStat(Stat.DEXTERITY) +
+				(int)poeCharacter.getAdjustedStat(Stat.DEX_INT) +
+				(int)poeCharacter.getAdjustedStat(Stat.STR_DEX) +
+				(int)poeCharacter.getAdjustedStat(Stat.ALL_ATTRIBUTES);
+		intelligence = poeCharacter.characterClass.getIntelligence() +
+				(int)poeCharacter.getAdjustedStat(Stat.INTELLIGENCE) +
+				(int)poeCharacter.getAdjustedStat(Stat.DEX_INT) +
+				(int)poeCharacter.getAdjustedStat(Stat.STR_INT) +
+				(int)poeCharacter.getAdjustedStat(Stat.ALL_ATTRIBUTES);
+		strength = poeCharacter.characterClass.getStrength() +
+				(int)poeCharacter.getAdjustedStat(Stat.STRENGTH) +
+				(int)poeCharacter.getAdjustedStat(Stat.STR_INT) +
+				(int)poeCharacter.getAdjustedStat(Stat.STR_DEX) +
+				(int)poeCharacter.getAdjustedStat(Stat.ALL_ATTRIBUTES);
+
+		mana = PoeCalc.calcMana(level, intelligence, poeCharacter.getAdjustedStat(Stat.MANA_BONUS), poeCharacter.getAdjustedStat(Stat.MANA));
+		life = PoeCalc.calcLife(level, strength, poeCharacter.getAdjustedStat(Stat.MAXIMUM_LIFE), poeCharacter.getAdjustedStat(Stat.INCRESED_MAXIMUM_LIFE));
+
+		// defense
+		energyShield = PoeCalc.calcEnergyShield(intelligence);
+		evasion = PoeCalc.calcEvasion(level, dexterity);
+
+		// offense
+		accuracy = PoeCalc.calcAccuracy(level, dexterity);
+		meleePhysicalDamage = PoeCalc.calcMeleePhysicalDamage(strength);
 	}
 
 	public int getDexterity()
@@ -56,6 +88,26 @@ public class CharacterInstance
 		return mana;
 	}
 
+	public int getEvasion()
+	{
+		return evasion;
+	}
+
+	public int getAccuracy()
+	{
+		return accuracy;
+	}
+
+	public int getEnergyShield()
+	{
+		return energyShield;
+	}
+
+	public int getMeleePhysicalDamage()
+	{
+		return meleePhysicalDamage;
+	}
+
 	@Override
 	public String toString()
 	{
@@ -75,11 +127,11 @@ public class CharacterInstance
 
 		private int level;
 
-		private Map<Attribute, AttributeValue> attributes;
+		private final Map<Attribute, AttributeValue> attributes;
 
-		private StatValues stats;
+		private final StatValues stats;
 
-		private Map<Integer, PassiveSkill> passiveSkills;
+		private final Map<Integer, PassiveSkill> passiveSkills;
 
 		private List<CharacterItem> items;
 
@@ -99,6 +151,10 @@ public class CharacterInstance
 
 		public PoeCharacterEditor()
 		{
+			passiveSkills = new HashMap<>();
+			stats = new StatValues();
+			attributes = new HashMap<>();
+			items = new ArrayList<>();
 		}
 
 		public float getAttributeValue(final Attribute attribute)
@@ -129,15 +185,33 @@ public class CharacterInstance
 		public boolean addPassiveSkill(final PassiveSkill passiveSkill)
 		{
 			// todo: unit test passiveSkillCount() >= skillPoints
-			if (passiveSkillCount() >= skillPoints) { return false; }
-			if (passiveSkill == null) { return false; }
-			if (hasPassiveSkill(passiveSkill.getId())) { return false; }
-			if (passiveSkills.size() > 0 && passiveSkill.isClassStartingNode()) { return false; }
-			if (!hasNeighbor(passiveSkill)) { return false; }
+			if (passiveSkillCount() >= skillPoints)
+			{
+				return false;
+			}
+			if (passiveSkill == null)
+			{
+				return false;
+			}
+			if (hasPassiveSkill(passiveSkill.getId()))
+			{
+				return false;
+			}
+			if (passiveSkills.size() > 0 && passiveSkill.isClassStartingNode())
+			{
+				return false;
+			}
+			if (!hasNeighbor(passiveSkill))
+			{
+				return false;
+			}
 
 			passiveSkills.put(passiveSkill.getId(), passiveSkill);
 
-			if (passiveSkill.getStatValues() == null) { return true; }
+			if (passiveSkill.getStatValues() == null)
+			{
+				return true;
+			}
 
 			for (final StatValue statValue : passiveSkill.getStatValues())
 			{
@@ -151,7 +225,10 @@ public class CharacterInstance
 		{
 			for (final PassiveSkill passiveSkill : passiveSkills)
 			{
-				if (!addPassiveSkill(passiveSkill) && passiveSkillCount() >= skillPoints) { return; }
+				if (!addPassiveSkill(passiveSkill) && passiveSkillCount() >= skillPoints)
+				{
+					return;
+				}
 			}
 		}
 
@@ -213,7 +290,10 @@ public class CharacterInstance
 
 		private boolean hasNeighbor(final PassiveSkill passiveSkill)
 		{
-			if (passiveSkills.size() == 0) { return true; }
+			if (passiveSkills.size() == 0)
+			{
+				return true;
+			}
 			return passiveSkill.isNeighbor(passiveSkills.values());
 		}
 
@@ -230,20 +310,41 @@ public class CharacterInstance
 		@Override
 		public boolean equals(final Object obj)
 		{
-			if (this == obj) { return true; }
-			if (obj == null) { return false; }
-			if (getClass() != obj.getClass()) { return false; }
+			if (this == obj)
+			{
+				return true;
+			}
+			if (obj == null)
+			{
+				return false;
+			}
+			if (getClass() != obj.getClass())
+			{
+				return false;
+			}
 			final PoeCharacterEditor other = (PoeCharacterEditor)obj;
 			if (getPassiveAttributes() == null)
 			{
-				if (other.getPassiveAttributes() != null) { return false; }
+				if (other.getPassiveAttributes() != null)
+				{
+					return false;
+				}
 			}
-			else if (!getPassiveAttributes().equals(other.getPassiveAttributes())) { return false; }
+			else if (!getPassiveAttributes().equals(other.getPassiveAttributes()))
+			{
+				return false;
+			}
 			if (attributes == null)
 			{
-				if (other.attributes != null) { return false; }
+				if (other.attributes != null)
+				{
+					return false;
+				}
 			}
-			else if (!attributes.equals(other.attributes)) { return false; }
+			else if (!attributes.equals(other.attributes))
+			{
+				return false;
+			}
 			return true;
 		}
 
@@ -256,7 +357,10 @@ public class CharacterInstance
 		public static int div5(final float attributeValue)
 		{
 			final float gg = attributeValue % 5;
-			if (gg == 0) { return (int)(attributeValue / 5); }
+			if (gg == 0)
+			{
+				return (int)(attributeValue / 5);
+			}
 
 			final int g = (int)(attributeValue - gg);
 			final int f = g / 5;
@@ -271,7 +375,10 @@ public class CharacterInstance
 		public float getStat(final Stat stat)
 		{
 			final StatValue statValue = getStatValue(stat);
-			if (statValue == null) { return 0; }
+			if (statValue == null)
+			{
+				return 0;
+			}
 
 			return statValue.getValue();
 		}
@@ -307,7 +414,10 @@ public class CharacterInstance
 		{
 			for (final PassiveSkill passive : passiveSkills.values())
 			{
-				if (Objects.equals(string, passive.getName())) { return true; }
+				if (Objects.equals(string, passive.getName()))
+				{
+					return true;
+				}
 			}
 
 			return false;
@@ -358,7 +468,10 @@ public class CharacterInstance
 			final Map<Stat, Float> stats = new HashMap<>();
 			getAdjustedStats().stream().forEach(s -> stats.put(s.getStat(), s.getValue()));
 			final Float statValue = stats.get(stat);
-			if (statValue == null) { return 0; }
+			if (statValue == null)
+			{
+				return 0;
+			}
 
 			return statValue;
 		}
@@ -382,6 +495,11 @@ public class CharacterInstance
 		{
 			addPassiveSkills(passiveSkills);
 			return this;
+		}
+
+		public PoeCharacterEditor withPassiveSkills(final PassiveSkill... passiveSkills)
+		{
+			return withPassiveSkills(Arrays.asList(passiveSkills));
 		}
 
 		public PoeCharacterEditor withCharacterClass(final CharacterClass characterClass)

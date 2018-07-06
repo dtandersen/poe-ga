@@ -1,4 +1,7 @@
-package org.jenetics;
+package io.jenetics;
+
+import io.jenetics.Alterer;
+import io.jenetics.Gene;
 
 public class PublicCompositeAlterer
 {

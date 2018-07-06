@@ -5,6 +5,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import poe.app.evolve.CharacterView;
@@ -21,7 +24,11 @@ public class SeleniumCharacterView implements CharacterView
 	@Override
 	public void start()
 	{
-		driver = new ChromeDriver();
+		final ChromeOptions options = new ChromeOptions();
+		options.addArguments("load-extension=C:\\Users\\David\\AppData\\Local\\Google\\Chrome\\User Data\\Default\\Extensions\\cjpalhdlnbpafiamejdnhcphjbkeiagm\\1.16.12_0");
+		final DesiredCapabilities capabilities = new DesiredCapabilities();
+		capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+		driver = new ChromeDriver(capabilities);
 		driver.get("http://poeplanner.com");
 	}
 
@@ -73,6 +80,7 @@ public class SeleniumCharacterView implements CharacterView
 		}
 		catch (final Exception e)
 		{
+			System.out.println("backdrop detected");
 			if (e.getMessage().contains("backdrop"))
 			{
 				sleep(1000);
@@ -87,9 +95,20 @@ public class SeleniumCharacterView implements CharacterView
 		}
 		final WebElement searchBox = driver.findElement(By.id("passive-tree-decode"));
 		searchBox.sendKeys(evolutionStatus.getCharacter().getUrl());
+		System.out.println(evolutionStatus.getCharacter().getUrl());
+		sleep(1000);
 		final WebElement button = driver.findElement(By.id("passive-tree-decode-button"));
 		button.click();
-		closeBackdrop();
+		waitClosed(button);
+		// sleep(1000);
+		// closeBackdrop();
+	}
+
+	private void waitClosed(final WebElement button)
+	{
+		final WebDriverWait wait = new WebDriverWait(driver, 30);
+		wait
+				.until(ExpectedConditions.invisibilityOfElementLocated(By.id("passive-tree-decode-button")));
 	}
 
 	private void closeBackdrop()
@@ -100,7 +119,11 @@ public class SeleniumCharacterView implements CharacterView
 			if (backdrop.isEnabled())
 			{
 				System.out.println("close backdrop");
-				backdrop.click();
+				// backdrop.click();
+				new Actions(driver)
+						.moveToElement(backdrop, 10, 10)
+						.click()
+						.perform();
 			}
 			else
 			{

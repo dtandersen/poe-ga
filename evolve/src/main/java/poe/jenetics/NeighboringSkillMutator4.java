@@ -1,17 +1,18 @@
 package poe.jenetics;
 
-import static org.jenetics.internal.math.random.indexes;
+import static io.jenetics.internal.math.random.indexes;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
-import org.jenetics.AbstractAlterer;
-import org.jenetics.Chromosome;
-import org.jenetics.Genotype;
-import org.jenetics.Phenotype;
-import org.jenetics.Population;
-import org.jenetics.internal.util.IntRef;
-import org.jenetics.util.MSeq;
-import org.jenetics.util.RandomRegistry;
+import io.jenetics.AbstractAlterer;
+import io.jenetics.AltererResult;
+import io.jenetics.Chromosome;
+import io.jenetics.Genotype;
+import io.jenetics.Phenotype;
+import io.jenetics.internal.util.IntRef;
+import io.jenetics.util.MSeq;
+import io.jenetics.util.RandomRegistry;
+import io.jenetics.util.Seq;
 import poe.repository.PassiveSkillTree;
 
 public class NeighboringSkillMutator4 extends AbstractAlterer<SkillGene, Float>
@@ -25,7 +26,7 @@ public class NeighboringSkillMutator4 extends AbstractAlterer<SkillGene, Float>
 	}
 
 	@Override
-	public int alter(final Population<SkillGene, Float> population, final long generation)
+	public AltererResult<SkillGene, Float> alter(final Seq<Phenotype<SkillGene, Float>> population, final long generation)
 	{
 		final IntRef alterations = new IntRef(0);
 
@@ -36,11 +37,30 @@ public class NeighboringSkillMutator4 extends AbstractAlterer<SkillGene, Float>
 			final Genotype<SkillGene> gt = pt.getGenotype();
 			final Genotype<SkillGene> mgt = mutate(gt, alterations);
 			final Phenotype<SkillGene, Float> mpt = pt.newInstance(mgt, generation);
-			population.set(i, mpt);
+			// population.set(i, mpt);
 		}
 
-		return alterations.value;
+		// return alterations.value;
+		return AltererResult.of(population.asISeq(), alterations.value);
 	}
+	// @Override
+	// public int alter(final Population<SkillGene, Float> population, final
+	// long generation)
+	// {
+	// final IntRef alterations = new IntRef(0);
+	//
+	// for (int i = 0; i < population.size(); ++i)
+	// {
+	// final Phenotype<SkillGene, Float> pt = population.get(i);
+	//
+	// final Genotype<SkillGene> gt = pt.getGenotype();
+	// final Genotype<SkillGene> mgt = mutate(gt, alterations);
+	// final Phenotype<SkillGene, Float> mpt = pt.newInstance(mgt, generation);
+	// population.set(i, mpt);
+	// }
+	//
+	// return alterations.value;
+	// }
 
 	protected Genotype<SkillGene> mutate(
 			final Genotype<SkillGene> genotype,

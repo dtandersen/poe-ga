@@ -1,12 +1,15 @@
 package poe.jenetics;
 
-import static org.jenetics.internal.math.random.indexes;
+import static io.jenetics.internal.math.random.indexes;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.jenetics.Mutator;
-import org.jenetics.util.MSeq;
-import org.jenetics.util.RandomRegistry;
+import io.jenetics.Chromosome;
+import io.jenetics.Mutator;
+import io.jenetics.MutatorResult;
+import io.jenetics.util.MSeq;
+import io.jenetics.util.RandomRegistry;
 import poe.repository.PassiveSkillTree;
 
 public class NeighboringSkillMutator extends Mutator<SkillGene, Float>
@@ -20,14 +23,21 @@ public class NeighboringSkillMutator extends Mutator<SkillGene, Float>
 	}
 
 	@Override
-	protected int mutate(final MSeq<SkillGene> genes, final double p)
+	protected MutatorResult<Chromosome<SkillGene>> mutate(final Chromosome<SkillGene> chromosome, final double p, final Random random)
 	{
+		final MSeq<SkillGene> genes = chromosome.toSeq().copy();
 		final List<Integer> original = genes.asList().stream().map(SkillGene::getAllele).collect(Collectors.toList());
 		final Set<Integer> neighbors = pst.neighbors(original);
 		neighbors.removeAll(original);
-		return (int)indexes(RandomRegistry.getRandom(), genes.length(), p)
+		final int count = (int)indexes(RandomRegistry.getRandom(), genes.length(), p)
 				.peek(i -> genes.set(i, genes.get(i).newInstance(randomNeighbor(neighbors))))
 				.count();
+
+		final MutatorResult<Chromosome<SkillGene>> result = MutatorResult.of(
+				chromosome.newInstance(genes.toISeq()),
+				count);
+		return result;
+
 	}
 
 	private int randomNeighbor(final Set<Integer> neighbors)
@@ -51,9 +61,11 @@ public class NeighboringSkillMutator extends Mutator<SkillGene, Float>
 
 	//
 	// @Override
-	// public int alter(final Population<SkillGene, Integer> population, final long generation)
+	// public int alter(final Population<SkillGene, Integer> population, final
+	// long generation)
 	// {
-	// final Consumer<? super Phenotype<SkillGene, Integer>> action = new PhenotypeConsumer(mutationRate, pst);
+	// final Consumer<? super Phenotype<SkillGene, Integer>> action = new
+	// PhenotypeConsumer(mutationRate, pst);
 	// // for (final Object x : population.stream())
 	// // {
 	// // return 0;
@@ -63,13 +75,15 @@ public class NeighboringSkillMutator extends Mutator<SkillGene, Float>
 	// return 0;
 	// }
 	//
-	// private final class PhenotypeConsumer implements Consumer<Phenotype<SkillGene, Integer>>
+	// private final class PhenotypeConsumer implements
+	// Consumer<Phenotype<SkillGene, Integer>>
 	// {
 	// private final float mutationRate;
 	//
 	// private final PassiveSkillTree pst;
 	//
-	// public PhenotypeConsumer(final float mutationRate, final PassiveSkillTree pst)
+	// public PhenotypeConsumer(final float mutationRate, final PassiveSkillTree
+	// pst)
 	// {
 	// this.mutationRate = mutationRate;
 	// this.pst = pst;
@@ -82,13 +96,15 @@ public class NeighboringSkillMutator extends Mutator<SkillGene, Float>
 	// }
 	// }
 	//
-	// private final class ChromeosomeConsumer implements Consumer<Chromosome<SkillGene>>
+	// private final class ChromeosomeConsumer implements
+	// Consumer<Chromosome<SkillGene>>
 	// {
 	// private final float mutationRate;
 	//
 	// private final PassiveSkillTree pst;
 	//
-	// public ChromeosomeConsumer(final float mutationRate, final PassiveSkillTree pst)
+	// public ChromeosomeConsumer(final float mutationRate, final
+	// PassiveSkillTree pst)
 	// {
 	// this.mutationRate = mutationRate;
 	// this.pst = pst;
@@ -100,7 +116,8 @@ public class NeighboringSkillMutator extends Mutator<SkillGene, Float>
 	// final Random random = RandomRegistry.getRandom();
 	// if (random.nextFloat() >= mutationRate) { return; }
 	//
-	// final Set<Integer> neighbors = pst.neighbors(chromosome.stream().map(SkillGene::getPassiveSkillId).collect(Collectors.toList()));
+	// final Set<Integer> neighbors =
+	// pst.neighbors(chromosome.stream().map(SkillGene::getPassiveSkillId).collect(Collectors.toList()));
 	//
 	// final int index = random.nextInt(chromosome.length());
 	// final SkillGene gene = chromosome.getGene(index);

@@ -2,10 +2,10 @@ package poe.jenetics;
 
 import java.util.List;
 import java.util.Set;
-import org.jenetics.AbstractChromosome;
-import org.jenetics.Chromosome;
-import org.jenetics.util.ISeq;
-import org.jenetics.util.MSeq;
+import io.jenetics.AbstractChromosome;
+import io.jenetics.Chromosome;
+import io.jenetics.util.ISeq;
+import io.jenetics.util.MSeq;
 
 @SuppressWarnings("serial")
 public class SkillChromosome extends AbstractChromosome<SkillGene>

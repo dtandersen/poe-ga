@@ -1,9 +1,12 @@
 package poe.jenetics;
 
 import java.util.List;
+import java.util.Random;
 import java.util.stream.IntStream;
-import org.jenetics.Mutator;
-import org.jenetics.util.MSeq;
+import io.jenetics.Chromosome;
+import io.jenetics.Mutator;
+import io.jenetics.MutatorResult;
+import io.jenetics.util.MSeq;
 
 public class DeterministicMutator extends Mutator<SkillGene, Float>
 {
@@ -18,8 +21,9 @@ public class DeterministicMutator extends Mutator<SkillGene, Float>
 	}
 
 	@Override
-	protected int mutate(final MSeq<SkillGene> genes, final double p)
+	protected MutatorResult<Chromosome<SkillGene>> mutate(final Chromosome<SkillGene> chromosome, final double p, final Random random)
 	{
+		final MSeq<SkillGene> genes = chromosome.toSeq().copy();
 		final List<Integer> testGenes = testingGenes.get(count++);
 		System.out.println("gene before=" + genes);
 
@@ -29,7 +33,9 @@ public class DeterministicMutator extends Mutator<SkillGene, Float>
 
 		System.out.println("gene after=" + genes);
 
-		return count;
+		return MutatorResult.of(
+				chromosome.newInstance(genes.toISeq()),
+				count);
 	}
 
 	@Override

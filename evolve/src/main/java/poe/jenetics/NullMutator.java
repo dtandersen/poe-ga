@@ -1,7 +1,9 @@
 package poe.jenetics;
 
-import org.jenetics.Mutator;
-import org.jenetics.util.MSeq;
+import java.util.Random;
+import io.jenetics.Chromosome;
+import io.jenetics.Mutator;
+import io.jenetics.MutatorResult;
 
 public class NullMutator extends Mutator<SkillGene, Float>
 {
@@ -11,8 +13,8 @@ public class NullMutator extends Mutator<SkillGene, Float>
 	}
 
 	@Override
-	protected int mutate(final MSeq<SkillGene> genes, final double p)
+	protected MutatorResult<Chromosome<SkillGene>> mutate(final Chromosome<SkillGene> chromosome, final double p, final Random random)
 	{
-		return 0;
+		return MutatorResult.of(chromosome);
 	}
 }

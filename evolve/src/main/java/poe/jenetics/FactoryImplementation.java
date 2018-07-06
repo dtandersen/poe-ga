@@ -3,8 +3,8 @@ package poe.jenetics;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.jenetics.Genotype;
-import org.jenetics.util.Factory;
+import io.jenetics.Genotype;
+import io.jenetics.util.Factory;
 
 final class FactoryImplementation implements Factory<Genotype<SkillGene>>
 {

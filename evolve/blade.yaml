@@ -1,7 +1,7 @@
 ---
 characterClass: witch
 level: 100
-genes: 300
+genes: 150
 chromosomes: 1
 skillPoints: 90
 population: 500
@@ -9,21 +9,23 @@ generations: 1000000
 threads: 1
 alterers:
 - type: crossover
-  probability: .005
-#  - type: swap
-#    probability: .01
+  probability: .05
+- type: swap
+  probability: .05
 #- type: mutator
-#  probability: .005
-- type: neighbor
-  probability: .005
+#  probability: .015
+- type: singleneighbor
+  probability: .007
+- type: multineighbor
+  probability: .05
 evaluators:
 - expression:  10 * (strength + dexterity + intelligence)
 - expression:  10 * (skillEffectDuration)
 - expression:  1000 * areaDamage
 - expression:  life + energyShield
-- expression:  100 * min(99, dexterity)
-- expression:  250 * min(200, increasedMaximumLife)
-- expression:  50 * 150 * (1 + physicalDamage/100.0 + areaDamage) * (1 + 5/100.0 * (1 + csc/100.0 + spellCsc/100.0) * (0.5 + csm/100.0 + spellCsm/100.0)) 
+- expression:  1000 * min(99, dexterity)
+- expression:  1000 * min(200, increasedMaximumLife)
+- expression:  50 * 150 * (1 + physicalDamage/100.0 + spellDamage/100.0 + areaDamage) * (1 + 5/100.0 * (1 + csc/100.0 + spellCsc/100.0) * (0.5 + csm/100.0 + spellCsm/100.0)) 
 #  - expression:  2 * ehp.maxLightningHit
 #  - expression:  2 * ehp.maxFireHit
 #  - expression:  2 * ehp.maxColdHit
@@ -41,6 +43,7 @@ evaluators:
 #  - expression: hasPassive('Breath of Lightning') * 10
 #  - expression: hasPassive('Mind Over Matter') * 10
 #  - expression: hasPassive('Annihilation') * 10
+- expression: min(hasPassive('Jewel Socket'), 8) * 100000
 items:
   - stats:
     - stat: +73 to maximum Energy Shield

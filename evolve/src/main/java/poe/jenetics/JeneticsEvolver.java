@@ -6,17 +6,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import org.jenetics.Alterer;
-import org.jenetics.BoltzmannSelector;
-import org.jenetics.Chromosome;
-import org.jenetics.Genotype;
-import org.jenetics.PublicCompositeAlterer;
-import org.jenetics.engine.Engine;
-import org.jenetics.engine.EvolutionResult;
-import org.jenetics.util.Factory;
+import io.jenetics.Alterer;
+import io.jenetics.BoltzmannSelector;
+import io.jenetics.Chromosome;
+import io.jenetics.EliteSelector;
+import io.jenetics.Genotype;
+import io.jenetics.PublicCompositeAlterer;
+import io.jenetics.engine.Engine;
+import io.jenetics.engine.EvolutionResult;
+import io.jenetics.util.Factory;
 import poe.command.model.AltererConfig;
-import poe.entity.CharacterInstance.PoeCharacterEditor;
 import poe.entity.CharacterClass;
+import poe.entity.CharacterInstance.PoeCharacterEditor;
 import poe.entity.PassiveSkill;
 import poe.repository.Evolver;
 import poe.repository.PassiveSkillTree;
@@ -85,7 +86,7 @@ public class JeneticsEvolver implements Evolver
 				// .selector(new TournamentSelector<SkillGene, Float>())
 				// .selector(new StochasticUniversalSelector<SkillGene,
 				// Float>())
-				.selector(new BoltzmannSelector<SkillGene, Float>(2))
+				.selector(new EliteSelector<>((int)(pop * .01), new BoltzmannSelector<SkillGene, Float>(4)))
 				// .maximalPhenotypeAge(50)
 				// .fitnessScaler(f -> f * .9f + 10000f)
 				.executor(exec)

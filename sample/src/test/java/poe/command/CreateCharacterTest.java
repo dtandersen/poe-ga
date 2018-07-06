@@ -78,8 +78,8 @@ public class CreateCharacterTest
 				StatValue.of(Stat.STRENGTH, 14),
 				StatValue.of(Stat.DEXTERITY, 14),
 				StatValue.of(Stat.INTELLIGENCE, 32),
-				StatValue.of(Stat.MAXIMUM_LIFE, 57),
-				StatValue.of(Stat.MANA_BONUS, 56),
+				StatValue.of(Stat.ADDED_LIFE, 57),
+				StatValue.of(Stat.ADDED_MANA, 56),
 				StatValue.of(Stat.EVASION_RATING, 58),
 				StatValue.of(Stat.ACC_PLUS, 28)));
 	}
@@ -129,7 +129,7 @@ public class CreateCharacterTest
 		createCharacter(CharacterClass.MARAUDER, new Integer[] { 31628, 31628 });
 
 		assertThat(theCharacter(), hasStats2()
-				.withStatValue(Stat.MAXIMUM_LIFE, 16)
+				.withStatValue(Stat.ADDED_LIFE, 16)
 				.withStatValue(Stat.MELEE_PHYSICAL_DAMAGE, 16));
 
 		assertThat(theCharacter(), PoeMatchers.hasPassives(passiveWithId(31628)));
@@ -141,7 +141,7 @@ public class CreateCharacterTest
 		createCharacter(CharacterClass.MARAUDER, new Integer[] { 31628, 38148 });
 
 		assertThat(theCharacter(), hasStats2()
-				.withStatValue(Stat.MAXIMUM_LIFE, 16)
+				.withStatValue(Stat.ADDED_LIFE, 16)
 				.withStatValue(Stat.MELEE_PHYSICAL_DAMAGE, 16));
 
 		assertThat(theCharacter(), PoeMatchers.hasPassives(passiveWithId(31628)));

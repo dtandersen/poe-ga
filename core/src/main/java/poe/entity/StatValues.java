@@ -36,4 +36,14 @@ public class StatValues
 	{
 		return "StatValueBag[passives=" + passives + "]";
 	}
+
+	public float valueOf(final Stat increasedMana)
+	{
+		final StatValue sv = find(increasedMana);
+		if (sv == null)
+		{
+			return 0;
+		}
+		return sv.getValue();
+	}
 }

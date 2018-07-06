@@ -6,6 +6,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Container for stats. When a new stat is added it increments the old stat.
+ *
+ * @author David Andersen
+ * @deprecated Use {@link StatValues}.
+ */
+@Deprecated
 public class StatBucket
 {
 	private final Map<Stat, StatValue> stats = new HashMap<>();
@@ -13,6 +20,7 @@ public class StatBucket
 	public void add(final StatValue stat)
 	{
 		final StatValue existing = stats.get(stat.getStat());
+
 		if (existing == null)
 		{
 			stats.put(stat.getStat(), stat);

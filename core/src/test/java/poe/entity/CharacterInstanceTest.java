@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import poe.command.MarkdownStream;
 import poe.command.MarkdownStream.Row;
 import poe.entity.CharacterInstance.PoeCharacterEditor;
+import poe.entity.CharacterItem.CharacterItemBuilder;
 import poe.entity.PassiveSkill.PassiveSkillBuilder;
 import poe.entity.StatValue.StatBuilder;
 
@@ -73,8 +74,8 @@ public class CharacterInstanceTest
 		final PassiveSkill extraLife = PassiveSkillBuilder.passiveSkill()
 				.withName("Lots of Life")
 				.withStats(
-						StatBuilder.stat(Stat.INCRESED_MAXIMUM_LIFE, 10),
-						StatBuilder.stat(Stat.MAXIMUM_LIFE, 10))
+						StatBuilder.stat(Stat.INCREASED_LIFE, 10),
+						StatBuilder.stat(Stat.ADDED_LIFE, 10))
 				.build();
 		final CharacterInstance editor = new PoeCharacterEditor()
 				.withCharacterClass(CharacterClass.MARAUDER)
@@ -91,9 +92,10 @@ public class CharacterInstanceTest
 		final PassiveSkill lotsOfMana = PassiveSkillBuilder.passiveSkill()
 				.withName("Lots of Mana")
 				.withStats(
-						StatBuilder.stat(Stat.MANA_BONUS, 10),
-						StatBuilder.stat(Stat.MANA, 10))
+						StatBuilder.stat(Stat.ADDED_MANA, 10),
+						StatBuilder.stat(Stat.INCREASED_MANA, 10))
 				.build();
+
 		final CharacterInstance editor = new PoeCharacterEditor()
 				.withCharacterClass(CharacterClass.MARAUDER)
 				.withLevel(1)
@@ -101,6 +103,46 @@ public class CharacterInstanceTest
 				.build();
 
 		assertThat(editor.getMana(), equalTo(62));
+	}
+
+	@Test
+	public void energyShieldCalculation()
+	{
+		final PassiveSkill energyShielded = PassiveSkillBuilder.passiveSkill()
+				.withName("Lots of Mana")
+				.withStats(
+						StatBuilder.stat(Stat.ADDED_ENERGY_SHIELD, 10),
+						StatBuilder.stat(Stat.INCREASED_ENERGY_SHIELD, 10))
+				.build();
+
+		final CharacterInstance editor = new PoeCharacterEditor()
+				.withCharacterClass(CharacterClass.WITCH)
+				.withLevel(1)
+				.withPassiveSkills(energyShielded)
+				.build();
+
+		assertThat(editor.getEnergyShield(), equalTo(18));
+	}
+
+	@Test
+	public void shouldCombineStatsOfPassiveSkillsAndItems()
+	{
+		final PassiveSkill energyShielded = PassiveSkillBuilder.passiveSkill()
+				.withName("Lots of Mana")
+				.withStats(
+						StatBuilder.stat(Stat.ADDED_ENERGY_SHIELD, 10))
+				.build();
+
+		final CharacterInstance character = new PoeCharacterEditor()
+				.withCharacterClass(CharacterClass.WITCH)
+				.withLevel(1)
+				.withPassiveSkills(energyShielded)
+				.withItems(CharacterItemBuilder.item()
+						.withStatValue(Stat.ADDED_ENERGY_SHIELD, 10))
+				.build();
+
+		assertThat(character.getEnergyShield(), equalTo(26));
+		assertThat(character.getStatValue(Stat.ADDED_ENERGY_SHIELD), equalTo(20f));
 	}
 
 	private Matcher<CharacterInstance> matches(final String... markdown)

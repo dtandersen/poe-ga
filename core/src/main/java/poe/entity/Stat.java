@@ -12,15 +12,15 @@ public enum Stat
 	UNKNOWN("Unknown"),
 
 	// life
-	INCRESED_MAXIMUM_LIFE(INT + "% increased maximum Life"),
-	MAXIMUM_LIFE(PLUS + INT + " to maximum Life"),
+	INCREASED_LIFE(INT + "% increased maximum Life"),
+	ADDED_LIFE(PLUS + INT + " to maximum Life"),
 	CHAOS_INNOCULATION("Maximum Life becomes " + INT + ", Immune to Chaos Damage"),
 	LIFE_ON_KILL(PLUS_INT + " Life gained on Kill"),
 	LIFE_ON_HIT(PLUS_INT + " Life gained for each Enemy hit by your Attacks"),
 
 	// mana
-	MANA_BONUS(PLUS_INT + " to maximum Mana"),
-	MANA(INT + "% increased maximum Mana"),
+	ADDED_MANA(PLUS_INT + " to maximum Mana"),
+	INCREASED_MANA(INT + "% increased maximum Mana"),
 	MANA_COST_REDUCED(INT + "% reduced Mana Cost of Skills"),
 	MANA_REGEN(INT + "% increased Mana Regeneration Rate"),
 	MANA_RESERVED(INT + "% reduced Mana Reserved"),
@@ -509,7 +509,7 @@ public enum Stat
 	POISON_ON_HIT_ATTACK(INT + "% chance to Poison on Hit with Attacks"),
 
 	// energy shield
-	MAX_ENERGY_SHIELD(PLUS + INT + " to maximum Energy Shield"),
+	ADDED_ENERGY_SHIELD(PLUS + INT + " to maximum Energy Shield"),
 	INCREASED_ENERGY_SHIELD(INT + "% increased maximum Energy Shield"),
 	ENERGY_SHIELD_PCT_2(INT + "% more maximum Energy Shield"),
 	ENERGY_SHIELD_MANA(INT + "% of Maximum Mana as Extra Maximum Energy Shield"),
@@ -649,5 +649,10 @@ public enum Stat
 	public boolean isUnknown()
 	{
 		return this == UNKNOWN;
+	}
+
+	public StatValue value(final float value)
+	{
+		return new StatValue(this, value);
 	}
 }

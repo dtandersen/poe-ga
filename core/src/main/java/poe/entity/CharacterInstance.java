@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import poe.entity.CharacterItem.CharacterItemBuilder;
 
 public class CharacterInstance
 {
@@ -30,37 +31,48 @@ public class CharacterInstance
 
 	private final int meleePhysicalDamage;
 
+	private final StatValues stats;
+
 	public CharacterInstance(final PoeCharacterEditor poeCharacter)
 	{
 		final int level = poeCharacter.level;
+		stats = new StatValues();
+
+		mergeStats(poeCharacter);
 
 		// attributes
-		dexterity = poeCharacter.characterClass.getDexterity() +
-				(int)poeCharacter.getAdjustedStat(Stat.DEXTERITY) +
-				(int)poeCharacter.getAdjustedStat(Stat.DEX_INT) +
-				(int)poeCharacter.getAdjustedStat(Stat.STR_DEX) +
-				(int)poeCharacter.getAdjustedStat(Stat.ALL_ATTRIBUTES);
-		intelligence = poeCharacter.characterClass.getIntelligence() +
-				(int)poeCharacter.getAdjustedStat(Stat.INTELLIGENCE) +
-				(int)poeCharacter.getAdjustedStat(Stat.DEX_INT) +
-				(int)poeCharacter.getAdjustedStat(Stat.STR_INT) +
-				(int)poeCharacter.getAdjustedStat(Stat.ALL_ATTRIBUTES);
-		strength = poeCharacter.characterClass.getStrength() +
-				(int)poeCharacter.getAdjustedStat(Stat.STRENGTH) +
-				(int)poeCharacter.getAdjustedStat(Stat.STR_INT) +
-				(int)poeCharacter.getAdjustedStat(Stat.STR_DEX) +
-				(int)poeCharacter.getAdjustedStat(Stat.ALL_ATTRIBUTES);
+		final CharacterClass characterClass = poeCharacter.characterClass;
+		dexterity = characterClass.getDexterity() +
+				(int)stats.valueOf(Stat.DEXTERITY) +
+				(int)stats.valueOf(Stat.DEX_INT) +
+				(int)stats.valueOf(Stat.STR_DEX) +
+				(int)stats.valueOf(Stat.ALL_ATTRIBUTES);
+		intelligence = characterClass.getIntelligence() +
+				(int)stats.valueOf(Stat.INTELLIGENCE) +
+				(int)stats.valueOf(Stat.DEX_INT) +
+				(int)stats.valueOf(Stat.STR_INT) +
+				(int)stats.valueOf(Stat.ALL_ATTRIBUTES);
+		strength = characterClass.getStrength() +
+				(int)stats.valueOf(Stat.STRENGTH) +
+				(int)stats.valueOf(Stat.STR_INT) +
+				(int)stats.valueOf(Stat.STR_DEX) +
+				(int)stats.valueOf(Stat.ALL_ATTRIBUTES);
 
-		mana = PoeCalc.calcMana(level, intelligence, poeCharacter.getAdjustedStat(Stat.MANA_BONUS), poeCharacter.getAdjustedStat(Stat.MANA));
-		life = PoeCalc.calcLife(level, strength, poeCharacter.getAdjustedStat(Stat.MAXIMUM_LIFE), poeCharacter.getAdjustedStat(Stat.INCRESED_MAXIMUM_LIFE));
+		mana = PoeCalc.calcMana(level, intelligence, stats.valueOf(Stat.ADDED_MANA), stats.valueOf(Stat.INCREASED_MANA));
+		life = PoeCalc.calcLife(level, strength, stats.valueOf(Stat.ADDED_LIFE), stats.valueOf(Stat.INCREASED_LIFE));
 
 		// defense
-		energyShield = PoeCalc.calcEnergyShield(intelligence);
+		energyShield = PoeCalc.calcEnergyShield(intelligence, stats.valueOf(Stat.ADDED_ENERGY_SHIELD), stats.valueOf(Stat.INCREASED_ENERGY_SHIELD));
 		evasion = PoeCalc.calcEvasion(level, dexterity);
 
 		// offense
 		accuracy = PoeCalc.calcAccuracy(level, dexterity);
 		meleePhysicalDamage = PoeCalc.calcMeleePhysicalDamage(strength);
+	}
+
+	public float getStatValue(final Stat stat)
+	{
+		return stats.valueOf(stat);
 	}
 
 	public int getDexterity()
@@ -116,6 +128,13 @@ public class CharacterInstance
 				"intelligence=" + getIntelligence() +
 				"strength=" + getStrength() +
 				"]";
+	}
+
+	private void mergeStats(final PoeCharacterEditor poeCharacter)
+	{
+		poeCharacter.getStatValues().forEach(stat -> stats.increment(stat));
+		poeCharacter.items.forEach(item -> item.forEachStatValue(stat -> stats.increment(stat)));
+
 	}
 
 	/**
@@ -511,6 +530,12 @@ public class CharacterInstance
 		public PoeCharacterEditor withLevel(final int level)
 		{
 			this.level = level;
+			return this;
+		}
+
+		public PoeCharacterEditor withItems(final CharacterItemBuilder withStatValue)
+		{
+			items.add(withStatValue.build());
 			return this;
 		}
 	}

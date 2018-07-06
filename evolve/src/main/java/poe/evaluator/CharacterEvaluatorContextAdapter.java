@@ -34,13 +34,13 @@ public class CharacterEvaluatorContextAdapter implements CharacterEvaluatorConte
 	@Override
 	public float getMaximumLife()
 	{
-		return characterSheet.getAdjustedStat(Stat.MAXIMUM_LIFE);
+		return characterSheet.getAdjustedStat(Stat.ADDED_LIFE);
 	}
 
 	@Override
 	public float getIncreasedMaximumLife()
 	{
-		return characterSheet.getAdjustedStat(Stat.INCRESED_MAXIMUM_LIFE);
+		return characterSheet.getAdjustedStat(Stat.INCREASED_LIFE);
 	}
 
 	@Override
@@ -118,13 +118,13 @@ public class CharacterEvaluatorContextAdapter implements CharacterEvaluatorConte
 	@Override
 	public float getMaxMana()
 	{
-		return characterSheet.getAdjustedStat(Stat.MANA_BONUS);
+		return characterSheet.getAdjustedStat(Stat.ADDED_MANA);
 	}
 
 	@Override
 	public float getIncreasedMaxMana()
 	{
-		return characterSheet.getAdjustedStat(Stat.MANA);
+		return characterSheet.getAdjustedStat(Stat.INCREASED_MANA);
 	}
 
 	@Override
@@ -1912,7 +1912,7 @@ public class CharacterEvaluatorContextAdapter implements CharacterEvaluatorConte
 	@Override
 	public float getMaxEnergyShield()
 	{
-		return characterSheet.getAdjustedStat(Stat.MAX_ENERGY_SHIELD);
+		return characterSheet.getAdjustedStat(Stat.ADDED_ENERGY_SHIELD);
 	}
 
 	@Override

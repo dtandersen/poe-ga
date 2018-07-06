@@ -30,7 +30,7 @@ public class JsonPassiveSkillRepositoryTest
 						.withId(19858)
 						.withOutputs(9206)
 						.withStats(
-								stat(Stat.INCRESED_MAXIMUM_LIFE, 10),
+								stat(Stat.INCREASED_LIFE, 10),
 								stat(Stat.FLASK_LIFE, 20),
 								stat(Stat.FLASK_RECOVERY, 20))));
 

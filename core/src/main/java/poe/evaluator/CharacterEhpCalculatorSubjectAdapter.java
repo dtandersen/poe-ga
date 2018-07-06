@@ -24,8 +24,8 @@ public class CharacterEhpCalculatorSubjectAdapter implements EhpSubject
 			return 1;
 		}
 
-		final float stat = character.getStat(Stat.MAXIMUM_LIFE) + 70 * 12 + (character.getStat(Stat.STRENGTH) / 10 * 5);
-		final float life = stat * (1 + (character.getStat(Stat.INCRESED_MAXIMUM_LIFE) / 100f));
+		final float stat = character.getStat(Stat.ADDED_LIFE) + 70 * 12 + (character.getStat(Stat.STRENGTH) / 10 * 5);
+		final float life = stat * (1 + (character.getStat(Stat.INCREASED_LIFE) / 100f));
 		return life;
 	}
 
@@ -74,14 +74,14 @@ public class CharacterEhpCalculatorSubjectAdapter implements EhpSubject
 	@Override
 	public float getEnergyShield()
 	{
-		return (character.getStat(Stat.MAX_ENERGY_SHIELD)) *
+		return (character.getStat(Stat.ADDED_ENERGY_SHIELD)) *
 				(1 * (character.getStat(Stat.INCREASED_ENERGY_SHIELD) + (character.getStat(Stat.INTELLIGENCE) / 10 * 2)));
 	}
 
 	@Override
 	public float getMana()
 	{
-		return character.getStat(Stat.MANA_BONUS) * (1 + character.getStat(Stat.MANA));
+		return character.getStat(Stat.ADDED_MANA) * (1 + character.getStat(Stat.INCREASED_MANA));
 	}
 
 	@Override

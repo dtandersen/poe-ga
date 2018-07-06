@@ -156,7 +156,7 @@ public enum Stat
 	SHOCK_EFFECT(INT + "% increased Effect of Shock"),
 
 	// skills
-	SKILL_DUR(INT + "% increased Skill Effect Duration"),
+	SKILL_EFFECT_DURATION(INT + "% increased Skill Effect Duration"),
 
 	// totem
 	TOTEM_DAMAGE(INT + "% increased Totem Damage"),
@@ -434,7 +434,7 @@ public enum Stat
 
 	// aoe
 	AOE_RADIUS(INT + "% increased Area of Effect"),
-	AOE_DAMAGE(INT + "% increased Area Damage"),
+	AREA_DAMAGE(INT + "% increased Area Damage"),
 
 	// stun
 	STUN_DURATION(INT + "% increased Stun Duration on Enemies"),

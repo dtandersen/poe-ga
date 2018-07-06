@@ -783,4 +783,6 @@ public interface CharacterEvaluatorContext
 	int getEnergyShield();
 
 	int getLife();
+
+	float getSkillEffectDuration();
 }

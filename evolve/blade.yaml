@@ -17,6 +17,9 @@ alterers:
 - type: neighbor
   probability: .005
 evaluators:
+- expression:  10 * (strength + dexterity + intelligence)
+- expression:  10 * (skillEffectDuration)
+- expression:  1000 * areaDamage
 - expression:  life + energyShield
 - expression:  100 * min(99, dexterity)
 - expression:  250 * min(200, increasedMaximumLife)

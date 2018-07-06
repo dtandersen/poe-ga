@@ -11,8 +11,59 @@ import java.util.stream.Collectors;
 
 public class CharacterInstance
 {
+	private final int dexterity;
+
+	private final int intelligence;
+
+	private final int strength;
+
+	private final int life;
+
+	private final int mana;
+
 	public CharacterInstance(final PoeCharacterEditor poeCharacter)
 	{
+		dexterity = poeCharacter.characterClass.getDexterity();
+		intelligence = poeCharacter.characterClass.getIntelligence();
+		strength = poeCharacter.characterClass.getStrength();
+		final int level = poeCharacter.level;
+		mana = PoeCalc.calcMana(level, intelligence);
+		life = PoeCalc.calcLife(level, strength);
+	}
+
+	public int getDexterity()
+	{
+		return dexterity;
+	}
+
+	public int getIntelligence()
+	{
+		return intelligence;
+	}
+
+	public int getStrength()
+	{
+		return strength;
+	}
+
+	public int getLife()
+	{
+		return life;
+	}
+
+	public int getMana()
+	{
+		return mana;
+	}
+
+	@Override
+	public String toString()
+	{
+		return "CharacterInstance[" +
+				"dexterity=" + getDexterity() +
+				"intelligence=" + getIntelligence() +
+				"strength=" + getStrength() +
+				"]";
 	}
 
 	/**
@@ -20,15 +71,15 @@ public class CharacterInstance
 	 */
 	public static class PoeCharacterEditor
 	{
-		private final CharacterClass characterClass;
+		private CharacterClass characterClass;
 
-		private final int level;
+		private int level;
 
-		private final Map<Attribute, AttributeValue> attributes;
+		private Map<Attribute, AttributeValue> attributes;
 
-		private final StatValues stats;
+		private StatValues stats;
 
-		private final Map<Integer, PassiveSkill> passiveSkills;
+		private Map<Integer, PassiveSkill> passiveSkills;
 
 		private List<CharacterItem> items;
 
@@ -44,6 +95,10 @@ public class CharacterInstance
 			stats = new StatValues();
 
 			calculateBaseAttributes(level, characterClass);
+		}
+
+		public PoeCharacterEditor()
+		{
 		}
 
 		public float getAttributeValue(final Attribute attribute)
@@ -326,6 +381,18 @@ public class CharacterInstance
 		public PoeCharacterEditor withPassiveSkills(final List<PassiveSkill> passiveSkills)
 		{
 			addPassiveSkills(passiveSkills);
+			return this;
+		}
+
+		public PoeCharacterEditor withCharacterClass(final CharacterClass characterClass)
+		{
+			this.characterClass = characterClass;
+			return this;
+		}
+
+		public PoeCharacterEditor withLevel(final int level)
+		{
+			this.level = level;
 			return this;
 		}
 	}

@@ -11,6 +11,7 @@
 		<module>ga</module>
 		<module>verifier</module>
 		<module>sample</module>
+		<module>poeaje-api-square</module>
 	</modules>
 
 	<properties>

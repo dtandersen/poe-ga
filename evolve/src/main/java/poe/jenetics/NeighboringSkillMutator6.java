@@ -24,7 +24,7 @@ public class NeighboringSkillMutator6 extends Mutator<SkillGene, Float>
 			final double p,
 			final Random random)
 	{
-		if (p > random.nextFloat()) { return MutatorResult.of(chromosome); }
+		// if (p > random.nextFloat()) { return MutatorResult.of(chromosome); }
 
 		final int P = probability.toInt(p);
 		final Neighborizer neighborizer = new Neighborizer(pst, chromosome.getGene(random.nextInt(chromosome.length())).getAllele(), random);

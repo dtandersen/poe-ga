@@ -12,8 +12,13 @@ import io.jenetics.Chromosome;
 import io.jenetics.EliteSelector;
 import io.jenetics.Genotype;
 import io.jenetics.PublicCompositeAlterer;
+import io.jenetics.StochasticUniversalSelector;
+import io.jenetics.UniformCrossover;
 import io.jenetics.engine.Engine;
 import io.jenetics.engine.EvolutionResult;
+import io.jenetics.engine.EvolutionStreamable;
+import io.jenetics.engine.Limits;
+import io.jenetics.ext.engine.CyclicEngine;
 import io.jenetics.util.Factory;
 import poe.command.model.AltererConfig;
 import poe.entity.CharacterClass;
@@ -79,18 +84,11 @@ public class JeneticsEvolver implements Evolver
 		}
 
 		final Alterer<SkillGene, Float>[] altererArray = alterers2.toArray(new Alterer[0]);
-		final Engine<SkillGene, Float> engine = Engine
-				.builder(fitnessFunction, gtf)
-				.populationSize(pop)
-				.alterers(PublicCompositeAlterer.of(altererArray))
-				// .selector(new TournamentSelector<SkillGene, Float>())
-				// .selector(new StochasticUniversalSelector<SkillGene,
-				// Float>())
-				.selector(new EliteSelector<>((int)(pop * .01), new BoltzmannSelector<SkillGene, Float>(4)))
-				// .maximalPhenotypeAge(50)
-				// .fitnessScaler(f -> f * .9f + 10000f)
-				.executor(exec)
-				.build();
+		// final EvolutionStreamable<SkillGene, Float> engine = engine2(pop,
+		// gtf, fitnessFunction, altererArray);
+		final EvolutionStreamable<SkillGene, Float> engine = engine3(pop, gtf, fitnessFunction, altererArray, passiveSkillTree);
+		// final Engine<SkillGene, Float> engine = engine1(pop, gtf,
+		// fitnessFunction, altererArray);
 
 		final EvolutionResult<SkillGene, Float> result = engine.stream()
 				.limit(evolutionContext.getGenerationLimit())
@@ -112,5 +110,108 @@ public class JeneticsEvolver implements Evolver
 		poeEvolutionResult.setCharacter(character);
 		poeEvolutionResult.setGenerations(result.getTotalGenerations());
 		poeEvolutionResult.setFitness(result.getBestFitness());
+	}
+
+	private Engine<SkillGene, Float> engine1(final int pop, final Factory<Genotype<SkillGene>> gtf, final FitnessFunction fitnessFunction, final Alterer<SkillGene, Float>[] altererArray)
+	{
+		final Engine<SkillGene, Float> engine = Engine
+				.builder(fitnessFunction, gtf)
+				.populationSize(pop)
+				.alterers(PublicCompositeAlterer.of(altererArray))
+				// .selector(new TournamentSelector<SkillGene, Float>())
+				// .selector(new StochasticUniversalSelector<SkillGene,
+				// Float>())
+				.selector(new EliteSelector<>((5), new StochasticUniversalSelector<SkillGene, Float>()))
+				// .selector(new EliteSelector<>((int)(pop * .01), new
+				// BoltzmannSelector<SkillGene, Float>(1)))
+				// .maximalPhenotypeAge(50)
+				// .fitnessScaler(f -> f * .9f + 10000f)
+				// .executor(exec)
+				.build();
+		return engine;
+	}
+
+	private EvolutionStreamable<SkillGene, Float> engine2(final int pop, final Factory<Genotype<SkillGene>> gtf, final FitnessFunction fitnessFunction, final Alterer<SkillGene, Float>[] altererArray)
+	{
+		final Engine<SkillGene, Float> engine1 = Engine
+				.builder(fitnessFunction, gtf)
+				.populationSize(pop)
+				.alterers(PublicCompositeAlterer.of(altererArray))
+				// .selector(new TournamentSelector<SkillGene, Float>())
+				// .selector(new StochasticUniversalSelector<SkillGene,
+				// Float>())
+				.selector(new EliteSelector<>((5), new StochasticUniversalSelector<SkillGene, Float>()))
+				// .selector(new EliteSelector<>((int)(pop * .01), new
+				// BoltzmannSelector<SkillGene, Float>(1)))
+				// .maximalPhenotypeAge(50)
+				// .fitnessScaler(f -> f * .9f + 10000f)
+				// .executor(exec)
+				.build();
+		final Engine<SkillGene, Float> engine2 = Engine
+				.builder(fitnessFunction, gtf)
+				.populationSize(pop)
+				.alterers(PublicCompositeAlterer.of(altererArray))
+				// .selector(new TournamentSelector<SkillGene, Float>())
+				// .selector(new StochasticUniversalSelector<SkillGene,
+				// Float>())
+				.selector(new BoltzmannSelector<SkillGene, Float>(2))
+				// .selector(new EliteSelector<>((3), new
+				// BoltzmannSelector<SkillGene, Float>(2)))
+				// .selector(new EliteSelector<>((int)(pop * .01), new
+				// BoltzmannSelector<SkillGene, Float>(1)))
+				// .maximalPhenotypeAge(50)
+				// .fitnessScaler(f -> f * .9f + 10000f)
+				// .executor(exec)
+				.build();
+		return CyclicEngine.of(
+				engine2.limit(() -> Limits.bySteadyFitness(30)));
+		// return CyclicEngine.of(
+		// engine1.limit(50),
+		// engine2.limit(() -> Limits.bySteadyFitness(30)));
+	}
+
+	private EvolutionStreamable<SkillGene, Float> engine3(final int pop, final Factory<Genotype<SkillGene>> gtf, final FitnessFunction fitnessFunction, final Alterer<SkillGene, Float>[] altererArray, final PassiveSkillTree pst)
+	{
+		final Engine<SkillGene, Float> engine1 = Engine
+				.builder(fitnessFunction, gtf)
+				.populationSize(pop)
+				.alterers(new NeighboringSkillMutator6(.20f, pst))
+				// .selector(new TournamentSelector<SkillGene, Float>())
+				// .selector(new StochasticUniversalSelector<SkillGene,
+				// Float>())
+				// .selector(new EliteSelector<>((5), new
+				// StochasticUniversalSelector<SkillGene, Float>()))
+				.selector(new EliteSelector<>((3), new StochasticUniversalSelector<SkillGene, Float>()))
+				// .selector(new EliteSelector<>((int)(pop * .01), new
+				// BoltzmannSelector<SkillGene, Float>(1)))
+				// .maximalPhenotypeAge(50)
+				// .fitnessScaler(f -> f * .9f + 10000f)
+				// .executor(exec)
+				.build();
+		final Engine<SkillGene, Float> engine2 = Engine
+				.builder(fitnessFunction, gtf)
+				.populationSize(pop)
+				.alterers(
+						new UniformCrossover<SkillGene, Float>(.005f),
+						new NeighboringSkillMutator5(.01f, pst))
+				// .alterers(PublicCompositeAlterer.of(altererArray))
+				// .selector(new TournamentSelector<SkillGene, Float>())
+				// .selector(new StochasticUniversalSelector<SkillGene,
+				// Float>())
+				.selector(new EliteSelector<>((3), new BoltzmannSelector<SkillGene, Float>(2)))
+				// .selector(new EliteSelector<>((3), new
+				// BoltzmannSelector<SkillGene, Float>(2)))
+				// .selector(new EliteSelector<>((int)(pop * .01), new
+				// BoltzmannSelector<SkillGene, Float>(1)))
+				// .maximalPhenotypeAge(50)
+				// .fitnessScaler(f -> f * .9f + 10000f)
+				// .executor(exec)
+				.build();
+		return CyclicEngine.of(
+				engine1.limit(() -> Limits.bySteadyFitness(10)),
+				engine2.limit(() -> Limits.bySteadyFitness(30)));
+		// return CyclicEngine.of(
+		// engine1.limit(50),
+		// engine2.limit(() -> Limits.bySteadyFitness(30)));
 	}
 }

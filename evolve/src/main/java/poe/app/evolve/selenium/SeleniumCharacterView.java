@@ -171,7 +171,7 @@ public class SeleniumCharacterView implements CharacterView
 	{
 		try
 		{
-			Thread.sleep(millis);
+			// Thread.sleep(millis);
 		}
 		catch (final Exception e)
 		{

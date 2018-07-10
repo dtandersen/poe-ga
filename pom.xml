@@ -12,6 +12,7 @@
 		<module>verifier</module>
 		<module>sample</module>
 		<module>poeaje-api-square</module>
+		<module>currency</module>
 	</modules>
 
 	<properties>

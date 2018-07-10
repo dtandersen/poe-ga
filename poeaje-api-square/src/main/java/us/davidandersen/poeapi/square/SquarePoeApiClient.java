@@ -8,31 +8,31 @@ import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.moshi.MoshiConverterFactory;
-import us.davidandersen.poeapi.PoeApi;
+import us.davidandersen.poeapi.PoeApiClient;
 import us.davidandersen.poeapi.model.FetchItemResult;
 import us.davidandersen.poeapi.model.SearchExchangeResult;
 import us.davidandersen.poeapi.model.ServerError;
 import us.davidandersen.poeapi.square.SearchExchangeRequest.ExchangeJson;
 import us.davidandersen.poeapi.square.SearchExchangeRequest.ExchangeJson.Status;
 
-public class SquarePoeApi implements PoeApi
+public class SquarePoeApiClient implements PoeApiClient
 {
 	private static final String DEFAULT_ENDPOINT = "https://www.pathofexile.com/api/";
 
 	private final String endpoint;
 
-	public SquarePoeApi(final String endpoint)
+	public SquarePoeApiClient(final String endpoint)
 	{
 		this.endpoint = endpoint;
 	}
 
-	public SquarePoeApi()
+	public SquarePoeApiClient()
 	{
 		endpoint = DEFAULT_ENDPOINT;
 	}
 
 	@Override
-	public SearchExchangeResult searchExchange() throws IOException, ServerError
+	public SearchExchangeResult searchExchange(final String haveIn, final String wantIn) throws IOException, ServerError
 	{
 		final Retrofit retrofit = new Retrofit.Builder()
 				.baseUrl(endpoint)
@@ -45,16 +45,13 @@ public class SquarePoeApi implements PoeApi
 		want.exchange = new ExchangeJson();
 		want.exchange.status = new Status();
 		want.exchange.status.option = "online";
-		want.exchange.have = List.of("fuse");
-		want.exchange.want = List.of("chaos");
+		want.exchange.have = List.of(haveIn);
+		want.exchange.want = List.of(wantIn);
 		final Call<SearchExchangeResult> stuff = service.searchExchange(want);
 		// stuff.request().
 		SearchExchangeResult r1 = null;
 		final Response<SearchExchangeResult> xx = stuff.execute();
-		if (!xx.isSuccessful())
-		{
-			throw new ServerError(xx.code());
-		}
+		if (!xx.isSuccessful()) { throw new ServerError(xx.code()); }
 		r1 = xx.body();
 
 		return r1;

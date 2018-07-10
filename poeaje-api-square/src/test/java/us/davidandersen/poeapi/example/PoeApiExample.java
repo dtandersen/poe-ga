@@ -8,15 +8,15 @@ import us.davidandersen.poeapi.model.FetchItemResult.Result.Item;
 import us.davidandersen.poeapi.model.FetchItemResult.Result.Listing.Price;
 import us.davidandersen.poeapi.model.SearchExchangeResult;
 import us.davidandersen.poeapi.model.ServerError;
-import us.davidandersen.poeapi.square.SquarePoeApi;
+import us.davidandersen.poeapi.square.SquarePoeApiClient;
 
 public class PoeApiExample
 {
 	public static void main(final String[] args) throws ServerError, IOException
 	{
-		final SquarePoeApi poe = new SquarePoeApi();
+		final SquarePoeApiClient poe = new SquarePoeApiClient();
 
-		final SearchExchangeResult items = poe.searchExchange();
+		final SearchExchangeResult items = poe.searchExchange("fuse", "chaos");
 		final List<String> first10Results = items.result.subList(0, 10);
 		final FetchItemResult listings = poe.fetchListings(first10Results, items.id);
 

@@ -18,15 +18,14 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import okhttp3.mockwebserver.SocketPolicy;
-import okio.Buffer;
-import us.davidandersen.poeapi.PoeApi;
+import us.davidandersen.poeapi.PoeApiClient;
 import us.davidandersen.poeapi.model.FetchItemResult;
 import us.davidandersen.poeapi.model.FetchItemResult.Result;
 import us.davidandersen.poeapi.model.SearchExchangeResult;
 import us.davidandersen.poeapi.model.ServerError;
 import us.davidandersen.poeapi.util.ResourceUtil;
 
-public class SquarePoeApiTest
+public class SquarePoeApiClientTest
 {
 	private MockWebServer server;
 
@@ -48,8 +47,8 @@ public class SquarePoeApiTest
 	{
 		server.enqueue(new MockResponse().setBody(ResourceUtil.getFile("trade-exchange-response.json")));
 
-		final PoeApi poe = new SquarePoeApi(server.url("").toString());
-		final SearchExchangeResult stuff = poe.searchExchange();
+		final PoeApiClient poe = new SquarePoeApiClient(server.url("").toString());
+		final SearchExchangeResult stuff = poe.searchExchange("fuse", "chaos");
 
 		final RecordedRequest request1 = server.takeRequest(5, TimeUnit.SECONDS);
 		assertEquals("/trade/exchange/Incursion", request1.getPath());
@@ -66,11 +65,11 @@ public class SquarePoeApiTest
 	void showThrowIOExceptionWhenOnTimeout() throws Exception
 	{
 		server.enqueue(new MockResponse().setSocketPolicy(SocketPolicy.DISCONNECT_AT_START));
-		final PoeApi poe = new SquarePoeApi(server.url("").toString());
+		final PoeApiClient poe = new SquarePoeApiClient(server.url("").toString());
 
 		try
 		{
-			poe.searchExchange();
+			poe.searchExchange("chaos", "scour");
 		}
 		catch (final IOException e)
 		{
@@ -84,11 +83,11 @@ public class SquarePoeApiTest
 	void showThrowIOExceptionWhenOnServerError() throws Exception
 	{
 		server.enqueue(new MockResponse().setResponseCode(500).setBody(ResourceUtil.getFile("trade-exchange-response.json")));
-		final PoeApi poe = new SquarePoeApi(server.url("").toString());
+		final PoeApiClient poe = new SquarePoeApiClient(server.url("").toString());
 
 		try
 		{
-			poe.searchExchange();
+			poe.searchExchange("scour", "fuse");
 		}
 		catch (final ServerError e)
 		{
@@ -102,7 +101,7 @@ public class SquarePoeApiTest
 	void queryExchange() throws Exception
 	{
 		server.enqueue(new MockResponse().setBody(ResourceUtil.getFile("fetch-multiple-result.json")));
-		final PoeApi poe = new SquarePoeApi(server.url("").toString());
+		final PoeApiClient poe = new SquarePoeApiClient(server.url("").toString());
 
 		final List<String> ids = List.of("df4a68db48e5a1d185016f3cce2a11360c4fdee700260fb8f545c27e29922406", "a0e3b1fb99e7e64815db0611d27c9fddf0ea348e17322072feb78bd2e42a9f0d");
 		final FetchItemResult result = poe.fetchListings(ids, "jW58VLUX");

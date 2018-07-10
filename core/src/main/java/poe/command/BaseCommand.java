@@ -18,11 +18,11 @@ public abstract class BaseCommand<REQ, RES>
 
 	abstract public void execute();
 
-	interface VoidRequest
+	public interface VoidRequest
 	{
 	}
 
-	interface VoidResult
+	public interface VoidResult
 	{
 	}
 }

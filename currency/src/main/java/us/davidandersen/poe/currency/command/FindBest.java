@@ -3,6 +3,7 @@ package us.davidandersen.poe.currency.command;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import poe.command.BaseCommand;
 import us.davidandersen.poe.currency.command.FindBest.FindBestRequest;
 import us.davidandersen.poe.currency.command.FindBest.FindBestResult;
@@ -25,7 +26,17 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 		try
 		{
 			final int maxTrades = request.getMaxTrades();
-			if (maxTrades == 1)
+			if (maxTrades == 1 && isInputEqualToOutput(request.getWant(), request.getHave()))
+			{
+				result.setTrade(Trade.Builder()
+						.withMode("sell")
+						.withIn(request.getQuantity())
+						.withSell(request.getHave())
+						.withOut(request.getQuantity())
+						.withReceive(request.getWant())
+						.build());
+			}
+			else if (maxTrades == 1)
 			{
 				final Trade trade = doTrade(request.getWant(), request.getHave(), request.getQuantity());
 
@@ -40,10 +51,10 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 				{
 					tradeStack.add(null);
 				}
-				final TradeContext tc = new TradeContext();
-				tryTrade(start, end, maxTrades, tradeStack, 0, tc, request.getQuantity());
+				final TradeWatcher watcher = new TradeWatcher();
+				tryTrade(start, maxTrades, tradeStack, 0, watcher, request.getQuantity());
 
-				result.setTrades(tc.best());
+				result.setTrades(watcher.best());
 			}
 		}
 		catch (final IOException e)
@@ -52,29 +63,37 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 		}
 	}
 
-	private void tryTrade(final Currency have, final Currency end, final int maxTrades, final ArrayList<Trade> tradeStack, final int i, final TradeContext tc, final float qty) throws IOException
+	private void tryTrade(final Currency have, final int maxTrades, final ArrayList<Trade> tradeStack, final int depth, final TradeWatcher watcher, final float quantityIn) throws IOException
 	{
 		if (maxTrades == 0)
 		{
-			tc.check(tradeStack);
+			// reached the end, is this the best?
+			watcher.tradeComplete(tradeStack);
 			return;
 		}
 
-		for (final Currency c : Currency.values())
+		for (final Currency want : Currency.values())
 		{
-			final Currency want = c;
-			final Trade doTrade = doTrade(want.symbol(), have.symbol(), qty);
+			final Trade doTrade = doTrade(want.symbol(), have.symbol(), quantityIn);
 			if (doTrade == null)
 			{
+				// no trade available
 				continue;
 			}
-			tradeStack.set(i, doTrade);
 
-			tryTrade(want, end, maxTrades - 1, tradeStack, i + 1, tc, doTrade.getOut());
+			tradeStack.set(depth, doTrade);
+
+			final float quantityOut = doTrade.getOut();
+			tryTrade(want, maxTrades - 1, tradeStack, depth + 1, watcher, quantityOut);
 		}
 	}
 
-	static class TradeContext
+	private boolean isInputEqualToOutput(final String want, final String have)
+	{
+		return Objects.equals(want, have);
+	}
+
+	static class TradeWatcher
 	{
 		float q;
 
@@ -85,10 +104,11 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 			return best;
 		}
 
-		public void check(final List<Trade> tradeStack)
+		public void tradeComplete(final List<Trade> tradeStack)
 		{
 			if (best == null)
 			{
+				// best = tradeStack;
 				best = new ArrayList<>(tradeStack);
 				return;
 			}

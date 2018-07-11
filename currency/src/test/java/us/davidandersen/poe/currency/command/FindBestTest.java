@@ -26,7 +26,7 @@ public class FindBestTest
 	private final PriceRepository priceRepository = new MockRatioRepository();
 
 	@Test
-	void test() throws Exception
+	void singleTrade() throws Exception
 	{
 		givenPrices(
 				"want  | have  | price",
@@ -39,8 +39,21 @@ public class FindBestTest
 				"sell | 20 | chrom | 10  | chaos"));
 	}
 
+	/**
+	 * Same to same is always the input quantity.
+	 */
 	@Test
-	void test2() throws Exception
+	void singleTradeSameCurrency() throws Exception
+	{
+		run(Currency.CHAOS, Currency.CHAOS, 20, 1);
+
+		assertThat(bestTrade(), isTrades(
+				"mode | in | sell  | out | receive",
+				"sell | 20 | chaos | 20  | chaos"));
+	}
+
+	@Test
+	void doubleTrade() throws Exception
 	{
 		givenPrices(
 				"want  | have  | price",

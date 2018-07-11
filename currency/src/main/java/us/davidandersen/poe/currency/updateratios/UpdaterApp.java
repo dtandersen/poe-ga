@@ -1,4 +1,4 @@
-package us.davidandersen.poe.currency.app;
+package us.davidandersen.poe.currency.updateratios;
 
 import java.util.Arrays;
 import java.util.List;
@@ -8,6 +8,7 @@ import org.springframework.boot.Banner;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import us.davidandersen.poe.currency.Sleeper;
 import us.davidandersen.poe.currency.UpdateRatios;
 import us.davidandersen.poe.currency.UpdateRatios.UpdateRatioRequest;
@@ -16,6 +17,7 @@ import us.davidandersen.poe.currency.repository.RatioRepository;
 import us.davidandersen.poe.gateway.PoeApiGateway;
 
 @SpringBootApplication
+@ComponentScan(basePackages = "us.davidandersen.poe.currency.app")
 public class UpdaterApp implements CommandLineRunner
 {
 	@Autowired

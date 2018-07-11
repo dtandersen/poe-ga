@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MarkdownStream
@@ -101,5 +102,10 @@ public class MarkdownStream
 
 			return Optional.of(trimmed(index));
 		}
+	}
+
+	public static List<Row> asList(final String... markdown)
+	{
+		return stream(markdown).collect(Collectors.toList());
 	}
 }

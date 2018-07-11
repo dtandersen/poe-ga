@@ -10,10 +10,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import us.davidandersen.poe.currency.Sleeper;
-import us.davidandersen.poe.currency.UpdateRatios;
-import us.davidandersen.poe.currency.UpdateRatios.UpdateRatioRequest;
+import us.davidandersen.poe.currency.command.UpdateRatios;
+import us.davidandersen.poe.currency.command.UpdateRatios.UpdateRatioRequest;
 import us.davidandersen.poe.currency.entity.Currency;
-import us.davidandersen.poe.currency.repository.RatioRepository;
+import us.davidandersen.poe.currency.repository.PriceRepository;
 import us.davidandersen.poe.gateway.PoeApiGateway;
 
 @SpringBootApplication
@@ -21,7 +21,7 @@ import us.davidandersen.poe.gateway.PoeApiGateway;
 public class UpdaterApp implements CommandLineRunner
 {
 	@Autowired
-	private RatioRepository ratioRepository;
+	private PriceRepository ratioRepository;
 
 	@Autowired
 	private PoeApiGateway poeApi;
@@ -77,7 +77,7 @@ public class UpdaterApp implements CommandLineRunner
 	private List<String> list(final Currency... currencies)
 	{
 		return Arrays.stream(currencies)
-				.map(c -> c.getShortName())
+				.map(c -> c.symbol())
 				.collect(Collectors.toList());
 	}
 }

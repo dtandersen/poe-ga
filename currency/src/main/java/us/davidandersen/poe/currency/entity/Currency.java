@@ -81,7 +81,7 @@ public enum Currency
 		return null;
 	}
 
-	public static Currency shortNameToCurrency(final String shortName)
+	public static Currency ofSymbol(final String shortName)
 	{
 		for (final Currency c : values())
 		{
@@ -91,7 +91,7 @@ public enum Currency
 		return null;
 	}
 
-	public String getShortName()
+	public String symbol()
 	{
 		return shortName;
 	}

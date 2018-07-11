@@ -2,11 +2,7 @@ package poe.entity;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
 import org.hamcrest.Matcher;
-import org.hobsoft.hamcrest.compose.ComposeMatchers;
 import org.junit.jupiter.api.Test;
 import poe.command.MarkdownStream;
 import poe.command.MarkdownStream.Row;
@@ -14,6 +10,7 @@ import poe.entity.CharacterInstance.PoeCharacterEditor;
 import poe.entity.CharacterItem.CharacterItemBuilder;
 import poe.entity.PassiveSkill.PassiveSkillBuilder;
 import poe.entity.StatValue.StatBuilder;
+import us.davidandersen.poe.test.ComposeBuilder;
 
 public class CharacterInstanceTest
 {
@@ -160,44 +157,5 @@ public class CharacterInstanceTest
 				.withFeature("energyShield", CharacterInstance::getEnergyShield, row.intValue("energy shield"))
 				.withFeature("meleePhysicalDamage", CharacterInstance::getMeleePhysicalDamage, row.intValue("melee physical damage"))
 				.build();
-	}
-
-	static class ComposeBuilder<T>
-	{
-		private String description;
-
-		private final List<Matcher<? super T>> features;
-
-		public ComposeBuilder()
-		{
-			features = new ArrayList<>();
-		}
-
-		public ComposeBuilder<T> withDescription(final String description)
-		{
-			this.description = description;
-			return this;
-		}
-
-		public <U> ComposeBuilder<T> withFeature(final String featureName, final Function<T, U> featureFunction, final Matcher<U> featureMatcher)
-		{
-			features.add(ComposeMatchers.hasFeature(featureName, featureFunction, featureMatcher));
-			return this;
-		}
-
-		public <U> ComposeBuilder<T> withFeature(final String featureName, final Function<T, U> featureFunction, final U featureValue)
-		{
-			return withFeature(featureName, featureFunction, equalTo(featureValue));
-		}
-
-		public Matcher<T> build()
-		{
-			return ComposeMatchers.compose(description, features);
-		}
-
-		public static <T> ComposeBuilder<T> of(final Class<T> clazz)
-		{
-			return new ComposeBuilder<>();
-		}
 	}
 }

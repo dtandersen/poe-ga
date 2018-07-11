@@ -3,8 +3,9 @@ package us.davidandersen.poe.currency;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import us.davidandersen.poe.currency.Listing.ListingBuilder;
 import us.davidandersen.poe.currency.entity.Currency;
+import us.davidandersen.poe.currency.entity.Listing;
+import us.davidandersen.poe.currency.entity.Listing.ListingBuilder;
 import us.davidandersen.poe.gateway.PoeApiGateway;
 
 public class MockPoeGateway implements PoeApiGateway

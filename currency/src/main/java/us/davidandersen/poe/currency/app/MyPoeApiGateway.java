@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import us.davidandersen.poe.currency.Listing;
 import us.davidandersen.poe.currency.entity.Currency;
+import us.davidandersen.poe.currency.entity.Listing;
 import us.davidandersen.poe.gateway.PoeApiGateway;
 import us.davidandersen.poeapi.PoeApiClient;
 import us.davidandersen.poeapi.model.FetchItemResult;
@@ -18,7 +18,7 @@ public class MyPoeApiGateway implements PoeApiGateway
 	public List<Listing> find(final Currency have, final Currency want) throws IOException
 	{
 		final PoeApiClient api = new SquarePoeApiClient();
-		final SearchExchangeResult x = api.searchExchange(have.getShortName(), want.getShortName());
+		final SearchExchangeResult x = api.searchExchange(have.symbol(), want.symbol());
 		List<String> ids = x.result;
 		if (ids.isEmpty()) { return new ArrayList<>(); }
 		if (x.result.size() > 10)
@@ -29,7 +29,7 @@ public class MyPoeApiGateway implements PoeApiGateway
 
 		return listings.result.stream()
 				.map(l -> Listing.Builder()
-						.have(Currency.shortNameToCurrency(l.listing.price.currency))
+						.have(Currency.ofSymbol(l.listing.price.currency))
 						.want(Currency.longNameToCurrency(l.item.typeLine))
 						.price(l.listing.price.amount)
 						.build())

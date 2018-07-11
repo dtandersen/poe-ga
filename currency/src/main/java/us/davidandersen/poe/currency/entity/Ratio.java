@@ -1,6 +1,4 @@
-package us.davidandersen.poe.currency;
-
-import us.davidandersen.poe.currency.entity.Currency;
+package us.davidandersen.poe.currency.entity;
 
 public class Ratio
 {
@@ -47,6 +45,16 @@ public class Ratio
 		return new Ratio.RatioBuilder();
 	}
 
+	@Override
+	public String toString()
+	{
+		return "Ratio[" +
+				"want=" + want +
+				", have=" + have +
+				", price=+" + price +
+				"]";
+	}
+
 	public static class RatioBuilder
 	{
 		private Currency have;
@@ -55,16 +63,26 @@ public class Ratio
 
 		private double price;
 
-		public RatioBuilder withHave(final Currency have)
+		public RatioBuilder want(final Currency want)
+		{
+			this.want = want;
+			return this;
+		}
+
+		public RatioBuilder want(final String want)
+		{
+			return want(Currency.ofSymbol(want));
+		}
+
+		public RatioBuilder have(final Currency have)
 		{
 			this.have = have;
 			return this;
 		}
 
-		public RatioBuilder want(final Currency want)
+		public RatioBuilder have(final String have)
 		{
-			this.want = want;
-			return this;
+			return have(Currency.ofSymbol(have));
 		}
 
 		public RatioBuilder price(final double price)

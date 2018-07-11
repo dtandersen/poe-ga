@@ -7,20 +7,20 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
-import us.davidandersen.poe.currency.Ratio;
 import us.davidandersen.poe.currency.entity.Currency;
-import us.davidandersen.poe.currency.repository.RatioRepository;
+import us.davidandersen.poe.currency.entity.Ratio;
+import us.davidandersen.poe.currency.repository.PriceRepository;
 
 @SpringBootApplication
 @ComponentScan(basePackages = "us.davidandersen.poe.currency.app")
-public class FindBest implements CommandLineRunner
+public class FindBestApp implements CommandLineRunner
 {
 	@Autowired
-	private RatioRepository ratioRepository;
+	private PriceRepository ratioRepository;
 
 	public static void main(final String[] args)
 	{
-		final SpringApplication app = new SpringApplication(FindBest.class);
+		final SpringApplication app = new SpringApplication(FindBestApp.class);
 		app.setBannerMode(Banner.Mode.OFF);
 		app.run(args);
 	}

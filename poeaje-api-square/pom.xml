@@ -9,6 +9,24 @@
 	</parent>
 	<artifactId>poeapi-client</artifactId>
 	<dependencies>
+		<!-- test -->
+		<dependency>
+			<groupId>us.davidandersen.poe</groupId>
+			<artifactId>test</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup.okhttp3</groupId>
+			<artifactId>mockwebserver</artifactId>
+			<version>3.10.0</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.skyscreamer</groupId>
+			<artifactId>jsonassert</artifactId>
+			<version>1.5.0</version>
+			<scope>test</scope>
+		</dependency>
+
 		<!-- json, etc. -->
 		<dependency>
 			<groupId>com.squareup.retrofit2</groupId>
@@ -24,20 +42,6 @@
 			<groupId>com.squareup.okhttp3</groupId>
 			<artifactId>logging-interceptor</artifactId>
 			<version>3.10.0</version>
-		</dependency>
-
-		<!-- test -->
-		<dependency>
-			<groupId>com.squareup.okhttp3</groupId>
-			<artifactId>mockwebserver</artifactId>
-			<version>3.10.0</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.skyscreamer</groupId>
-			<artifactId>jsonassert</artifactId>
-			<version>1.5.0</version>
-			<scope>test</scope>
 		</dependency>
 	</dependencies>
 </project>

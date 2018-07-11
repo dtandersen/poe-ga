@@ -18,6 +18,12 @@
 		</dependencies>
 	</dependencyManagement>
 	<dependencies>
+		<!-- test -->
+		<dependency>
+			<groupId>us.davidandersen.poe</groupId>
+			<artifactId>test</artifactId>
+		</dependency>
+	
 		<dependency>
 			<groupId>us.davidandersen.poe</groupId>
 			<artifactId>core</artifactId>

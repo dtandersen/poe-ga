@@ -2,8 +2,8 @@ package us.davidandersen.poe.gateway;
 
 import java.io.IOException;
 import java.util.List;
-import us.davidandersen.poe.currency.Listing;
 import us.davidandersen.poe.currency.entity.Currency;
+import us.davidandersen.poe.currency.entity.Listing;
 
 public interface PoeApiGateway
 {

@@ -8,9 +8,11 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import poe.command.MarkdownStream;
 import poe.command.MarkdownStream.Row;
-import us.davidandersen.poe.currency.Listing.ListingBuilder;
-import us.davidandersen.poe.currency.UpdateRatios.UpdateRatioRequest;
+import us.davidandersen.poe.currency.command.UpdateRatios;
+import us.davidandersen.poe.currency.command.UpdateRatios.UpdateRatioRequest;
 import us.davidandersen.poe.currency.entity.Currency;
+import us.davidandersen.poe.currency.entity.Listing;
+import us.davidandersen.poe.currency.entity.Listing.ListingBuilder;
 
 class UpdateRatiosTest
 {
@@ -81,7 +83,7 @@ class UpdateRatiosTest
 			public List<String> getCurrencies()
 			{
 				return Arrays.stream(currencies)
-						.map(c -> c.getShortName())
+						.map(c -> c.symbol())
 						.collect(Collectors.toList());
 			}
 		});

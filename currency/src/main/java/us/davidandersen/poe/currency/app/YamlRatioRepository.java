@@ -6,13 +6,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import org.yaml.snakeyaml.Yaml;
-import us.davidandersen.poe.currency.Ratio;
-import us.davidandersen.poe.currency.Ratio.RatioBuilder;
 import us.davidandersen.poe.currency.app.YamlRatioRepository.Ratios.RatioYaml;
 import us.davidandersen.poe.currency.entity.Currency;
-import us.davidandersen.poe.currency.repository.RatioRepository;
+import us.davidandersen.poe.currency.entity.Ratio;
+import us.davidandersen.poe.currency.entity.Ratio.RatioBuilder;
+import us.davidandersen.poe.currency.repository.PriceRepository;
 
-public class YamlRatioRepository implements RatioRepository
+public class YamlRatioRepository implements PriceRepository
 {
 	@Override
 	public void insert(final RatioBuilder ratioBuilder) throws IOException
@@ -60,8 +60,8 @@ public class YamlRatioRepository implements RatioRepository
 	private RatioYaml ratio2Yaml(final Ratio ratio)
 	{
 		final RatioYaml yaml = new RatioYaml();
-		yaml.have = ratio.getHave().getShortName();
-		yaml.want = ratio.getWant().getShortName();
+		yaml.have = ratio.getHave().symbol();
+		yaml.want = ratio.getWant().symbol();
 		yaml.price = ratio.getPrice();
 		return yaml;
 	}
@@ -69,8 +69,8 @@ public class YamlRatioRepository implements RatioRepository
 	private Ratio toRatio(final RatioYaml ratioYaml)
 	{
 		return Ratio.Builder()
-				.want(Currency.shortNameToCurrency(ratioYaml.want))
-				.withHave(Currency.shortNameToCurrency(ratioYaml.have))
+				.want(Currency.ofSymbol(ratioYaml.want))
+				.have(Currency.ofSymbol(ratioYaml.have))
 				.price(ratioYaml.price)
 				.build();
 	}

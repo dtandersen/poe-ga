@@ -1,25 +1,28 @@
-package us.davidandersen.poe.currency;
+package us.davidandersen.poe.currency.command;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 import poe.command.BaseCommand;
 import poe.command.BaseCommand.VoidResult;
-import us.davidandersen.poe.currency.UpdateRatios.UpdateRatioRequest;
+import us.davidandersen.poe.currency.Sleeper;
+import us.davidandersen.poe.currency.command.UpdateRatios.UpdateRatioRequest;
 import us.davidandersen.poe.currency.entity.Currency;
-import us.davidandersen.poe.currency.repository.RatioRepository;
+import us.davidandersen.poe.currency.entity.Listing;
+import us.davidandersen.poe.currency.entity.Ratio;
+import us.davidandersen.poe.currency.repository.PriceRepository;
 import us.davidandersen.poe.gateway.PoeApiGateway;
 
 public class UpdateRatios extends BaseCommand<UpdateRatioRequest, VoidResult>
 {
-	private final RatioRepository ratioRepository;
+	private final PriceRepository ratioRepository;
 
 	private final PoeApiGateway poeApi;
 
 	private final Sleeper sleeper;
 
 	public UpdateRatios(
-			final RatioRepository ratioRepository,
+			final PriceRepository ratioRepository,
 			final PoeApiGateway poeApi,
 			final Sleeper sleeper)
 	{
@@ -33,7 +36,7 @@ public class UpdateRatios extends BaseCommand<UpdateRatioRequest, VoidResult>
 	{
 		final List<String> currencyStrings = request.getCurrencies();
 		final List<Currency> currencies = currencyStrings.stream()
-				.map(c -> Currency.shortNameToCurrency(c))
+				.map(c -> Currency.ofSymbol(c))
 				.collect(Collectors.toList());
 
 		for (final Currency have : currencies)
@@ -61,11 +64,14 @@ public class UpdateRatios extends BaseCommand<UpdateRatioRequest, VoidResult>
 	{
 		System.out.println(want + "<=" + have);
 		final List<Listing> listings = poeApi.find(have, want);
-		if (listings.isEmpty()) { return; }
+		if (listings.isEmpty())
+		{
+			return;
+		}
 		final Listing listing = listings.get(0);
 
 		ratioRepository.insert(Ratio.Builder()
-				.withHave(have)
+				.have(have)
 				.want(want)
 				.price(listing.getPrice()));
 	}

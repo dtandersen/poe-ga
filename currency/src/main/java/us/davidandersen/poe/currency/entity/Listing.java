@@ -1,6 +1,4 @@
-package us.davidandersen.poe.currency;
-
-import us.davidandersen.poe.currency.entity.Currency;
+package us.davidandersen.poe.currency.entity;
 
 public class Listing
 {
@@ -70,13 +68,13 @@ public class Listing
 
 		public ListingBuilder want(final String want)
 		{
-			this.want = Currency.shortNameToCurrency(want);
+			this.want = Currency.ofSymbol(want);
 			return this;
 		}
 
 		public ListingBuilder have(final String have)
 		{
-			this.have = Currency.shortNameToCurrency(have);
+			this.have = Currency.ofSymbol(have);
 			return this;
 		}
 	}

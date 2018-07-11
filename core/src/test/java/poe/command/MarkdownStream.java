@@ -64,7 +64,7 @@ public class MarkdownStream
 			elements = line.split("\\|");
 		}
 
-		private String trimmed(final String column)
+		public String trimmed(final String column)
 		{
 			final int index = headers.indexOf(column);
 			return trimmed(index);
@@ -88,6 +88,11 @@ public class MarkdownStream
 		public float floatValue(final int index)
 		{
 			return Float.parseFloat(trimmed(index));
+		}
+
+		public float floatValue(final String columnName)
+		{
+			return floatValue(headers.indexOf(columnName));
 		}
 
 		public Optional<String> trimmedOptional(final int index)

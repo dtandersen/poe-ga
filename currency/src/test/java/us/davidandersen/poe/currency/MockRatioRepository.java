@@ -10,7 +10,7 @@ public class MockRatioRepository implements RatioRepository
 {
 	private final List<Ratio> ratios = new ArrayList<>();
 
-	public Ratio get(final Currency have, final Currency want)
+	public Ratio get(final Currency want, final Currency have)
 	{
 		return ratios.stream()
 				.filter(r -> r.hasHave(have) && r.hasWant(want))

@@ -1,6 +1,7 @@
 package us.davidandersen.poe.currency.app;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import us.davidandersen.poe.currency.Listing;
@@ -19,6 +20,7 @@ public class MyPoeApiGateway implements PoeApiGateway
 		final PoeApiClient api = new SquarePoeApiClient();
 		final SearchExchangeResult x = api.searchExchange(have.getShortName(), want.getShortName());
 		List<String> ids = x.result;
+		if (ids.isEmpty()) { return new ArrayList<>(); }
 		if (x.result.size() > 10)
 		{
 			ids = x.result.subList(0, 10);

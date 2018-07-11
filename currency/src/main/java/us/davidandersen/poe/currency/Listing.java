@@ -67,5 +67,17 @@ public class Listing
 		{
 			return new Listing(this);
 		}
+
+		public ListingBuilder want(final String want)
+		{
+			this.want = Currency.shortNameToCurrency(want);
+			return this;
+		}
+
+		public ListingBuilder have(final String have)
+		{
+			this.have = Currency.shortNameToCurrency(have);
+			return this;
+		}
 	}
 }

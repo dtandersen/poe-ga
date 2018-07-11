@@ -63,9 +63,38 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 		}
 	}
 
-	private void tryTrade(final Currency have, final int maxTrades, final ArrayList<Trade> tradeStack, final int depth, final TradeWatcher watcher, final float quantityIn) throws IOException
+	public interface FindBestRequest
 	{
-		if (maxTrades == 0)
+		String getWant();
+
+		String getHave();
+
+		float getQuantity();
+
+		int getMaxTrades();
+	}
+
+	public interface FindBestResult
+	{
+		void setTrade(Trade trade);
+
+		void setTrades(List<Trade> best);
+	}
+
+	/**
+	 * Perform a depth first search of all possible trades.
+	 *
+	 * @param have
+	 * @param remainingTrades
+	 * @param tradeStack
+	 * @param depth
+	 * @param watcher
+	 * @param quantityIn
+	 * @throws IOException
+	 */
+	private void tryTrade(final Currency have, final int remainingTrades, final ArrayList<Trade> tradeStack, final int depth, final TradeWatcher watcher, final float quantityIn) throws IOException
+	{
+		if (remainingTrades == 0)
 		{
 			// reached the end, is this the best?
 			watcher.tradeComplete(tradeStack);
@@ -74,7 +103,14 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 
 		for (final Currency want : Currency.values())
 		{
+			if (want == have)
+			{
+				// no use trading same for same
+				continue;
+			}
+
 			final Trade doTrade = doTrade(want.symbol(), have.symbol(), quantityIn);
+
 			if (doTrade == null)
 			{
 				// no trade available
@@ -84,7 +120,9 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 			tradeStack.set(depth, doTrade);
 
 			final float quantityOut = doTrade.getOut();
-			tryTrade(want, maxTrades - 1, tradeStack, depth + 1, watcher, quantityOut);
+
+			// search deeper
+			tryTrade(want, remainingTrades - 1, tradeStack, depth + 1, watcher, quantityOut);
 		}
 	}
 
@@ -93,7 +131,30 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 		return Objects.equals(want, have);
 	}
 
-	static class TradeWatcher
+	private Trade doTrade(final String want2, final String have2, final float quantity2) throws IOException
+	{
+		final Currency want = Currency.ofSymbol(want2);
+		final Currency have = Currency.ofSymbol(have2);
+		final float quantity = quantity2;
+
+		final Ratio price = priceRepository.get(want, have);
+		if (price == null)
+		{
+			return null;
+		}
+		final float qout = quantity / price.getPrice();
+
+		final Trade trade = Trade.Builder()
+				.withMode("sell")
+				.withIn(quantity)
+				.withSell(have.symbol())
+				.withOut(qout)
+				.withReceive(want.symbol())
+				.build();
+		return trade;
+	}
+
+	private static class TradeWatcher
 	{
 		float q;
 
@@ -120,46 +181,5 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 				q = out;
 			}
 		}
-	}
-
-	private Trade doTrade(final String want2, final String have2, final float quantity2) throws IOException
-	{
-		final Currency want = Currency.ofSymbol(want2);
-		final Currency have = Currency.ofSymbol(have2);
-		final float quantity = quantity2;
-
-		final Ratio price = priceRepository.get(want, have);
-		if (price == null)
-		{
-			return null;
-		}
-		final float qout = quantity / price.getPrice();
-
-		final Trade trade = Trade.Builder()
-				.withMode("sell")
-				.withIn(quantity)
-				.withSell(have.symbol())
-				.withOut(qout)
-				.withReceive(want.symbol())
-				.build();
-		return trade;
-	}
-
-	public interface FindBestRequest
-	{
-		String getWant();
-
-		String getHave();
-
-		float getQuantity();
-
-		int getMaxTrades();
-	}
-
-	public interface FindBestResult
-	{
-		void setTrade(Trade trade);
-
-		void setTrades(List<Trade> best);
 	}
 }

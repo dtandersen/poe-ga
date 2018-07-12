@@ -75,8 +75,6 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 	{
 		if (remainingTrades == 0)
 		{
-			// reached the end, is this the best?
-			watcher.tradeComplete(tradeStack, depth);
 			return;
 		}
 
@@ -108,10 +106,9 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 
 			tradeStack.set(depth, doTrade);
 
-			if (want == end && remainingTrades > 1)
+			if (want == end)
 			{
 				watcher.tradeComplete(tradeStack, depth + 1);
-				continue;
 			}
 
 			final float quantityOut = doTrade.getOut();

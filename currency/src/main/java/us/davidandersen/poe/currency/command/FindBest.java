@@ -3,7 +3,6 @@ package us.davidandersen.poe.currency.command;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import poe.command.BaseCommand;
 import us.davidandersen.poe.currency.command.FindBest.FindBestRequest;
 import us.davidandersen.poe.currency.command.FindBest.FindBestResult;
@@ -26,37 +25,18 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 		try
 		{
 			final int maxTrades = request.getMaxTrades();
-			if (maxTrades == 1 && isInputEqualToOutput(request.getWant(), request.getHave()))
+			final Currency start = Currency.ofSymbol(request.getHave());
+			final Currency end = Currency.ofSymbol(request.getWant());
+			final TradeWatcher watcher = new TradeWatcher();
+			final ArrayList<Trade> tradeStack = new ArrayList<>(maxTrades);
+			for (int i = 0; i < maxTrades; i++)
 			{
-				result.success(List.of(Trade.Builder()
-						.withMode("sell")
-						.withIn(request.getQuantity())
-						.withSell(request.getHave())
-						.withOut(request.getQuantity())
-						.withReceive(request.getWant())
-						.withSellPrice(1)
-						.build()));
+				tradeStack.add(null);
 			}
-			else if (maxTrades == 1)
-			{
-				final Trade trade = doTrade(request.getWant(), request.getHave(), request.getQuantity());
 
-				result.success(List.of(trade));
-			}
-			else
-			{
-				final Currency start = Currency.ofSymbol(request.getHave());
-				final Currency end = Currency.ofSymbol(request.getWant());
-				final ArrayList<Trade> tradeStack = new ArrayList<>(maxTrades);
-				for (int i = 0; i < maxTrades; i++)
-				{
-					tradeStack.add(null);
-				}
-				final TradeWatcher watcher = new TradeWatcher();
-				tryTrade(start, maxTrades, tradeStack, 0, watcher, request.getQuantity(), end);
+			tryTrade(start, maxTrades, tradeStack, 0, watcher, request.getQuantity(), end);
 
-				result.success(watcher.best());
-			}
+			result.success(watcher.best());
 		}
 		catch (final IOException e)
 		{
@@ -77,8 +57,6 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 
 	public interface FindBestResult
 	{
-		// void setTrade(Trade trade);
-
 		void success(List<Trade> best);
 	}
 
@@ -102,17 +80,17 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 			return;
 		}
 
-		Currency[] values;
+		Currency[] wants;
 		if (remainingTrades == 1)
 		{
-			values = new Currency[] { end };
+			wants = new Currency[] { end };
 		}
 		else
 		{
-			values = Currency.values();
+			wants = Currency.values();
 
 		}
-		for (final Currency want : values)
+		for (final Currency want : wants)
 		{
 			if (want == have)
 			{
@@ -137,11 +115,6 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 		}
 	}
 
-	private boolean isInputEqualToOutput(final String want, final String have)
-	{
-		return Objects.equals(want, have);
-	}
-
 	private Trade doTrade(final String want2, final String have2, final float quantity2) throws IOException
 	{
 		final Currency want = Currency.ofSymbol(want2);
@@ -149,7 +122,10 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 		final float quantity = quantity2;
 
 		final Ratio price = priceRepository.get(want, have);
-		if (price == null) { return null; }
+		if (price == null)
+		{
+			return null;
+		}
 		final float qout = quantity / price.getPrice();
 
 		final Trade trade = Trade.Builder()
@@ -167,7 +143,7 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 	{
 		float q;
 
-		private List<Trade> best;
+		private List<Trade> best = new ArrayList<>();
 
 		public List<Trade> best()
 		{

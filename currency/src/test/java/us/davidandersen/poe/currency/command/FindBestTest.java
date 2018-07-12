@@ -2,6 +2,7 @@ package us.davidandersen.poe.currency.command;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,9 +48,7 @@ public class FindBestTest
 	{
 		run(Currency.CHAOS, Currency.CHAOS, 20, 1);
 
-		assertThat(bestTrade(), isTrades(
-				"mode | in | sell  | price | out | receive",
-				"sell | 20 | chaos | 1     | 20  | chaos"));
+		assertThat(bestTrade(), empty());
 	}
 
 	@Test

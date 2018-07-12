@@ -76,7 +76,7 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 		if (remainingTrades == 0)
 		{
 			// reached the end, is this the best?
-			watcher.tradeComplete(tradeStack);
+			watcher.tradeComplete(tradeStack, depth);
 			return;
 		}
 
@@ -108,6 +108,12 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 
 			tradeStack.set(depth, doTrade);
 
+			if (want == end && remainingTrades > 1)
+			{
+				watcher.tradeComplete(tradeStack, depth + 1);
+				continue;
+			}
+
 			final float quantityOut = doTrade.getOut();
 
 			// search deeper
@@ -136,34 +142,41 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 				.withReceive(want.symbol())
 				.withSellPrice(price.getPrice())
 				.build();
+
 		return trade;
 	}
 
 	private static class TradeWatcher
 	{
-		float q;
+		float bestQuantity;
 
-		private List<Trade> best = new ArrayList<>();
+		private List<Trade> bestTrade = new ArrayList<>();
 
 		public List<Trade> best()
 		{
-			return best;
+			return bestTrade;
 		}
 
-		public void tradeComplete(final List<Trade> tradeStack)
+		public void tradeComplete(final List<Trade> tradeStack, final int depth)
 		{
-			if (best == null)
+			if (bestTrade == null)
 			{
 				// best = tradeStack;
-				best = new ArrayList<>(tradeStack);
+				bestTrade = new ArrayList<>(tradeStack);
 				return;
 			}
 
-			final float out = tradeStack.get(tradeStack.size() - 1).getOut();
-			if (out > q)
+			final float out = tradeStack.get(depth - 1).getOut();
+			final List<Trade> trades = new ArrayList<>();
+			for (int i = 0; i < depth; i++)
 			{
-				best = new ArrayList<>(tradeStack);
-				q = out;
+				trades.add(tradeStack.get(i));
+			}
+
+			if (out > bestQuantity)
+			{
+				bestTrade = trades;
+				bestQuantity = out;
 			}
 		}
 	}

@@ -104,6 +104,24 @@ public class FindBestTest
 				"sell | 60  | chrom | 2     | 30  | chaos"));
 	}
 
+	@Test
+	void shorterPathBetter() throws Exception
+	{
+		givenPrices(
+				"want  | have   | price",
+				"fuse  | alt    | 3",
+				"chrom | alt    | 2",
+				"chaos | alt    | 2",
+				"chaos | fuse   | 5",
+				"chaos | chrom  | 2");
+
+		run(Currency.CHAOS, Currency.ALTERATION, 120, 2);
+
+		assertThat(bestTrade(), isTrades(
+				"mode | in  | sell  | price | out | receive",
+				"sell | 120 | alt   | 2     | 60  | chaos"));
+	}
+
 	private void givenPrices(final String... markdown) throws IOException
 	{
 		for (final Row row : MarkdownStream.asList(markdown))

@@ -28,19 +28,20 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 			final int maxTrades = request.getMaxTrades();
 			if (maxTrades == 1 && isInputEqualToOutput(request.getWant(), request.getHave()))
 			{
-				result.setTrade(Trade.Builder()
+				result.success(List.of(Trade.Builder()
 						.withMode("sell")
 						.withIn(request.getQuantity())
 						.withSell(request.getHave())
 						.withOut(request.getQuantity())
 						.withReceive(request.getWant())
-						.build());
+						.withSellPrice(1)
+						.build()));
 			}
 			else if (maxTrades == 1)
 			{
 				final Trade trade = doTrade(request.getWant(), request.getHave(), request.getQuantity());
 
-				result.setTrade(trade);
+				result.success(List.of(trade));
 			}
 			else
 			{
@@ -52,9 +53,9 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 					tradeStack.add(null);
 				}
 				final TradeWatcher watcher = new TradeWatcher();
-				tryTrade(start, maxTrades, tradeStack, 0, watcher, request.getQuantity());
+				tryTrade(start, maxTrades, tradeStack, 0, watcher, request.getQuantity(), end);
 
-				result.setTrades(watcher.best());
+				result.success(watcher.best());
 			}
 		}
 		catch (final IOException e)
@@ -76,9 +77,9 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 
 	public interface FindBestResult
 	{
-		void setTrade(Trade trade);
+		// void setTrade(Trade trade);
 
-		void setTrades(List<Trade> best);
+		void success(List<Trade> best);
 	}
 
 	/**
@@ -92,7 +93,7 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 	 * @param quantityIn
 	 * @throws IOException
 	 */
-	private void tryTrade(final Currency have, final int remainingTrades, final ArrayList<Trade> tradeStack, final int depth, final TradeWatcher watcher, final float quantityIn) throws IOException
+	private void tryTrade(final Currency have, final int remainingTrades, final ArrayList<Trade> tradeStack, final int depth, final TradeWatcher watcher, final float quantityIn, final Currency end) throws IOException
 	{
 		if (remainingTrades == 0)
 		{
@@ -101,7 +102,17 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 			return;
 		}
 
-		for (final Currency want : Currency.values())
+		Currency[] values;
+		if (remainingTrades == 1)
+		{
+			values = new Currency[] { end };
+		}
+		else
+		{
+			values = Currency.values();
+
+		}
+		for (final Currency want : values)
 		{
 			if (want == have)
 			{
@@ -122,7 +133,7 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 			final float quantityOut = doTrade.getOut();
 
 			// search deeper
-			tryTrade(want, remainingTrades - 1, tradeStack, depth + 1, watcher, quantityOut);
+			tryTrade(want, remainingTrades - 1, tradeStack, depth + 1, watcher, quantityOut, end);
 		}
 	}
 
@@ -138,10 +149,7 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 		final float quantity = quantity2;
 
 		final Ratio price = priceRepository.get(want, have);
-		if (price == null)
-		{
-			return null;
-		}
+		if (price == null) { return null; }
 		final float qout = quantity / price.getPrice();
 
 		final Trade trade = Trade.Builder()
@@ -150,6 +158,7 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 				.withSell(have.symbol())
 				.withOut(qout)
 				.withReceive(want.symbol())
+				.withSellPrice(price.getPrice())
 				.build();
 		return trade;
 	}

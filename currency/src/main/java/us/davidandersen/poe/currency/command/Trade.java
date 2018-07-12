@@ -12,6 +12,8 @@ public class Trade
 
 	private final String receive;
 
+	private final float sellPrice;
+
 	public Trade(final TradeBuilder tradeBuilder)
 	{
 		mode = tradeBuilder.mode;
@@ -19,6 +21,7 @@ public class Trade
 		sell = tradeBuilder.sell;
 		out = tradeBuilder.out;
 		receive = tradeBuilder.receive;
+		sellPrice = tradeBuilder.sellPrice;
 	}
 
 	public String getMode()
@@ -46,6 +49,11 @@ public class Trade
 		return receive;
 	}
 
+	public float getSellPrice()
+	{
+		return sellPrice;
+	}
+
 	public static TradeBuilder Builder()
 	{
 		return new Trade.TradeBuilder();
@@ -60,6 +68,7 @@ public class Trade
 				", sell=" + sell +
 				", out=" + out +
 				", receieve=" + receive +
+				", sellPrice=" + sellPrice +
 				"]";
 	}
 
@@ -74,6 +83,8 @@ public class Trade
 		private float out;
 
 		private String receive;
+
+		private float sellPrice;
 
 		public Trade build()
 		{
@@ -107,6 +118,12 @@ public class Trade
 		public TradeBuilder withReceive(final String receive)
 		{
 			this.receive = receive;
+			return this;
+		}
+
+		public TradeBuilder withSellPrice(final float sellPrice)
+		{
+			this.sellPrice = sellPrice;
 			return this;
 		}
 	}

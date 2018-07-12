@@ -35,8 +35,8 @@ public class FindBestTest
 		run(Currency.CHAOS, Currency.CHROMATIC, 20, 1);
 
 		assertThat(bestTrade(), isTrades(
-				"mode | in | sell  | out | receive",
-				"sell | 20 | chrom | 10  | chaos"));
+				"mode | in | sell  | price | out | receive",
+				"sell | 20 | chrom | 2     | 10  | chaos"));
 	}
 
 	/**
@@ -48,8 +48,8 @@ public class FindBestTest
 		run(Currency.CHAOS, Currency.CHAOS, 20, 1);
 
 		assertThat(bestTrade(), isTrades(
-				"mode | in | sell  | out | receive",
-				"sell | 20 | chaos | 20  | chaos"));
+				"mode | in | sell  | price | out | receive",
+				"sell | 20 | chaos | 1     | 20  | chaos"));
 	}
 
 	@Test
@@ -63,9 +63,46 @@ public class FindBestTest
 		run(Currency.CHAOS, Currency.ALTERATION, 120, 2);
 
 		assertThat(bestTrade(), isTrades(
-				"mode | in  | sell  | out | receive",
-				"sell | 120 | alt   | 40  | fuse",
-				"sell | 40  | fuse  | 8   | chaos"));
+				"mode | in  | sell  | price | out | receive",
+				"sell | 120 | alt   | 3     | 40  | fuse",
+				"sell | 40  | fuse  | 5     | 8   | chaos"));
+	}
+
+	@Test
+	void takeBetterPath() throws Exception
+	{
+		givenPrices(
+				"want  | have   | price",
+				"fuse  | alt    | 3",
+				"chrom | alt    | 2",
+				"chaos | fuse   | 5",
+				"chaos | chrom  | 2");
+
+		run(Currency.CHAOS, Currency.ALTERATION, 120, 2);
+
+		assertThat(bestTrade(), isTrades(
+				"mode | in  | sell  | price | out | receive",
+				"sell | 120 | alt   | 2     | 60  | chrom",
+				"sell | 60  | chrom | 2     | 30  | chaos"));
+	}
+
+	@Test
+	void lastNodeMustBeEnd() throws Exception
+	{
+		givenPrices(
+				"want  | have   | price",
+				"fuse  | alt    | 3",
+				"chrom | alt    | 2",
+				"chaos | fuse   | 5",
+				"chaos | chrom  | 2",
+				"fuse  | chrom  | .5");
+
+		run(Currency.CHAOS, Currency.ALTERATION, 120, 2);
+
+		assertThat(bestTrade(), isTrades(
+				"mode | in  | sell  | price | out | receive",
+				"sell | 120 | alt   | 2     | 60  | chrom",
+				"sell | 60  | chrom | 2     | 30  | chaos"));
 	}
 
 	private void givenPrices(final String... markdown) throws IOException
@@ -139,6 +176,7 @@ public class FindBestTest
 						.withSell(row.trimmed("sell"))
 						.withOut(row.floatValue("out"))
 						.withReceive(row.trimmed("receive"))
+						.withSellPrice(row.floatValue("price"))
 						.build())
 				.collect(Collectors.toList());
 	}
@@ -152,6 +190,7 @@ public class FindBestTest
 				.withFeature("sell", Trade::getSell, trade.getSell())
 				.withFeature("out", Trade::getOut, trade.getOut())
 				.withFeature("receive", Trade::getReceive, trade.getReceive())
+				.withFeature("price", Trade::getSellPrice, trade.getSellPrice())
 				.build();
 	}
 
@@ -165,13 +204,7 @@ public class FindBestTest
 		}
 
 		@Override
-		public void setTrade(final Trade trade)
-		{
-			trades.add(trade);
-		}
-
-		@Override
-		public void setTrades(final List<Trade> trades)
+		public void success(final List<Trade> trades)
 		{
 			this.trades = trades;
 		}

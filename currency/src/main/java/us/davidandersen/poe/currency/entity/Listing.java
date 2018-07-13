@@ -30,6 +30,16 @@ public class Listing
 		return price;
 	}
 
+	public Currency getWant()
+	{
+		return want;
+	}
+
+	public Currency getHave()
+	{
+		return have;
+	}
+
 	public static ListingBuilder Builder()
 	{
 		return new ListingBuilder();

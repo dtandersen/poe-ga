@@ -1,4 +1,4 @@
-package us.davidandersen.poe.currency;
+package us.davidandersen.poe.currency.command;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -8,6 +8,9 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import poe.command.MarkdownStream;
 import poe.command.MarkdownStream.Row;
+import us.davidandersen.poe.currency.MockPoeGateway;
+import us.davidandersen.poe.currency.MockRatioRepository;
+import us.davidandersen.poe.currency.MockSleeper;
 import us.davidandersen.poe.currency.command.UpdateRatios;
 import us.davidandersen.poe.currency.command.UpdateRatios.UpdateRatioRequest;
 import us.davidandersen.poe.currency.entity.Currency;

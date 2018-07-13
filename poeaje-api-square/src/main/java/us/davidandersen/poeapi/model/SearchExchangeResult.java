@@ -7,4 +7,6 @@ public class SearchExchangeResult
 	public String id;
 
 	public List<String> result;
+
+	public int total;
 }

@@ -2,42 +2,71 @@ package us.davidandersen.poe.currency.entity;
 
 public class Listing
 {
-	private final Currency have;
+	private final String id;
 
-	private final Currency want;
+	private final String accountName;
 
-	private final double price;
+	private final Currency selling;
+
+	private final Currency buying;
+
+	private final float price;
+
+	private final String note;
 
 	public Listing(final ListingBuilder listingBuilder)
 	{
-		have = listingBuilder.have;
-		want = listingBuilder.want;
-		price = listingBuilder.price;
+		id = listingBuilder.id;
+		accountName = listingBuilder.accountName;
+		selling = listingBuilder.selling;
+		buying = listingBuilder.buying;
+		price = listingBuilder.buyPrice;
+		note = listingBuilder.note;
 	}
 
-	public boolean hasHave(final Currency have)
+	public String getId()
 	{
-		return this.have == have;
+		return id;
 	}
 
-	public boolean hasWant(final Currency want)
+	public String getAccountName()
 	{
-		return this.want == want;
+		return accountName;
 	}
 
-	public double getPrice()
+	public boolean isSelling(final Currency selling)
+	{
+		return this.selling == selling;
+	}
+
+	public boolean isBuying(final Currency buying)
+	{
+		return this.buying == buying;
+	}
+
+	public float getBuyPrice()
 	{
 		return price;
 	}
 
-	public Currency getWant()
+	public float getSellPrice()
 	{
-		return want;
+		return 1 / price;
 	}
 
-	public Currency getHave()
+	public Currency getBuying()
 	{
-		return have;
+		return buying;
+	}
+
+	public Currency getSelling()
+	{
+		return selling;
+	}
+
+	public String getNote()
+	{
+		return note;
 	}
 
 	public static ListingBuilder Builder()
@@ -47,45 +76,69 @@ public class Listing
 
 	public static class ListingBuilder
 	{
-		private Currency have;
+		public String note;
 
-		private Currency want;
+		public String accountName;
 
-		private double price;
+		public String id;
 
-		public ListingBuilder have(final Currency have)
+		private Currency selling;
+
+		private Currency buying;
+
+		private float buyPrice;
+
+		public ListingBuilder withId(final String id)
 		{
-			this.have = have;
+			this.id = id;
 			return this;
 		}
 
-		public ListingBuilder want(final Currency want)
+		public ListingBuilder withAccountName(final String accountName)
 		{
-			this.want = want;
+			this.accountName = accountName;
 			return this;
 		}
 
-		public ListingBuilder price(final double price)
+		public ListingBuilder selling(final Currency selling)
 		{
-			this.price = price;
+			this.selling = selling;
+			return this;
+		}
+
+		public ListingBuilder buying(final Currency buying)
+		{
+			this.buying = buying;
+			return this;
+		}
+
+		public ListingBuilder withBuyPrice(final float buyPrice)
+		{
+			this.buyPrice = buyPrice;
+			return this;
+		}
+
+		public ListingBuilder buying(final String want)
+		{
+			this.buying = Currency.ofSymbol(want);
+			return this;
+		}
+
+		public ListingBuilder selling(final String have)
+		{
+			this.selling = Currency.ofSymbol(have);
+			return this;
+		}
+
+		public ListingBuilder withNote(final String note)
+		{
+			this.note = note;
 			return this;
 		}
 
 		public Listing build()
 		{
 			return new Listing(this);
-		}
-
-		public ListingBuilder want(final String want)
-		{
-			this.want = Currency.ofSymbol(want);
-			return this;
-		}
-
-		public ListingBuilder have(final String have)
-		{
-			this.have = Currency.ofSymbol(have);
-			return this;
 		}
 	}
 }

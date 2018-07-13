@@ -32,7 +32,7 @@ public class GetListingsTest
 				"fuse  | chaos | .4",
 				"fuse  | chaos | .5");
 
-		run(Currency.CHAOS, Currency.FUSING);
+		run(Currency.CHAOS, Currency.FUSING, 0);
 
 		assertThat(selling(), hasListings(
 				"want  | have  | pay",
@@ -45,7 +45,28 @@ public class GetListingsTest
 				"fuse  | chaos | .5"));
 	}
 
-	private void run(final Currency base, final Currency other)
+	@Test
+	void testLimit()
+	{
+		givenListings(
+				"want  | have  | pay",
+				"chaos | fuse  | 1.9",
+				"chaos | fuse  | 1.95",
+				"fuse  | chaos | .4",
+				"fuse  | chaos | .5");
+
+		run(Currency.CHAOS, Currency.FUSING, 1);
+
+		assertThat(selling(), hasListings(
+				"want  | have  | pay",
+				"chaos | fuse  | 1.9"));
+
+		assertThat(buying(), hasListings(
+				"want  | have  | pay",
+				"fuse  | chaos | .4"));
+	}
+
+	private void run(final Currency base, final Currency other, final int limit)
 	{
 		final GetListings command = new GetListings(poeApi);
 		command.setRequest(new GetListingsRequest() {
@@ -59,6 +80,12 @@ public class GetListingsTest
 			public String getOther()
 			{
 				return other.symbol();
+			}
+
+			@Override
+			public int getLimit()
+			{
+				return limit;
 			}
 		});
 		result = new GetListingsResultImplementation();
@@ -76,9 +103,9 @@ public class GetListingsTest
 	private ListingBuilder toListing(final Row row)
 	{
 		return Listing.Builder()
-				.want(row.trimmed("want"))
-				.have(row.trimmed("have"))
-				.price(row.floatValue("pay"));
+				.buying(row.trimmed("want"))
+				.selling(row.trimmed("have"))
+				.withBuyPrice(row.floatValue("pay"));
 	}
 
 	private List<Listing> buying()
@@ -106,9 +133,9 @@ public class GetListingsTest
 		final Listing listing = listingBuilder.build();
 		return ComposeBuilder.of(Listing.class)
 				.withDescription("a listing with")
-				.withFeature("want", Listing::getWant, listing.getWant())
-				.withFeature("have", Listing::getHave, listing.getHave())
-				.withFeature("price", Listing::getPrice, listing.getPrice())
+				.withFeature("want", Listing::getBuying, listing.getBuying())
+				.withFeature("have", Listing::getSelling, listing.getSelling())
+				.withFeature("price", Listing::getBuyPrice, listing.getBuyPrice())
 				.build();
 	}
 

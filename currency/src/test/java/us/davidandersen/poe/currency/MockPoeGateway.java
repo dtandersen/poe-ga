@@ -1,5 +1,6 @@
 package us.davidandersen.poe.currency;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +22,21 @@ public class MockPoeGateway implements PoeApiGateway
 	public List<Listing> find(final Currency have, final Currency want)
 	{
 		return listings.stream()
-				.filter(l -> l.hasHave(have) && l.hasWant(want))
+				.filter(l -> l.isSelling(have) && l.isBuying(want))
+				.collect(Collectors.toList());
+	}
+
+	@Override
+	public List<Listing> find(final Currency have, final Currency want, final int limit) throws IOException
+	{
+		if (limit == 0)
+		{
+			return find(have, want);
+		}
+
+		return listings.stream()
+				.filter(l -> l.isSelling(have) && l.isBuying(want))
+				.limit(limit)
 				.collect(Collectors.toList());
 	}
 }

@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import poe.command.BaseCommand;
 import poe.command.BaseCommand.VoidResult;
-import us.davidandersen.poe.currency.Sleeper;
 import us.davidandersen.poe.currency.command.UpdateRatios.UpdateRatioRequest;
 import us.davidandersen.poe.currency.entity.Currency;
 import us.davidandersen.poe.currency.entity.Listing;
@@ -19,16 +18,12 @@ public class UpdateRatios extends BaseCommand<UpdateRatioRequest, VoidResult>
 
 	private final PoeApiGateway poeApi;
 
-	private final Sleeper sleeper;
-
 	public UpdateRatios(
 			final PriceRepository ratioRepository,
-			final PoeApiGateway poeApi,
-			final Sleeper sleeper)
+			final PoeApiGateway poeApi)
 	{
 		this.ratioRepository = ratioRepository;
 		this.poeApi = poeApi;
-		this.sleeper = sleeper;
 	}
 
 	@Override
@@ -45,7 +40,6 @@ public class UpdateRatios extends BaseCommand<UpdateRatioRequest, VoidResult>
 			{
 				if (have != want)
 				{
-					sleeper.sleep();
 					try
 					{
 						update(have, want);
@@ -73,7 +67,7 @@ public class UpdateRatios extends BaseCommand<UpdateRatioRequest, VoidResult>
 		ratioRepository.insert(Ratio.Builder()
 				.have(have)
 				.want(want)
-				.price(listing.getPrice()));
+				.price(listing.getBuyPrice()));
 	}
 
 	public interface UpdateRatioRequest

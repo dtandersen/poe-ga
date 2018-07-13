@@ -48,10 +48,12 @@ public class SquarePoeApiClient implements PoeApiClient
 		want.exchange.have = List.of(haveIn);
 		want.exchange.want = List.of(wantIn);
 		final Call<SearchExchangeResult> stuff = service.searchExchange(want);
-		// stuff.request().
 		SearchExchangeResult r1 = null;
 		final Response<SearchExchangeResult> xx = stuff.execute();
-		if (!xx.isSuccessful()) { throw new ServerError(xx.code()); }
+		if (!xx.isSuccessful())
+		{
+			throw new ServerError(xx.code());
+		}
 		r1 = xx.body();
 
 		return r1;
@@ -67,7 +69,6 @@ public class SquarePoeApiClient implements PoeApiClient
 				.baseUrl(endpoint)
 				.client(client)
 				.addConverterFactory(MoshiConverterFactory.create())
-				// .er
 				.build();
 
 		final PoeService service = retrofit.create(PoeService.class);
@@ -76,17 +77,8 @@ public class SquarePoeApiClient implements PoeApiClient
 		final Response<FetchItemResult> resx = call.execute();
 
 		System.out.println(resx.raw().toString());
-		// final FetchResult fetchResult = new FetchResult();
 
 		final FetchItemResult body = resx.body();
-		// final List<FetchItemResult2> retval = body.result;
-		// for (final FetchItemResult2 x : retval)
-		// {
-		// final RR inner = new RR();
-		// inner.setWant(x.item.typeLine);
-		// inner.setHave(x.listing.price.currency);
-		// fetchResult.add(inner);
-		// }
 
 		return body;
 	}

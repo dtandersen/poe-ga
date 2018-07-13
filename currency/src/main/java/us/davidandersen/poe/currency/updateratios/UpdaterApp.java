@@ -9,7 +9,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
-import us.davidandersen.poe.currency.Sleeper;
 import us.davidandersen.poe.currency.command.UpdateRatios;
 import us.davidandersen.poe.currency.command.UpdateRatios.UpdateRatioRequest;
 import us.davidandersen.poe.currency.entity.Currency;
@@ -25,9 +24,6 @@ public class UpdaterApp implements CommandLineRunner
 
 	@Autowired
 	private PoeApiGateway poeApi;
-
-	@Autowired
-	private Sleeper sleeper;
 
 	public static void main(final String[] args)
 	{
@@ -63,7 +59,7 @@ public class UpdaterApp implements CommandLineRunner
 				Currency.REGRET,
 				Currency.VAAL);
 
-		final UpdateRatios command = new UpdateRatios(ratioRepository, poeApi, sleeper);
+		final UpdateRatios command = new UpdateRatios(ratioRepository, poeApi);
 		command.setRequest(new UpdateRatioRequest() {
 			@Override
 			public List<String> getCurrencies()

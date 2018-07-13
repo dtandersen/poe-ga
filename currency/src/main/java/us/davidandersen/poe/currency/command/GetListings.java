@@ -26,8 +26,8 @@ public class GetListings extends BaseCommand<GetListingsRequest, GetListingsResu
 			final Currency base = Currency.ofSymbol(request.getBase());
 			final Currency other = Currency.ofSymbol(request.getOther());
 
-			final List<Listing> selling = poeApi.find(other, base);
-			final List<Listing> buying = poeApi.find(base, other);
+			final List<Listing> selling = poeApi.find(other, base, request.getLimit());
+			final List<Listing> buying = poeApi.find(base, other, request.getLimit());
 
 			result.setBuying(buying);
 			result.setSelling(selling);
@@ -43,6 +43,8 @@ public class GetListings extends BaseCommand<GetListingsRequest, GetListingsResu
 		String getBase();
 
 		String getOther();
+
+		int getLimit();
 	}
 
 	public interface GetListingsResult

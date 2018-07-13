@@ -59,37 +59,46 @@ public class MonitorApp implements CommandLineRunner
 
 	private void go()
 	{
+		final Currency base = Currency.CHAOS;
+		final Currency other = Currency.CHROMATIC;
+
 		final GetListings command = new GetListings(api);
 		command.setRequest(new GetListingsRequest() {
 			@Override
 			public String getBase()
 			{
-				return Currency.CHAOS.symbol();
+				return base.symbol();
 			}
 
 			@Override
 			public String getOther()
 			{
-				return Currency.FUSING.symbol();
+				return other.symbol();
+			}
+
+			@Override
+			public int getLimit()
+			{
+				return 10;
 			}
 		});
 		final GetListingsResultImplementation result = new GetListingsResultImplementation();
 		command.setResult(result);
 		command.execute();
 
-		display(result);
+		display(result, base, other);
 	}
 
-	private void display(final GetListingsResultImplementation result)
+	private void display(final GetListingsResultImplementation result, final Currency buying, final Currency selling)
 	{
-		System.out.println("Sellers");
-
-		for (final Listing l : result.selling)
+		System.out.println("Buying " + buying.symbol() + " for " + selling.symbol());
+		for (final Listing l : result.buying)
 		{
 			print(l);
 		}
-		System.out.println("Buyers");
-		for (final Listing l : result.buying)
+
+		System.out.println("Buying " + selling.symbol() + " for " + buying.symbol());
+		for (final Listing l : result.selling)
 		{
 			print(l);
 		}
@@ -97,7 +106,7 @@ public class MonitorApp implements CommandLineRunner
 
 	private void print(final Listing listing)
 	{
-		System.out.println(listing.getHave() + " " + trunc(listing.getPrice()) + " <=> " + trunc(1 / listing.getPrice()) + " " + listing.getWant());
+		System.out.println(listing.getSelling() + " " + trunc(listing.getBuyPrice()) + " <=> " + trunc(1 / listing.getBuyPrice()) + " " + listing.getBuying() + " " + listing.getNote() + " " + listing.getAccountName());
 	}
 
 	private String trunc(final double d)

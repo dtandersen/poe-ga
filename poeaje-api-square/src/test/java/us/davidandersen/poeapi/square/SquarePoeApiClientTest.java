@@ -59,6 +59,7 @@ public class SquarePoeApiClientTest
 
 		assertThat(stuff.result, contains("a0e3b1fb99e7e64815db0611d27c9fddf0ea348e17322072feb78bd2e42a9f0d", "69af0e807d4309b3c1ddfa1101fe3c91562456d0c5536472c7f275edf903047d"));
 		assertThat(stuff.id, equalTo("jW58VLUX"));
+		assertThat(stuff.total, equalTo(2));
 	}
 
 	@Test
@@ -112,6 +113,8 @@ public class SquarePoeApiClientTest
 		final Result result1 = result.result.get(0);
 		assertThat(result1.item.typeLine, equalTo("Chaos Orb"));
 		assertThat(result1.listing.price.currency, equalTo("fuse"));
+		assertThat(result1.listing.account.name, equalTo("haddock97"));
+		assertThat(result1.item.note, equalTo("~price 19/10 fuse"));
 	}
 
 	private static String requestBody(final RecordedRequest request)

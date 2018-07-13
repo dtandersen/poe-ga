@@ -10,8 +10,6 @@ import poe.command.MarkdownStream;
 import poe.command.MarkdownStream.Row;
 import us.davidandersen.poe.currency.MockPoeGateway;
 import us.davidandersen.poe.currency.MockRatioRepository;
-import us.davidandersen.poe.currency.MockSleeper;
-import us.davidandersen.poe.currency.command.UpdateRatios;
 import us.davidandersen.poe.currency.command.UpdateRatios.UpdateRatioRequest;
 import us.davidandersen.poe.currency.entity.Currency;
 import us.davidandersen.poe.currency.entity.Listing;
@@ -22,8 +20,6 @@ class UpdateRatiosTest
 	private final MockRatioRepository ratioRepository = new MockRatioRepository();
 
 	private final MockPoeGateway poeApi = new MockPoeGateway();
-
-	private final MockSleeper sleeper = new MockSleeper();
 
 	@Test
 	void shouldUseTheLowestPrice()
@@ -36,7 +32,6 @@ class UpdateRatiosTest
 		go(Currency.CHAOS, Currency.FUSING);
 
 		assertThat(ratioRepository.get(Currency.CHAOS, Currency.FUSING).getPrice(), equalTo(1.9f));
-		assertThat(sleeper.count(), equalTo(2));
 	}
 
 	private void givenListings(final String... markdown)
@@ -49,9 +44,9 @@ class UpdateRatiosTest
 	private ListingBuilder toListing(final Row row)
 	{
 		return Listing.Builder()
-				.want(row.trimmed("want"))
-				.have(row.trimmed("have"))
-				.price(row.floatValue("pay"));
+				.buying(row.trimmed("want"))
+				.selling(row.trimmed("have"))
+				.withBuyPrice(row.floatValue("pay"));
 	}
 
 	@Test
@@ -74,13 +69,11 @@ class UpdateRatiosTest
 		assertThat(ratioRepository.get(Currency.SCOURING, Currency.FUSING).getPrice(), equalTo(.8f));
 		assertThat(ratioRepository.get(Currency.CHAOS, Currency.SCOURING).getPrice(), equalTo(2.4f));
 		assertThat(ratioRepository.get(Currency.FUSING, Currency.SCOURING).getPrice(), equalTo(1.8f));
-
-		assertThat(sleeper.count(), equalTo(6));
 	}
 
 	private void go(final Currency... currencies)
 	{
-		final UpdateRatios command = new UpdateRatios(ratioRepository, poeApi, sleeper);
+		final UpdateRatios command = new UpdateRatios(ratioRepository, poeApi);
 		command.setRequest(new UpdateRatioRequest() {
 			@Override
 			public List<String> getCurrencies()

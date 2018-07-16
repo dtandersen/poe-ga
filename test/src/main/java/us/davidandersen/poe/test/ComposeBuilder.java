@@ -30,9 +30,10 @@ public class ComposeBuilder<T>
 		return this;
 	}
 
-	public <U> ComposeBuilder<T> withFeature(final String featureName, final Function<T, U> featureFunction, final U featureValue)
+	public <U> ComposeBuilder<T> withFeature(final String featureName, final Function<T, U> featureFunction, final Object featureValue)
 	{
-		return withFeature(featureName, featureFunction, equalTo(featureValue));
+		features.add(ComposeMatchers.hasFeature(featureName, featureFunction, equalTo(featureValue)));
+		return this;
 	}
 
 	public Matcher<T> build()

@@ -16,7 +16,7 @@ import us.davidandersen.poe.currency.repository.PriceRepository;
 import us.davidandersen.poe.gateway.PoeApiGateway;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "us.davidandersen.poe.currency.app")
+@ComponentScan(basePackages = "us.davidandersen.poe.currency.config")
 public class UpdaterApp implements CommandLineRunner
 {
 	@Autowired

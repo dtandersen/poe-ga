@@ -1,6 +1,7 @@
 package us.davidandersen.poe.currency.command;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import java.io.IOException;
@@ -29,15 +30,16 @@ public class FindBestTest
 	@Test
 	void singleTrade() throws Exception
 	{
-		givenPrices(
+		givenListings(
 				"want  | have  | price",
-				"chaos | chrom | 2");
+				"chaos | chrom | 8");
 
+		// convert chaos to chromatic orbs
 		run(Currency.CHAOS, Currency.CHROMATIC, 20, 1);
 
 		assertThat(bestTrade(), isTrades(
 				"mode | in | sell  | price | out | receive",
-				"sell | 20 | chrom | 2     | 10  | chaos"));
+				"sell | 20 | chaos | 8     | 160 | chrom"));
 	}
 
 	/**
@@ -54,75 +56,75 @@ public class FindBestTest
 	@Test
 	void doubleTrade() throws Exception
 	{
-		givenPrices(
+		givenListings(
 				"want  | have  | price",
-				"fuse  | alt   | 3",
-				"chaos | fuse  | 5");
+				"alt   | fuse  | .3",
+				"fuse  | chaos | .2");
 
-		run(Currency.CHAOS, Currency.ALTERATION, 120, 2);
+		run(Currency.ALTERATION, Currency.CHAOS, 120, 2);
 
 		assertThat(bestTrade(), isTrades(
 				"mode | in  | sell  | price | out | receive",
-				"sell | 120 | alt   | 3     | 40  | fuse",
-				"sell | 40  | fuse  | 5     | 8   | chaos"));
+				"sell | 120 | alt   | .3    | 36  | fuse",
+				"sell | 36  | fuse  | .2    | 7.2 | chaos"));
 	}
 
 	@Test
 	void takeBetterPath() throws Exception
 	{
-		givenPrices(
+		givenListings(
 				"want  | have   | price",
-				"fuse  | alt    | 3",
-				"chrom | alt    | 2",
-				"chaos | fuse   | 5",
-				"chaos | chrom  | 2");
+				"alt   | fuse   | .3",
+				"alt   | chrom  | .5",
+				"fuse  | chaos  | .2",
+				"chrom | chaos  | .5");
 
-		run(Currency.CHAOS, Currency.ALTERATION, 120, 2);
+		run(Currency.ALTERATION, Currency.CHAOS, 120, 2);
 
 		assertThat(bestTrade(), isTrades(
 				"mode | in  | sell  | price | out | receive",
-				"sell | 120 | alt   | 2     | 60  | chrom",
-				"sell | 60  | chrom | 2     | 30  | chaos"));
+				"sell | 120 | alt   | .5    | 60  | chrom",
+				"sell | 60  | chrom | .5    | 30  | chaos"));
 	}
 
 	@Test
 	void lastNodeMustBeEnd() throws Exception
 	{
-		givenPrices(
+		givenListings(
 				"want  | have   | price",
-				"fuse  | alt    | 3",
-				"chrom | alt    | 2",
-				"chaos | fuse   | 5",
-				"chaos | chrom  | 2",
-				"fuse  | chrom  | .5");
+				"alt   | fuse   | .3",
+				"alt   | chrom  | .5",
+				"fuse  | chaos  | .2",
+				"chrom | chaos  | .5",
+				"chrom | fuse   | 2");
 
-		run(Currency.CHAOS, Currency.ALTERATION, 120, 2);
+		run(Currency.ALTERATION, Currency.CHAOS, 120, 2);
 
 		assertThat(bestTrade(), isTrades(
 				"mode | in  | sell  | price | out | receive",
-				"sell | 120 | alt   | 2     | 60  | chrom",
-				"sell | 60  | chrom | 2     | 30  | chaos"));
+				"sell | 120 | alt   | .5     | 60  | chrom",
+				"sell | 60  | chrom | .5     | 30  | chaos"));
 	}
 
 	@Test
 	void shorterPathBetter() throws Exception
 	{
-		givenPrices(
+		givenListings(
 				"want  | have   | price",
-				"fuse  | alt    | 3",
-				"chrom | alt    | 2",
-				"chaos | alt    | 2",
-				"chaos | fuse   | 5",
-				"chaos | chrom  | 2");
+				"alt   | fuse   | .3",
+				"alt   | chrom  | .5",
+				"alt   | chaos  | .5",
+				"fuse  | chaos  | .2",
+				"chrom | chaos  | .5");
 
-		run(Currency.CHAOS, Currency.ALTERATION, 120, 2);
+		run(Currency.ALTERATION, Currency.CHAOS, 120, 2);
 
 		assertThat(bestTrade(), isTrades(
 				"mode | in  | sell  | price | out | receive",
-				"sell | 120 | alt   | 2     | 60  | chaos"));
+				"sell | 120 | alt   | .5    | 60  | chaos"));
 	}
 
-	private void givenPrices(final String... markdown) throws IOException
+	private void givenListings(final String... markdown) throws IOException
 	{
 		for (final Row row : MarkdownStream.asList(markdown))
 		{
@@ -135,10 +137,16 @@ public class FindBestTest
 		}
 	}
 
-	private void run(final Currency want, final Currency have, final float quantity, final int maxTrades)
+	private void run(final Currency have, final Currency want, final float quantity, final int maxTrades)
 	{
 		final FindBest command = new FindBest(priceRepository);
-		command.setRequest(new FindBestRequest() {
+		final FindBestRequest request = new FindBestRequest() {
+			@Override
+			public String getWant()
+			{
+				return want.symbol();
+			}
+
 			@Override
 			public String getHave()
 			{
@@ -152,18 +160,14 @@ public class FindBestTest
 			}
 
 			@Override
-			public String getWant()
-			{
-				return want.symbol();
-			}
-
-			@Override
 			public int getMaxTrades()
 			{
 				return maxTrades;
 			}
-		});
+		};
 		result = new FindBestResultBean();
+
+		command.setRequest(request);
 		command.setResult(result);
 		command.execute();
 	}
@@ -203,11 +207,11 @@ public class FindBestTest
 		return ComposeBuilder.of(Trade.class)
 				.withDescription("a trade with")
 				.withFeature("mode", Trade::getMode, trade.getMode())
-				.withFeature("in", Trade::getIn, trade.getIn())
+				.withFeature("in", Trade::getIn, closeTo(trade.getIn(), .001))
 				.withFeature("sell", Trade::getSell, trade.getSell())
-				.withFeature("out", Trade::getOut, trade.getOut())
+				.withFeature("out", Trade::getOut, closeTo(trade.getOut(), .001))
 				.withFeature("receive", Trade::getReceive, trade.getReceive())
-				.withFeature("price", Trade::getSellPrice, trade.getSellPrice())
+				.withFeature("price", Trade::getSellPrice, closeTo(trade.getSellPrice(), .001))
 				.build();
 	}
 

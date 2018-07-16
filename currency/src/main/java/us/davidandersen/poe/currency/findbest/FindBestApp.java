@@ -15,7 +15,7 @@ import us.davidandersen.poe.currency.entity.Currency;
 import us.davidandersen.poe.currency.repository.PriceRepository;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "us.davidandersen.poe.currency.app")
+@ComponentScan(basePackages = "us.davidandersen.poe.currency.config")
 public class FindBestApp implements CommandLineRunner
 {
 	@Autowired
@@ -31,10 +31,10 @@ public class FindBestApp implements CommandLineRunner
 	@Override
 	public void run(final String... args) throws Exception
 	{
+		final Currency have = Currency.GEMCUTTER;
 		final Currency want = Currency.CHAOS;
-		final Currency have = Currency.CHROMATIC;
-		final float quantity = 9.861112f;
-		final int maxTrades = 1;
+		final float quantity = 20;
+		final int maxTrades = 4;
 
 		final FindBest command = new FindBest(ratioRepository);
 		command.setRequest(new FindBestRequest() {

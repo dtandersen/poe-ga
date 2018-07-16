@@ -1,4 +1,4 @@
-package us.davidandersen.poe.currency.app;
+package us.davidandersen.poe.currency.config;
 
 import java.io.FileInputStream;
 import java.io.FileWriter;
@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import org.yaml.snakeyaml.Yaml;
-import us.davidandersen.poe.currency.app.YamlRatioRepository.Ratios.RatioYaml;
+import us.davidandersen.poe.currency.config.YamlRatioRepository.Ratios.RatioYaml;
 import us.davidandersen.poe.currency.entity.Currency;
 import us.davidandersen.poe.currency.entity.Ratio;
 import us.davidandersen.poe.currency.entity.Ratio.RatioBuilder;
@@ -73,5 +73,14 @@ public class YamlRatioRepository implements PriceRepository
 				.have(Currency.ofSymbol(ratioYaml.have))
 				.price(ratioYaml.price)
 				.build();
+	}
+
+	@Override
+	public void clear() throws IOException
+	{
+		final Yaml yaml = new Yaml();
+		Ratios ratios = yaml.loadAs(new FileInputStream("prices.yaml"), Ratios.class);
+		ratios = new Ratios();
+		yaml.dump(ratios, new FileWriter("prices.yaml"));
 	}
 }

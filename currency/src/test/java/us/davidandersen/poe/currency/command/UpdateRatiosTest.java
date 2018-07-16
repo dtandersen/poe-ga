@@ -2,6 +2,7 @@ package us.davidandersen.poe.currency.command;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.nullValue;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,6 +15,8 @@ import us.davidandersen.poe.currency.command.UpdateRatios.UpdateRatioRequest;
 import us.davidandersen.poe.currency.entity.Currency;
 import us.davidandersen.poe.currency.entity.Listing;
 import us.davidandersen.poe.currency.entity.Listing.ListingBuilder;
+import us.davidandersen.poe.currency.entity.Ratio;
+import us.davidandersen.poe.currency.entity.Ratio.RatioBuilder;
 
 class UpdateRatiosTest
 {
@@ -34,11 +37,43 @@ class UpdateRatiosTest
 		assertThat(ratioRepository.get(Currency.CHAOS, Currency.FUSING).getPrice(), equalTo(1.9f));
 	}
 
+	@Test
+	void clearOldPrices()
+	{
+		givenPrices(
+				"want  | have  | pay",
+				"chaos | fuse  | 1.9");
+
+		go(Currency.CHAOS, Currency.FUSING);
+
+		assertThat(ratioRepository.get(Currency.CHAOS, Currency.FUSING), nullValue());
+	}
+
 	private void givenListings(final String... markdown)
 	{
 		MarkdownStream.stream(markdown)
 				.map(row -> toListing(row))
-				.forEach(listings -> poeApi.addListing(listings));
+				.forEach(listing -> add(listing));
+	}
+
+	private void givenPrices(final String... markdown)
+	{
+		MarkdownStream.stream(markdown)
+				.map(row -> toRatio(row))
+				.forEach(listing -> addRatio(listing));
+	}
+
+	private void addRatio(final RatioBuilder listing)
+	{
+		ratioRepository.insert(listing);
+	}
+
+	private void add(final ListingBuilder listing)
+	{
+		for (int i = 0; i < 20; i++)
+		{
+			poeApi.addListing(listing);
+		}
 	}
 
 	private ListingBuilder toListing(final Row row)
@@ -47,6 +82,14 @@ class UpdateRatiosTest
 				.buying(row.trimmed("want"))
 				.selling(row.trimmed("have"))
 				.withBuyPrice(row.floatValue("pay"));
+	}
+
+	private RatioBuilder toRatio(final Row row)
+	{
+		return Ratio.Builder()
+				.want(row.trimmed("want"))
+				.have(row.trimmed("have"))
+				.price(row.floatValue("pay"));
 	}
 
 	@Test

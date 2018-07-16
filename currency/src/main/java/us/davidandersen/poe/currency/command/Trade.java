@@ -4,15 +4,15 @@ public class Trade
 {
 	private final String mode;
 
-	private final float in;
+	private final double in;
 
 	private final String sell;
 
-	private final float out;
+	private final double out;
 
 	private final String receive;
 
-	private final float sellPrice;
+	private final double sellPrice;
 
 	public Trade(final TradeBuilder tradeBuilder)
 	{
@@ -29,7 +29,7 @@ public class Trade
 		return mode;
 	}
 
-	public float getIn()
+	public double getIn()
 	{
 		return in;
 	}
@@ -39,7 +39,7 @@ public class Trade
 		return sell;
 	}
 
-	public float getOut()
+	public double getOut()
 	{
 		return out;
 	}
@@ -49,7 +49,7 @@ public class Trade
 		return receive;
 	}
 
-	public float getSellPrice()
+	public double getSellPrice()
 	{
 		return sellPrice;
 	}
@@ -76,11 +76,11 @@ public class Trade
 	{
 		private String mode;
 
-		private float in;
+		private double in;
 
 		private String sell;
 
-		private float out;
+		private double out;
 
 		private String receive;
 
@@ -97,7 +97,7 @@ public class Trade
 			return this;
 		}
 
-		public TradeBuilder withIn(final float in)
+		public TradeBuilder withIn(final double in)
 		{
 			this.in = in;
 			return this;
@@ -109,7 +109,7 @@ public class Trade
 			return this;
 		}
 
-		public TradeBuilder withOut(final float out)
+		public TradeBuilder withOut(final double out)
 		{
 			this.out = out;
 			return this;

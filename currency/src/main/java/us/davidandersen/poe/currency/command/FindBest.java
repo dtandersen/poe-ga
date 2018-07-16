@@ -71,12 +71,9 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 	 * @param quantityIn
 	 * @throws IOException
 	 */
-	private void tryTrade(final Currency have, final int remainingTrades, final ArrayList<Trade> tradeStack, final int depth, final TradeWatcher watcher, final float quantityIn, final Currency end) throws IOException
+	private void tryTrade(final Currency have, final int remainingTrades, final ArrayList<Trade> tradeStack, final int depth, final TradeWatcher watcher, final double quantityIn, final Currency end) throws IOException
 	{
-		if (remainingTrades == 0)
-		{
-			return;
-		}
+		if (remainingTrades == 0) { return; }
 
 		Currency[] wants;
 		if (remainingTrades == 1)
@@ -111,25 +108,22 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 				watcher.tradeComplete(tradeStack, depth + 1);
 			}
 
-			final float quantityOut = doTrade.getOut();
+			final double quantityOut = doTrade.getOut();
 
 			// search deeper
 			tryTrade(want, remainingTrades - 1, tradeStack, depth + 1, watcher, quantityOut, end);
 		}
 	}
 
-	private Trade doTrade(final String want2, final String have2, final float quantity2) throws IOException
+	private Trade doTrade(final String want2, final String have2, final double quantity2) throws IOException
 	{
 		final Currency want = Currency.ofSymbol(want2);
 		final Currency have = Currency.ofSymbol(have2);
-		final float quantity = quantity2;
+		final double quantity = quantity2;
 
-		final Ratio price = priceRepository.get(want, have);
-		if (price == null)
-		{
-			return null;
-		}
-		final float qout = quantity / price.getPrice();
+		final Ratio price = priceRepository.get(have, want);
+		if (price == null) { return null; }
+		final double qout = quantity * price.getPrice();
 
 		final Trade trade = Trade.Builder()
 				.withMode("sell")
@@ -145,7 +139,7 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 
 	private static class TradeWatcher
 	{
-		float bestQuantity;
+		double bestQuantity;
 
 		private List<Trade> bestTrade = new ArrayList<>();
 
@@ -163,7 +157,7 @@ public class FindBest extends BaseCommand<FindBestRequest, FindBestResult>
 				return;
 			}
 
-			final float out = tradeStack.get(depth - 1).getOut();
+			final double out = tradeStack.get(depth - 1).getOut();
 			final List<Trade> trades = new ArrayList<>();
 			for (int i = 0; i < depth; i++)
 			{

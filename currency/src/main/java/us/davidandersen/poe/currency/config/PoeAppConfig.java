@@ -1,4 +1,4 @@
-package us.davidandersen.poe.currency.app;
+package us.davidandersen.poe.currency.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

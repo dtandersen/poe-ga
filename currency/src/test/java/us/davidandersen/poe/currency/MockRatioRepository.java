@@ -19,10 +19,7 @@ public class MockRatioRepository implements PriceRepository
 				.filter(r -> r.hasHave(have) && r.hasWant(want))
 				.findFirst();
 
-		if (!findFirst.isPresent())
-		{
-			return null;
-		}
+		if (!findFirst.isPresent()) { return null; }
 
 		return findFirst.get();
 	}
@@ -37,5 +34,11 @@ public class MockRatioRepository implements PriceRepository
 	public String toString()
 	{
 		return ratios.toString();
+	}
+
+	@Override
+	public void clear()
+	{
+		ratios.clear();
 	}
 }

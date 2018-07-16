@@ -10,4 +10,6 @@ public interface PriceRepository
 	void insert(RatioBuilder ratio) throws IOException;
 
 	Ratio get(Currency want, Currency have) throws IOException;
+
+	void clear() throws IOException;
 }

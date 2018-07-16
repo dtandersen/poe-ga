@@ -1,4 +1,4 @@
-package us.davidandersen.poe.currency.app;
+package us.davidandersen.poe.currency.config;
 
 import java.io.IOException;
 import java.util.ArrayList;

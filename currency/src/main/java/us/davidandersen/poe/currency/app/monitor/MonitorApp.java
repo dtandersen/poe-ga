@@ -15,7 +15,7 @@ import us.davidandersen.poe.currency.entity.Listing;
 import us.davidandersen.poe.gateway.PoeApiGateway;
 
 @SpringBootApplication
-@ComponentScan(basePackages = "us.davidandersen.poe.currency.app")
+@ComponentScan(basePackages = "us.davidandersen.poe.currency.config")
 public class MonitorApp implements CommandLineRunner
 {
 	private final class GetListingsResultImplementation implements GetListingsResult
@@ -60,7 +60,7 @@ public class MonitorApp implements CommandLineRunner
 	private void go()
 	{
 		final Currency base = Currency.CHAOS;
-		final Currency other = Currency.CHROMATIC;
+		final Currency other = Currency.GEMCUTTER;
 
 		final GetListings command = new GetListings(api);
 		command.setRequest(new GetListingsRequest() {
@@ -91,13 +91,13 @@ public class MonitorApp implements CommandLineRunner
 
 	private void display(final GetListingsResultImplementation result, final Currency buying, final Currency selling)
 	{
-		System.out.println("Buying " + buying.symbol() + " for " + selling.symbol());
+		System.out.println("Selling " + selling.symbol() + " for " + buying.symbol());
 		for (final Listing l : result.buying)
 		{
 			print(l);
 		}
 
-		System.out.println("Buying " + selling.symbol() + " for " + buying.symbol());
+		System.out.println("Selling " + buying.symbol() + " for " + selling.symbol());
 		for (final Listing l : result.selling)
 		{
 			print(l);
@@ -111,6 +111,6 @@ public class MonitorApp implements CommandLineRunner
 
 	private String trunc(final double d)
 	{
-		return String.format("%.2f", d);
+		return String.format("%.3f", d);
 	}
 }

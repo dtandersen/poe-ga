@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import org.junit.jupiter.api.Test;
+import us.davidandersen.poe.currency.config.DefaultPoeApiGateway;
 import us.davidandersen.poe.currency.entity.Currency;
 import us.davidandersen.poe.currency.entity.Listing;
 import us.davidandersen.poeapi.MockPoeApiClient;
